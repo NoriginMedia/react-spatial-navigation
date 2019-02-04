@@ -1,0 +1,38 @@
+{
+  "name": "react-spatial-navigation",
+  "version": "1.0.0",
+  "main": "dist/",
+  "scripts": {
+    "eslint": "eslint src",
+    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files",
+    "start": "parcel index.html -d parcel"
+  },
+  "dependencies": {
+    "lodash": "^4.17.0",
+    "prop-types": "^15.5.8",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "recompose": "^0.28.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "8.2.3",
+    "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "4.19.1",
+    "eslint-config-norigin": "git+https://github.com/NoriginMedia/eslint-config-norigin.git#v3.7.0",
+    "parcel-bundler": "^1.11.0",
+    "pre-commit": "^1.2.2",
+    "react-native-web": "^0.10.0",
+    "react-art": "^16.3.1"
+  },
+  "pre-commit": [
+    "eslint"
+  ],
+  "alias": {
+    "react-native": "react-native-web"
+  }
+}

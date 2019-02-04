@@ -1,0 +1,22 @@
+{
+  "extends": "norigin/react",
+  "rules": {
+    "indent": ["error", 2],
+    "new-cap": ["error", {"capIsNew": false}],
+    "quotes": ["error", "single", "avoid-escape"],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "react/jsx-closing-bracket-location": ["off"],
+    "react/jsx-closing-tag-location": ["off"],
+    "react/jsx-curly-brace-presence": ["error", {"props": "always"}],
+    "react/boolean-prop-naming": ["off"],
+    "arrow-body-style": ["error", "as-needed"],
+    "import/extensions": ["error", "never"],
+    "no-console": ["error", {"allow": ["warn", "error", "log"]}],
+    "id-length": ["error", {"min": 1, "max": 60}]
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 7
+  }
+}
