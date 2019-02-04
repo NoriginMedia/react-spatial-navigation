@@ -1,5 +1,5 @@
-import withFocusable from 'withFocusable';
-import withSpatialNavigation from 'withSpatialNavigation';
+import withFocusable from './withFocusable';
+import withSpatialNavigation from './withSpatialNavigation';
 
 export {
   withFocusable,

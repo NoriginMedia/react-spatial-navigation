@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.withSpatialNavigation = exports.withFocusable = undefined;
 
-var _withFocusable = require('withFocusable');
+var _withFocusable = require('./withFocusable');
 
 var _withFocusable2 = _interopRequireDefault(_withFocusable);
 
-var _withSpatialNavigation = require('withSpatialNavigation');
+var _withSpatialNavigation = require('./withSpatialNavigation');
 
 var _withSpatialNavigation2 = _interopRequireDefault(_withSpatialNavigation);
 
