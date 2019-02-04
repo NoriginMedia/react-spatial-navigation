@@ -123,7 +123,7 @@ MenuItem.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-const MenuItemFocusable = withFocusable(MenuItem);
+const MenuItemFocusable = withFocusable()(MenuItem);
 
 class Menu extends React.PureComponent {
   componentDidMount() {
@@ -151,7 +151,7 @@ Menu.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-const MenuFocusable = withFocusable(Menu);
+const MenuFocusable = withFocusable()(Menu);
 
 class Content extends React.PureComponent {
   constructor(props) {
@@ -188,7 +188,7 @@ Content.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-const ContentFocusable = withFocusable(Content);
+const ContentFocusable = withFocusable()(Content);
 
 class Active extends React.PureComponent {
   render() {
@@ -248,7 +248,7 @@ Program.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-const ProgramFocusable = withFocusable(Program);
+const ProgramFocusable = withFocusable()(Program);
 
 class Category extends React.PureComponent {
   constructor(props) {
@@ -303,7 +303,7 @@ Category.propTypes = {
   realFocusKey: PropTypes.string.isRequired
 };
 
-const CategoryFocusable = withFocusable(Category);
+const CategoryFocusable = withFocusable()(Category);
 
 class Categories extends React.PureComponent {
   constructor(props) {
@@ -348,7 +348,7 @@ Categories.propTypes = {
   realFocusKey: PropTypes.string.isRequired
 };
 
-const CategoriesFocusable = withFocusable(Categories);
+const CategoriesFocusable = withFocusable()(Categories);
 
 class Spatial extends React.PureComponent {
   render() {

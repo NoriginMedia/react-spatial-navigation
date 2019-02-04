@@ -170,7 +170,7 @@ MenuItem.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-var MenuItemFocusable = (0, _withFocusable2.default)(MenuItem);
+var MenuItemFocusable = (0, _withFocusable2.default)()(MenuItem);
 
 var Menu = function (_React$PureComponent2) {
   _inherits(Menu, _React$PureComponent2);
@@ -214,7 +214,7 @@ Menu.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-var MenuFocusable = (0, _withFocusable2.default)(Menu);
+var MenuFocusable = (0, _withFocusable2.default)()(Menu);
 
 var Content = function (_React$PureComponent3) {
   _inherits(Content, _React$PureComponent3);
@@ -264,7 +264,7 @@ Content.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-var ContentFocusable = (0, _withFocusable2.default)(Content);
+var ContentFocusable = (0, _withFocusable2.default)()(Content);
 
 var Active = function (_React$PureComponent4) {
   _inherits(Active, _React$PureComponent4);
@@ -364,7 +364,7 @@ Program.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-var ProgramFocusable = (0, _withFocusable2.default)(Program);
+var ProgramFocusable = (0, _withFocusable2.default)()(Program);
 
 var Category = function (_React$PureComponent6) {
   _inherits(Category, _React$PureComponent6);
@@ -441,7 +441,7 @@ Category.propTypes = {
   realFocusKey: _propTypes2.default.string.isRequired
 };
 
-var CategoryFocusable = (0, _withFocusable2.default)(Category);
+var CategoryFocusable = (0, _withFocusable2.default)()(Category);
 
 var Categories = function (_React$PureComponent7) {
   _inherits(Categories, _React$PureComponent7);
@@ -505,7 +505,7 @@ Categories.propTypes = {
   realFocusKey: _propTypes2.default.string.isRequired
 };
 
-var CategoriesFocusable = (0, _withFocusable2.default)(Categories);
+var CategoriesFocusable = (0, _withFocusable2.default)()(Categories);
 
 var Spatial = function (_React$PureComponent8) {
   _inherits(Spatial, _React$PureComponent8);
