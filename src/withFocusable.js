@@ -1,18 +1,18 @@
 /* eslint-disable react/no-find-dom-node */
 import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
-import {uniqueId, indexOf, noop} from 'lodash';
-import {
-  compose,
-  mapProps,
-  lifecycle,
-  setPropTypes,
-  withHandlers,
-  withContext,
-  withStateHandlers,
-  getContext,
-  pure
-} from 'recompose';
+import uniqueId from 'lodash/uniqueId';
+import indexOf from 'lodash/indexOf';
+import noop from 'lodash/noop';
+import compose from 'recompose/compose';
+import mapProps from 'recompose/mapProps';
+import lifecycle from 'recompose/lifecycle';
+import setPropTypes from 'recompose/setPropTypes';
+import withHandlers from 'recompose/withHandlers';
+import withContext from 'recompose/withContext';
+import withStateHandlers from 'recompose/withStateHandlers';
+import getContext from 'recompose/getContext';
+import pure from 'recompose/pure';
 import SpatialNavigation from './spatialNavigation';
 import {getSpatialNavigationContext} from './withSpatialNavigationContext';
 import measureLayout from './measureLayout';

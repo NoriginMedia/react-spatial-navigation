@@ -4,54 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _pure2 = require('recompose/pure');
-
-var _pure3 = _interopRequireDefault(_pure2);
-
-var _getContext2 = require('recompose/getContext');
-
-var _getContext3 = _interopRequireDefault(_getContext2);
-
-var _withStateHandlers2 = require('recompose/withStateHandlers');
-
-var _withStateHandlers3 = _interopRequireDefault(_withStateHandlers2);
-
-var _withContext2 = require('recompose/withContext');
-
-var _withContext3 = _interopRequireDefault(_withContext2);
-
-var _withHandlers2 = require('recompose/withHandlers');
-
-var _withHandlers3 = _interopRequireDefault(_withHandlers2);
-
-var _setPropTypes2 = require('recompose/setPropTypes');
-
-var _setPropTypes3 = _interopRequireDefault(_setPropTypes2);
-
-var _lifecycle2 = require('recompose/lifecycle');
-
-var _lifecycle3 = _interopRequireDefault(_lifecycle2);
-
-var _mapProps2 = require('recompose/mapProps');
-
-var _mapProps3 = _interopRequireDefault(_mapProps2);
-
-var _compose2 = require('recompose/compose');
-
-var _compose3 = _interopRequireDefault(_compose2);
-
-var _noop2 = require('lodash/noop');
-
-var _noop3 = _interopRequireDefault(_noop2);
-
-var _indexOf2 = require('lodash/indexOf');
-
-var _indexOf3 = _interopRequireDefault(_indexOf2);
-
-var _uniqueId2 = require('lodash/uniqueId');
-
-var _uniqueId3 = _interopRequireDefault(_uniqueId2);
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _reactDom = require('react-dom');
@@ -59,6 +11,54 @@ var _reactDom = require('react-dom');
 var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _uniqueId = require('lodash/uniqueId');
+
+var _uniqueId2 = _interopRequireDefault(_uniqueId);
+
+var _indexOf = require('lodash/indexOf');
+
+var _indexOf2 = _interopRequireDefault(_indexOf);
+
+var _noop = require('lodash/noop');
+
+var _noop2 = _interopRequireDefault(_noop);
+
+var _compose = require('recompose/compose');
+
+var _compose2 = _interopRequireDefault(_compose);
+
+var _mapProps = require('recompose/mapProps');
+
+var _mapProps2 = _interopRequireDefault(_mapProps);
+
+var _lifecycle = require('recompose/lifecycle');
+
+var _lifecycle2 = _interopRequireDefault(_lifecycle);
+
+var _setPropTypes = require('recompose/setPropTypes');
+
+var _setPropTypes2 = _interopRequireDefault(_setPropTypes);
+
+var _withHandlers = require('recompose/withHandlers');
+
+var _withHandlers2 = _interopRequireDefault(_withHandlers);
+
+var _withContext = require('recompose/withContext');
+
+var _withContext2 = _interopRequireDefault(_withContext);
+
+var _withStateHandlers = require('recompose/withStateHandlers');
+
+var _withStateHandlers2 = _interopRequireDefault(_withStateHandlers);
+
+var _getContext = require('recompose/getContext');
+
+var _getContext2 = _interopRequireDefault(_getContext);
+
+var _pure = require('recompose/pure');
+
+var _pure2 = _interopRequireDefault(_pure);
 
 var _spatialNavigation = require('./spatialNavigation');
 
@@ -81,23 +81,23 @@ var withFocusable = function withFocusable() {
       configPropagateFocus = _ref$propagateFocus === undefined ? false : _ref$propagateFocus;
 
   return function (BaseComponent) {
-    return (0, _compose3.default)(_withSpatialNavigationContext.getSpatialNavigationContext, (0, _getContext3.default)({
+    return (0, _compose2.default)(_withSpatialNavigationContext.getSpatialNavigationContext, (0, _getContext2.default)({
       /**
        * From the context provided by another higher-level 'withFocusable' component
        */
       parentFocusKey: _propTypes2.default.string
-    }), (0, _withStateHandlers3.default)(function (_ref2) {
+    }), (0, _withStateHandlers2.default)(function (_ref2) {
       var focusKey = _ref2.focusKey,
           _ref2$setFocus = _ref2.setFocus,
-          setFocus = _ref2$setFocus === undefined ? _noop3.default : _ref2$setFocus;
+          setFocus = _ref2$setFocus === undefined ? _noop2.default : _ref2$setFocus;
 
-      var realFocusKey = focusKey || (0, _uniqueId3.default)('sn:focusable-item-');
+      var realFocusKey = focusKey || (0, _uniqueId2.default)('sn:focusable-item-');
 
       return {
         realFocusKey: realFocusKey,
         setFocus: setFocus.bind(null, realFocusKey)
       };
-    }, {}), (0, _mapProps3.default)(function (_ref3) {
+    }, {}), (0, _mapProps2.default)(function (_ref3) {
       var currentFocusKey = _ref3.currentFocusKey,
           parentsHavingFocusedChild = _ref3.parentsHavingFocusedChild,
           realFocusKey = _ref3.realFocusKey,
@@ -106,32 +106,32 @@ var withFocusable = function withFocusable() {
       return _extends({}, props, {
         realFocusKey: realFocusKey,
         focused: currentFocusKey === realFocusKey,
-        hasFocusedChild: (0, _indexOf3.default)(parentsHavingFocusedChild, realFocusKey) > -1
+        hasFocusedChild: (0, _indexOf2.default)(parentsHavingFocusedChild, realFocusKey) > -1
       });
     }),
 
     /**
      * Propagate it's own 'focusKey' as a 'parentFocusKey' to it's children
      */
-    (0, _withContext3.default)({
+    (0, _withContext2.default)({
       parentFocusKey: _propTypes2.default.string
     }, function (_ref4) {
       var realFocusKey = _ref4.realFocusKey;
       return {
         parentFocusKey: realFocusKey
       };
-    }), (0, _withHandlers3.default)({
+    }), (0, _withHandlers2.default)({
       onEnterPressHandler: function onEnterPressHandler(_ref5) {
         var _ref5$onEnterPress = _ref5.onEnterPress,
-            onEnterPress = _ref5$onEnterPress === undefined ? _noop3.default : _ref5$onEnterPress;
+            onEnterPress = _ref5$onEnterPress === undefined ? _noop2.default : _ref5$onEnterPress;
         return onEnterPress;
       },
       onBecameFocusedHandler: function onBecameFocusedHandler(_ref6) {
         var _ref6$onBecameFocused = _ref6.onBecameFocused,
-            onBecameFocused = _ref6$onBecameFocused === undefined ? _noop3.default : _ref6$onBecameFocused;
+            onBecameFocused = _ref6$onBecameFocused === undefined ? _noop2.default : _ref6$onBecameFocused;
         return onBecameFocused;
       }
-    }), (0, _lifecycle3.default)({
+    }), (0, _lifecycle2.default)({
       updateLayout: function updateLayout() {
         var focusKey = this.props.realFocusKey;
 
@@ -189,7 +189,7 @@ var withFocusable = function withFocusable() {
           focusKey: focusKey
         });
       }
-    }), _pure3.default, (0, _setPropTypes3.default)({
+    }), _pure2.default, (0, _setPropTypes2.default)({
       focusKey: _propTypes2.default.string,
       propagateFocus: _propTypes2.default.bool,
       onEnterPress: _propTypes2.default.func,

@@ -4,7 +4,7 @@
   "main": "dist/",
   "scripts": {
     "eslint": "eslint src",
-    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files",
+    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
     "start": "parcel index.html -d parcel"
   },
   "dependencies": {
@@ -18,7 +18,6 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "8.2.3",
-    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
@@ -34,12 +33,5 @@
   ],
   "alias": {
     "react-native": "react-native-web"
-  },
-  "babel": {
-    "presets": ["env", "react"],
-    "plugins": [
-      ["lodash", { "id": ["lodash", "recompose"] }],
-      "transform-object-rest-spread"
-    ]
   }
 }

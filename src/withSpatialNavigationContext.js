@@ -1,5 +1,6 @@
 import React from 'react';
-import {setDisplayName, wrapDisplayName} from 'recompose';
+import setDisplayName from 'recompose/setDisplayName';
+import wrapDisplayName from 'recompose/wrapDisplayName';
 
 const SpatialNavigationContext = React.createContext();
 

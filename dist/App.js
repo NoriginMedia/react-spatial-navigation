@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _shuffle2 = require('lodash/shuffle');
-
-var _shuffle3 = _interopRequireDefault(_shuffle2);
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19,6 +15,10 @@ var _react2 = _interopRequireDefault(_react);
 var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _shuffle = require('lodash/shuffle');
+
+var _shuffle2 = _interopRequireDefault(_shuffle);
 
 var _reactNative = require('react-native');
 
@@ -104,7 +104,7 @@ var styles = _reactNative.StyleSheet.create({
   }
 });
 
-var categories = (0, _shuffle3.default)([{
+var categories = (0, _shuffle2.default)([{
   title: 'Featured'
 }, {
   title: 'Cool'
@@ -112,7 +112,7 @@ var categories = (0, _shuffle3.default)([{
   title: 'Decent'
 }]);
 
-var programs = (0, _shuffle3.default)([{
+var programs = (0, _shuffle2.default)([{
   title: 'Program 1',
   color: '#337fdd'
 }, {

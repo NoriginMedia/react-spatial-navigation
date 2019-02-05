@@ -5,27 +5,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ROOT_FOCUS_KEY = undefined;
 
-var _findKey2 = require('lodash/findKey');
-
-var _findKey3 = _interopRequireDefault(_findKey2);
-
-var _sortBy2 = require('lodash/sortBy');
-
-var _sortBy3 = _interopRequireDefault(_sortBy2);
-
-var _first3 = require('lodash/first');
-
-var _first4 = _interopRequireDefault(_first3);
-
-var _filter2 = require('lodash/filter');
-
-var _filter3 = _interopRequireDefault(_filter2);
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _DEFAULT_KEY_MAP;
+
+var _filter = require('lodash/filter');
+
+var _filter2 = _interopRequireDefault(_filter);
+
+var _first2 = require('lodash/first');
+
+var _first3 = _interopRequireDefault(_first2);
+
+var _sortBy = require('lodash/sortBy');
+
+var _sortBy2 = _interopRequireDefault(_sortBy);
+
+var _findKey = require('lodash/findKey');
+
+var _findKey2 = _interopRequireDefault(_findKey);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -119,7 +119,7 @@ var SpatialNavigation = function () {
 
       if (window) {
         this.tvEventListener = function (event) {
-          var eventType = (0, _findKey3.default)(_this.getKeyMap(), function (code) {
+          var eventType = (0, _findKey2.default)(_this.getKeyMap(), function (code) {
             return event.keyCode === code;
           });
 
@@ -161,7 +161,7 @@ var SpatialNavigation = function () {
   }, {
     key: 'onKeyEvent',
     value: function onKeyEvent(keyCode) {
-      var direction = (0, _findKey3.default)(this.getKeyMap(), function (code) {
+      var direction = (0, _findKey2.default)(this.getKeyMap(), function (code) {
         return keyCode === code;
       });
 
@@ -192,7 +192,7 @@ var SpatialNavigation = function () {
         /**
          * Get only the siblings with the coords on the way of our moving direction
          */
-        var siblings = (0, _filter3.default)(this.focusableComponents, function (component) {
+        var siblings = (0, _filter2.default)(this.focusableComponents, function (component) {
           return component.parentFocusKey === parentFocusKey && (isIncrementalDirection && component.layout[coordinate] > layout[coordinate] || !isIncrementalDirection && component.layout[coordinate] < layout[coordinate]);
         });
 
@@ -200,7 +200,7 @@ var SpatialNavigation = function () {
         var currentReferenceX = currentReferencePoints.resultX;
         var currentReferenceY = currentReferencePoints.resultY;
 
-        var sortedSiblings = (0, _sortBy3.default)(siblings, function (sibling) {
+        var sortedSiblings = (0, _sortBy2.default)(siblings, function (sibling) {
           var siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, sibling.layout);
           var siblingReferenceX = siblingReferencePoints.resultX;
           var siblingReferenceY = siblingReferencePoints.resultY;
@@ -208,7 +208,7 @@ var SpatialNavigation = function () {
           return Math.sqrt(Math.pow(siblingReferenceX - currentReferenceX, 2) + Math.pow(siblingReferenceY - currentReferenceY, 2));
         });
 
-        var nextComponent = (0, _first4.default)(sortedSiblings);
+        var nextComponent = (0, _first3.default)(sortedSiblings);
 
         if (nextComponent) {
           this.setFocus && this.setFocus(nextComponent.focusKey);
@@ -239,7 +239,7 @@ var SpatialNavigation = function () {
         return targetFocusKey;
       }
 
-      var children = (0, _filter3.default)(this.focusableComponents, function (component) {
+      var children = (0, _filter2.default)(this.focusableComponents, function (component) {
         return component.parentFocusKey === targetFocusKey;
       });
 
@@ -259,15 +259,15 @@ var SpatialNavigation = function () {
         /**
          * If there is no lastFocusedChild, trying to focus something by coordinates
          */
-        var sortedXChildren = (0, _sortBy3.default)(children, function (child) {
+        var sortedXChildren = (0, _sortBy2.default)(children, function (child) {
           return child.layout.left;
         });
-        var sortedYChildren = (0, _sortBy3.default)(sortedXChildren, function (child) {
+        var sortedYChildren = (0, _sortBy2.default)(sortedXChildren, function (child) {
           return child.layout.top;
         });
 
-        var _first2 = (0, _first4.default)(sortedYChildren),
-            childKey = _first2.focusKey;
+        var _first = (0, _first3.default)(sortedYChildren),
+            childKey = _first.focusKey;
 
         /**
          * If the target node is propagating focus, try to target first child

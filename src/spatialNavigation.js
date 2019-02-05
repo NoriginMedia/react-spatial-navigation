@@ -1,4 +1,7 @@
-import {filter, first, sortBy, findKey} from 'lodash';
+import filter from 'lodash/filter';
+import first from 'lodash/first';
+import sortBy from 'lodash/sortBy';
+import findKey from 'lodash/findKey';
 
 export const ROOT_FOCUS_KEY = 'SN:ROOT';
 

@@ -4,29 +4,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _pure2 = require('recompose/pure');
-
-var _pure3 = _interopRequireDefault(_pure2);
-
-var _withContext2 = require('recompose/withContext');
-
-var _withContext3 = _interopRequireDefault(_withContext2);
-
-var _withStateHandlers2 = require('recompose/withStateHandlers');
-
-var _withStateHandlers3 = _interopRequireDefault(_withStateHandlers2);
-
-var _lifecycle2 = require('recompose/lifecycle');
-
-var _lifecycle3 = _interopRequireDefault(_lifecycle2);
-
-var _compose2 = require('recompose/compose');
-
-var _compose3 = _interopRequireDefault(_compose2);
-
 var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _compose = require('recompose/compose');
+
+var _compose2 = _interopRequireDefault(_compose);
+
+var _lifecycle = require('recompose/lifecycle');
+
+var _lifecycle2 = _interopRequireDefault(_lifecycle);
+
+var _withContext = require('recompose/withContext');
+
+var _withContext2 = _interopRequireDefault(_withContext);
+
+var _withStateHandlers = require('recompose/withStateHandlers');
+
+var _withStateHandlers2 = _interopRequireDefault(_withStateHandlers);
+
+var _pure = require('recompose/pure');
+
+var _pure2 = _interopRequireDefault(_pure);
 
 var _spatialNavigation = require('./spatialNavigation');
 
@@ -45,7 +45,7 @@ var withSpatialNavigation = function withSpatialNavigation() {
       _spatialNavigation2.default.setKeyMap(keyMap);
     }
 
-    return (0, _compose3.default)((0, _withStateHandlers3.default)({
+    return (0, _compose2.default)((0, _withStateHandlers2.default)({
       currentFocusKey: _spatialNavigation2.default.getCurrentFocusedKey(),
 
       /**
@@ -89,20 +89,20 @@ var withSpatialNavigation = function withSpatialNavigation() {
     /**
      * Propagate parentFocusKey as ROOT
      */
-    (0, _withContext3.default)({
+    (0, _withContext2.default)({
       parentFocusKey: _propTypes2.default.string
     }, function () {
       return {
         parentFocusKey: _spatialNavigation.ROOT_FOCUS_KEY
       };
-    }), (0, _lifecycle3.default)({
+    }), (0, _lifecycle2.default)({
       componentDidMount: function componentDidMount() {
         _spatialNavigation2.default.init(this.props.setFocus);
       },
       componentWillUnmount: function componentWillUnmount() {
         _spatialNavigation2.default.destroy();
       }
-    }), _pure3.default)(BaseComponent);
+    }), _pure2.default)(BaseComponent);
   };
 };
 

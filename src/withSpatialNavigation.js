@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
-import {
-  compose,
-  lifecycle,
-  withStateHandlers,
-  withContext,
-  pure
-} from 'recompose';
+import compose from 'recompose/compose';
+import lifecycle from 'recompose/lifecycle';
+import withContext from 'recompose/withContext';
+import withStateHandlers from 'recompose/withStateHandlers';
+import pure from 'recompose/pure';
 import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
 import {withSpatialNavigationContext} from './withSpatialNavigationContext';
 

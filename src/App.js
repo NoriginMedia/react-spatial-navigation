@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {shuffle} from 'lodash';
+import shuffle from 'lodash/shuffle';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import withFocusable from './withFocusable';
 import withSpatialNavigation from './withSpatialNavigation';
