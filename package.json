@@ -34,5 +34,12 @@
   ],
   "alias": {
     "react-native": "react-native-web"
+  },
+  "babel": {
+    "presets": ["env", "react"],
+    "plugins": [
+      ["lodash", { "id": ["lodash", "recompose"] }],
+      "transform-object-rest-spread"
+    ]
   }
 }
