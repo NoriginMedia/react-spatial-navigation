@@ -196,7 +196,7 @@ class SpatialNavigation {
        */
       const {lastFocusedChildKey} = targetComponent;
 
-      if (lastFocusedChildKey && this.focusableComponents[lastFocusedChildKey]) {
+      if (lastFocusedChildKey && this.isFocusableComponent(lastFocusedChildKey)) {
         this.onIntermediateNodeBecameFocused(targetFocusKey);
 
         return this.getNextFocusKey(lastFocusedChildKey);
@@ -276,7 +276,7 @@ class SpatialNavigation {
   }
 
   updateLayout(focusKey, layout) {
-    if (this.focusableComponents[focusKey]) {
+    if (this.isFocusableComponent(focusKey)) {
       this.focusableComponents[focusKey].layout = layout;
     }
   }
@@ -336,11 +336,15 @@ class SpatialNavigation {
   }
 
   isPropagateFocus(focusKey) {
-    return this.focusableComponents[focusKey] && this.focusableComponents[focusKey].propagateFocus;
+    return this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].propagateFocus;
+  }
+
+  isFocusableComponent(focusKey) {
+    return !!this.focusableComponents[focusKey];
   }
 
   onIntermediateNodeBecameFocused(focusKey) {
-    this.focusableComponents[focusKey] &&
+    this.isFocusableComponent(focusKey) &&
       this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
   }
 }
