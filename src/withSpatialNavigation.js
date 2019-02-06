@@ -18,12 +18,14 @@ const withSpatialNavigation = ({keyMap} = {}) => (BaseComponent) => {
 
       /**
        * This collection contains focus keys of the elements that are having a child focused
-       * Might be handy for styling of certain parent components if their child is focused
+       * Might be handy for styling of certain parent components if their child is focused.
        */
       parentsHavingFocusedChild: []
     }, {
       setFocus: ({currentFocusKey, parentsHavingFocusedChild}) => (focusKey, overwriteFocusKey) => {
-        const targetFocusKey = overwriteFocusKey || focusKey;
+        // if there exists an overriding focusKey then use it, but only if it exists in the SP service.
+        const targetFocusKey = overwriteFocusKey && SpatialNavigation.isFocusableComponent(overwriteFocusKey) ?
+          overwriteFocusKey : focusKey;
 
         if (currentFocusKey !== targetFocusKey) {
           const newFocusKey = SpatialNavigation.getNextFocusKey(targetFocusKey);

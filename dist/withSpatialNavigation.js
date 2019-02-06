@@ -50,7 +50,7 @@ var withSpatialNavigation = function withSpatialNavigation() {
 
       /**
        * This collection contains focus keys of the elements that are having a child focused
-       * Might be handy for styling of certain parent components if their child is focused
+       * Might be handy for styling of certain parent components if their child is focused.
        */
       parentsHavingFocusedChild: []
     }, {
@@ -58,7 +58,8 @@ var withSpatialNavigation = function withSpatialNavigation() {
         var currentFocusKey = _ref2.currentFocusKey,
             parentsHavingFocusedChild = _ref2.parentsHavingFocusedChild;
         return function (focusKey, overwriteFocusKey) {
-          var targetFocusKey = overwriteFocusKey || focusKey;
+          // if there exists an overriding focusKey then use it, but only if it exists in the SP service.
+          var targetFocusKey = overwriteFocusKey && _spatialNavigation2.default.isFocusableComponent(overwriteFocusKey) ? overwriteFocusKey : focusKey;
 
           if (currentFocusKey !== targetFocusKey) {
             var newFocusKey = _spatialNavigation2.default.getNextFocusKey(targetFocusKey);
