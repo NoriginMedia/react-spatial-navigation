@@ -36,10 +36,6 @@ var _lifecycle = require('recompose/lifecycle');
 
 var _lifecycle2 = _interopRequireDefault(_lifecycle);
 
-var _setPropTypes = require('recompose/setPropTypes');
-
-var _setPropTypes2 = _interopRequireDefault(_setPropTypes);
-
 var _withHandlers = require('recompose/withHandlers');
 
 var _withHandlers2 = _interopRequireDefault(_withHandlers);
@@ -78,7 +74,9 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var withFocusable = function withFocusable() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       _ref$propagateFocus = _ref.propagateFocus,
-      configPropagateFocus = _ref$propagateFocus === undefined ? false : _ref$propagateFocus;
+      configPropagateFocus = _ref$propagateFocus === undefined ? false : _ref$propagateFocus,
+      _ref$forgetLasFocused = _ref.forgetLasFocusedChild,
+      configForgetLastFocusedChild = _ref$forgetLasFocused === undefined ? false : _ref$forgetLasFocused;
 
   return (0, _compose2.default)(_withSpatialNavigationContext.getSpatialNavigationContext, (0, _getContext2.default)({
     /**
@@ -153,6 +151,7 @@ var withFocusable = function withFocusable() {
           focusKey = _props.realFocusKey,
           propagateFocus = _props.propagateFocus,
           parentFocusKey = _props.parentFocusKey,
+          forgetLastFocusedChild = _props.forgetLastFocusedChild,
           onEnterPressHandler = _props.onEnterPressHandler,
           onBecameFocusedHandler = _props.onBecameFocusedHandler;
 
@@ -162,7 +161,8 @@ var withFocusable = function withFocusable() {
         parentFocusKey: parentFocusKey,
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
-        propagateFocus: !!(configPropagateFocus || propagateFocus)
+        propagateFocus: configPropagateFocus || propagateFocus,
+        configForgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild
       });
 
       this.updateLayout();
@@ -188,12 +188,22 @@ var withFocusable = function withFocusable() {
         focusKey: focusKey
       });
     }
-  }), _pure2.default, (0, _setPropTypes2.default)({
-    focusKey: _propTypes2.default.string,
-    propagateFocus: _propTypes2.default.bool,
-    onEnterPress: _propTypes2.default.func,
-    onBecameFocused: _propTypes2.default.func
-  }));
+  }), _pure2.default
+
+  /*
+    Removed as causing TypeError for extensible changes
+    TODO: Find a way to get propTypes in here.
+   */
+  /*
+  setPropTypes({
+    focusKey: PropTypes.string,
+    propagateFocus: PropTypes.bool,
+    forgetLastFocusedChild: PropTypes.bool,
+    onEnterPress: PropTypes.func,
+    onBecameFocused: PropTypes.func
+  })
+  */
+  );
 };
 
 exports.default = withFocusable;

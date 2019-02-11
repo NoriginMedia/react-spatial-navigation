@@ -7,7 +7,6 @@ import noop from 'lodash/noop';
 import compose from 'recompose/compose';
 import mapProps from 'recompose/mapProps';
 import lifecycle from 'recompose/lifecycle';
-import setPropTypes from 'recompose/setPropTypes';
 import withHandlers from 'recompose/withHandlers';
 import withContext from 'recompose/withContext';
 import withStateHandlers from 'recompose/withStateHandlers';
@@ -17,7 +16,8 @@ import SpatialNavigation from './spatialNavigation';
 import {getSpatialNavigationContext} from './withSpatialNavigationContext';
 import measureLayout from './measureLayout';
 
-const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => compose(
+const withFocusable = ({propagateFocus: configPropagateFocus = false,
+  forgetLasFocusedChild: configForgetLastFocusedChild = false} = {}) => compose(
   getSpatialNavigationContext,
   getContext({
     /**
@@ -81,14 +81,15 @@ const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => c
 
     componentDidMount() {
       const {realFocusKey: focusKey, propagateFocus, parentFocusKey,
-        onEnterPressHandler, onBecameFocusedHandler} = this.props;
+        forgetLastFocusedChild, onEnterPressHandler, onBecameFocusedHandler} = this.props;
 
       SpatialNavigation.addFocusable({
         focusKey,
         parentFocusKey,
         onEnterPressHandler,
         onBecameFocusedHandler,
-        propagateFocus: !!(configPropagateFocus || propagateFocus)
+        propagateFocus: (configPropagateFocus || propagateFocus),
+        configForgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild)
       });
 
       this.updateLayout();
@@ -110,13 +111,21 @@ const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => c
       });
     }
   }),
-  pure,
+  pure
+
+  /*
+    Removed as causing TypeError for extensible changes
+    TODO: Find a way to get propTypes in here.
+   */
+  /*
   setPropTypes({
     focusKey: PropTypes.string,
     propagateFocus: PropTypes.bool,
+    forgetLastFocusedChild: PropTypes.bool,
     onEnterPress: PropTypes.func,
     onBecameFocused: PropTypes.func
   })
+  */
 );
 
 export default withFocusable;

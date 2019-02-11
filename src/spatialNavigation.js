@@ -196,7 +196,8 @@ class SpatialNavigation {
        */
       const {lastFocusedChildKey} = targetComponent;
 
-      if (lastFocusedChildKey && this.isFocusableComponent(lastFocusedChildKey)) {
+      if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild &&
+        this.isFocusableComponent(lastFocusedChildKey)) {
         this.onIntermediateNodeBecameFocused(targetFocusKey);
 
         return this.getNextFocusKey(lastFocusedChildKey);
@@ -230,13 +231,15 @@ class SpatialNavigation {
     return targetFocusKey;
   }
 
-  addFocusable({focusKey, parentFocusKey, onEnterPressHandler, onBecameFocusedHandler, propagateFocus}) {
+  addFocusable({focusKey, parentFocusKey, onEnterPressHandler, onBecameFocusedHandler, forgetLastFocusedChild,
+    propagateFocus}) {
     this.focusableComponents[focusKey] = {
       focusKey,
       parentFocusKey,
       onEnterPressHandler,
       onBecameFocusedHandler,
       propagateFocus,
+      forgetLastFocusedChild,
       lastFocusedChildKey: null,
       layout: {
         x: 0,
