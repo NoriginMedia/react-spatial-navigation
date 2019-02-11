@@ -7,7 +7,7 @@ import pure from 'recompose/pure';
 import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
 import {withSpatialNavigationContext} from './withSpatialNavigationContext';
 
-const withSpatialNavigation = ({keyMap} = {}) => (BaseComponent) => {
+const withSpatialNavigation = ({keyMap} = {}) => {
   if (keyMap) {
     SpatialNavigation.setKeyMap(keyMap);
   }
@@ -69,7 +69,7 @@ const withSpatialNavigation = ({keyMap} = {}) => (BaseComponent) => {
       }
     }),
     pure
-  )(BaseComponent);
+  );
 };
 
 export default withSpatialNavigation;

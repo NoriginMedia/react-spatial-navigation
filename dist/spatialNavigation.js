@@ -250,7 +250,7 @@ var SpatialNavigation = function () {
         var lastFocusedChildKey = targetComponent.lastFocusedChildKey;
 
 
-        if (lastFocusedChildKey && this.isFocusableComponent(lastFocusedChildKey)) {
+        if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isFocusableComponent(lastFocusedChildKey)) {
           this.onIntermediateNodeBecameFocused(targetFocusKey);
 
           return this.getNextFocusKey(lastFocusedChildKey);
@@ -298,6 +298,7 @@ var SpatialNavigation = function () {
           parentFocusKey = _ref.parentFocusKey,
           onEnterPressHandler = _ref.onEnterPressHandler,
           onBecameFocusedHandler = _ref.onBecameFocusedHandler,
+          forgetLastFocusedChild = _ref.forgetLastFocusedChild,
           propagateFocus = _ref.propagateFocus;
 
       this.focusableComponents[focusKey] = {
@@ -306,6 +307,7 @@ var SpatialNavigation = function () {
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
         propagateFocus: propagateFocus,
+        forgetLastFocusedChild: forgetLastFocusedChild,
         lastFocusedChildKey: null,
         layout: {
           x: 0,
