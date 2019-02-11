@@ -40,71 +40,69 @@ var withSpatialNavigation = function withSpatialNavigation() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       keyMap = _ref.keyMap;
 
-  return function (BaseComponent) {
-    if (keyMap) {
-      _spatialNavigation2.default.setKeyMap(keyMap);
-    }
+  if (keyMap) {
+    _spatialNavigation2.default.setKeyMap(keyMap);
+  }
 
-    return (0, _compose2.default)((0, _withStateHandlers2.default)({
-      currentFocusKey: _spatialNavigation2.default.getCurrentFocusedKey(),
+  return (0, _compose2.default)((0, _withStateHandlers2.default)({
+    currentFocusKey: _spatialNavigation2.default.getCurrentFocusedKey(),
 
-      /**
-       * This collection contains focus keys of the elements that are having a child focused
-       * Might be handy for styling of certain parent components if their child is focused.
-       */
-      parentsHavingFocusedChild: []
-    }, {
-      setFocus: function setFocus(_ref2) {
-        var currentFocusKey = _ref2.currentFocusKey,
-            parentsHavingFocusedChild = _ref2.parentsHavingFocusedChild;
-        return function (focusKey, overwriteFocusKey) {
-          // if there exists an overriding focusKey then use it, but only if it exists in the SP service.
-          var targetFocusKey = overwriteFocusKey && _spatialNavigation2.default.isFocusableComponent(overwriteFocusKey) ? overwriteFocusKey : focusKey;
+    /**
+     * This collection contains focus keys of the elements that are having a child focused
+     * Might be handy for styling of certain parent components if their child is focused.
+     */
+    parentsHavingFocusedChild: []
+  }, {
+    setFocus: function setFocus(_ref2) {
+      var currentFocusKey = _ref2.currentFocusKey,
+          parentsHavingFocusedChild = _ref2.parentsHavingFocusedChild;
+      return function (focusKey, overwriteFocusKey) {
+        // if there exists an overriding focusKey then use it, but only if it exists in the SP service.
+        var targetFocusKey = overwriteFocusKey && _spatialNavigation2.default.isFocusableComponent(overwriteFocusKey) ? overwriteFocusKey : focusKey;
 
-          if (currentFocusKey !== targetFocusKey) {
-            var newFocusKey = _spatialNavigation2.default.getNextFocusKey(targetFocusKey);
+        if (currentFocusKey !== targetFocusKey) {
+          var newFocusKey = _spatialNavigation2.default.getNextFocusKey(targetFocusKey);
 
-            _spatialNavigation2.default.setCurrentFocusedKey(newFocusKey);
+          _spatialNavigation2.default.setCurrentFocusedKey(newFocusKey);
 
-            var newParentsHavingFocusedChild = _spatialNavigation2.default.getAllParentsFocusKeys(newFocusKey);
-
-            return {
-              currentFocusKey: newFocusKey,
-              parentsHavingFocusedChild: newParentsHavingFocusedChild
-            };
-          }
+          var newParentsHavingFocusedChild = _spatialNavigation2.default.getAllParentsFocusKeys(newFocusKey);
 
           return {
-            currentFocusKey: currentFocusKey,
-            parentsHavingFocusedChild: parentsHavingFocusedChild
+            currentFocusKey: newFocusKey,
+            parentsHavingFocusedChild: newParentsHavingFocusedChild
           };
+        }
+
+        return {
+          currentFocusKey: currentFocusKey,
+          parentsHavingFocusedChild: parentsHavingFocusedChild
         };
-      }
-    }),
-
-    /**
-     * Propagate these props to children as a context
-     */
-    _withSpatialNavigationContext.withSpatialNavigationContext,
-
-    /**
-     * Propagate parentFocusKey as ROOT
-     */
-    (0, _withContext2.default)({
-      parentFocusKey: _propTypes2.default.string
-    }, function () {
-      return {
-        parentFocusKey: _spatialNavigation.ROOT_FOCUS_KEY
       };
-    }), (0, _lifecycle2.default)({
-      componentDidMount: function componentDidMount() {
-        _spatialNavigation2.default.init(this.props.setFocus);
-      },
-      componentWillUnmount: function componentWillUnmount() {
-        _spatialNavigation2.default.destroy();
-      }
-    }), _pure2.default)(BaseComponent);
-  };
+    }
+  }),
+
+  /**
+   * Propagate these props to children as a context
+   */
+  _withSpatialNavigationContext.withSpatialNavigationContext,
+
+  /**
+   * Propagate parentFocusKey as ROOT
+   */
+  (0, _withContext2.default)({
+    parentFocusKey: _propTypes2.default.string
+  }, function () {
+    return {
+      parentFocusKey: _spatialNavigation.ROOT_FOCUS_KEY
+    };
+  }), (0, _lifecycle2.default)({
+    componentDidMount: function componentDidMount() {
+      _spatialNavigation2.default.init(this.props.setFocus);
+    },
+    componentWillUnmount: function componentWillUnmount() {
+      _spatialNavigation2.default.destroy();
+    }
+  }), _pure2.default);
 };
 
 exports.default = withSpatialNavigation;

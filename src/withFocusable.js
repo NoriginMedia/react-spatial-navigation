@@ -17,7 +17,7 @@ import SpatialNavigation from './spatialNavigation';
 import {getSpatialNavigationContext} from './withSpatialNavigationContext';
 import measureLayout from './measureLayout';
 
-const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => (BaseComponent) => compose(
+const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => compose(
   getSpatialNavigationContext,
   getContext({
     /**
@@ -117,6 +117,6 @@ const withFocusable = ({propagateFocus: configPropagateFocus = false} = {}) => (
     onEnterPress: PropTypes.func,
     onBecameFocused: PropTypes.func
   })
-)(BaseComponent);
+);
 
 export default withFocusable;
