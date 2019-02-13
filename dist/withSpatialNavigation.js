@@ -24,6 +24,10 @@ var _withStateHandlers = require('recompose/withStateHandlers');
 
 var _withStateHandlers2 = _interopRequireDefault(_withStateHandlers);
 
+var _withHandlers = require('recompose/withHandlers');
+
+var _withHandlers2 = _interopRequireDefault(_withHandlers);
+
 var _pure = require('recompose/pure');
 
 var _pure2 = _interopRequireDefault(_pure);
@@ -78,6 +82,13 @@ var withSpatialNavigation = function withSpatialNavigation() {
           parentsHavingFocusedChild: parentsHavingFocusedChild
         };
       };
+    }
+  }), (0, _withHandlers2.default)({
+    pauseSpatialNavigation: function pauseSpatialNavigation() {
+      return _spatialNavigation2.default.pause;
+    },
+    resumeSpatialNavigation: function resumeSpatialNavigation() {
+      return _spatialNavigation2.default.resume;
     }
   }),
 

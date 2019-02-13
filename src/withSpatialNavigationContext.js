@@ -10,13 +10,17 @@ export const withSpatialNavigationContext = (BaseComponent) => {
       setFocus,
       currentFocusKey,
       parentsHavingFocusedChild,
+      pauseSpatialNavigation,
+      resumeSpatialNavigation,
       ...restProps
     } = ownerProps;
 
     const contextData = {
       setFocus,
       currentFocusKey,
-      parentsHavingFocusedChild
+      parentsHavingFocusedChild,
+      pauseSpatialNavigation,
+      resumeSpatialNavigation
     };
 
     return (<SpatialNavigationContext.Provider value={contextData}>

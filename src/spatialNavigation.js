@@ -64,7 +64,15 @@ class SpatialNavigation {
     this.tvEventListener = null;
     this.keyMap = DEFAULT_KEY_MAP;
 
+    /**
+     * Flag used to block key events from this service
+     * @type {boolean}
+     */
+    this.paused = true;
+
     this.onKeyEvent = this.onKeyEvent.bind(this);
+    this.pause = this.pause.bind(this);
+    this.resume = this.resume.bind(this);
   }
 
   init(setFocus) {
@@ -83,6 +91,10 @@ class SpatialNavigation {
   bindEventHandlers() {
     if (window) {
       this.tvEventListener = (event) => {
+        if (this.paused === true) {
+          return;
+        }
+
         const eventType = findKey(this.getKeyMap(), (code) => event.keyCode === code);
 
         if (!eventType) {
@@ -349,6 +361,14 @@ class SpatialNavigation {
   onIntermediateNodeBecameFocused(focusKey) {
     this.isFocusableComponent(focusKey) &&
       this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
+  }
+
+  pause() {
+    this.paused = true;
+  }
+
+  resume() {
+    this.paused = false;
   }
 }
 

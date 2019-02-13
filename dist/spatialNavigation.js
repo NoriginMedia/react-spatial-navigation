@@ -94,7 +94,15 @@ var SpatialNavigation = function () {
     this.tvEventListener = null;
     this.keyMap = DEFAULT_KEY_MAP;
 
+    /**
+     * Flag used to block key events from this service
+     * @type {boolean}
+     */
+    this.paused = true;
+
     this.onKeyEvent = this.onKeyEvent.bind(this);
+    this.pause = this.pause.bind(this);
+    this.resume = this.resume.bind(this);
   }
 
   _createClass(SpatialNavigation, [{
@@ -119,6 +127,10 @@ var SpatialNavigation = function () {
 
       if (window) {
         this.tvEventListener = function (event) {
+          if (_this.paused === true) {
+            return;
+          }
+
           var eventType = (0, _findKey2.default)(_this.getKeyMap(), function (code) {
             return event.keyCode === code;
           });
@@ -429,6 +441,16 @@ var SpatialNavigation = function () {
     key: 'onIntermediateNodeBecameFocused',
     value: function onIntermediateNodeBecameFocused(focusKey) {
       this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
+    }
+  }, {
+    key: 'pause',
+    value: function pause() {
+      this.paused = true;
+    }
+  }, {
+    key: 'resume',
+    value: function resume() {
+      this.paused = false;
     }
   }]);
 

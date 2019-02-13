@@ -30,12 +30,16 @@ var withSpatialNavigationContext = function withSpatialNavigationContext(BaseCom
     var setFocus = ownerProps.setFocus,
         currentFocusKey = ownerProps.currentFocusKey,
         parentsHavingFocusedChild = ownerProps.parentsHavingFocusedChild,
-        restProps = _objectWithoutProperties(ownerProps, ['setFocus', 'currentFocusKey', 'parentsHavingFocusedChild']);
+        pauseSpatialNavigation = ownerProps.pauseSpatialNavigation,
+        resumeSpatialNavigation = ownerProps.resumeSpatialNavigation,
+        restProps = _objectWithoutProperties(ownerProps, ['setFocus', 'currentFocusKey', 'parentsHavingFocusedChild', 'pauseSpatialNavigation', 'resumeSpatialNavigation']);
 
     var contextData = {
       setFocus: setFocus,
       currentFocusKey: currentFocusKey,
-      parentsHavingFocusedChild: parentsHavingFocusedChild
+      parentsHavingFocusedChild: parentsHavingFocusedChild,
+      pauseSpatialNavigation: pauseSpatialNavigation,
+      resumeSpatialNavigation: resumeSpatialNavigation
     };
 
     return _react2.default.createElement(

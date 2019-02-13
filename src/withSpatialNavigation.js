@@ -3,6 +3,7 @@ import compose from 'recompose/compose';
 import lifecycle from 'recompose/lifecycle';
 import withContext from 'recompose/withContext';
 import withStateHandlers from 'recompose/withStateHandlers';
+import withHandlers from 'recompose/withHandlers';
 import pure from 'recompose/pure';
 import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
 import {withSpatialNavigationContext} from './withSpatialNavigationContext';
@@ -45,6 +46,10 @@ const withSpatialNavigation = ({keyMap} = {}) => {
           parentsHavingFocusedChild
         };
       }
+    }),
+    withHandlers({
+      pauseSpatialNavigation: () => SpatialNavigation.pause,
+      resumeSpatialNavigation: () => SpatialNavigation.resume
     }),
 
     /**
