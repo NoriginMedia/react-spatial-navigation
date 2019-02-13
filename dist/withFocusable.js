@@ -75,8 +75,8 @@ var withFocusable = function withFocusable() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       _ref$propagateFocus = _ref.propagateFocus,
       configPropagateFocus = _ref$propagateFocus === undefined ? false : _ref$propagateFocus,
-      _ref$forgetLasFocused = _ref.forgetLasFocusedChild,
-      configForgetLastFocusedChild = _ref$forgetLasFocused === undefined ? false : _ref$forgetLasFocused;
+      _ref$forgetLastFocuse = _ref.forgetLastFocusedChild,
+      configForgetLastFocusedChild = _ref$forgetLastFocuse === undefined ? false : _ref$forgetLastFocuse;
 
   return (0, _compose2.default)(_withSpatialNavigationContext.getSpatialNavigationContext, (0, _getContext2.default)({
     /**
@@ -162,7 +162,7 @@ var withFocusable = function withFocusable() {
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
         propagateFocus: configPropagateFocus || propagateFocus,
-        configForgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild
+        forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild
       });
 
       this.updateLayout();

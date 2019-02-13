@@ -17,7 +17,7 @@ import {getSpatialNavigationContext} from './withSpatialNavigationContext';
 import measureLayout from './measureLayout';
 
 const withFocusable = ({propagateFocus: configPropagateFocus = false,
-  forgetLasFocusedChild: configForgetLastFocusedChild = false} = {}) => compose(
+  forgetLastFocusedChild: configForgetLastFocusedChild = false} = {}) => compose(
   getSpatialNavigationContext,
   getContext({
     /**
@@ -89,7 +89,7 @@ const withFocusable = ({propagateFocus: configPropagateFocus = false,
         onEnterPressHandler,
         onBecameFocusedHandler,
         propagateFocus: (configPropagateFocus || propagateFocus),
-        configForgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild)
+        forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild)
       });
 
       this.updateLayout();
