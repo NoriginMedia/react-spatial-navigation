@@ -68,7 +68,7 @@ class SpatialNavigation {
      * Flag used to block key events from this service
      * @type {boolean}
      */
-    this.paused = true;
+    this.paused = false;
 
     this.onKeyEvent = this.onKeyEvent.bind(this);
     this.pause = this.pause.bind(this);
