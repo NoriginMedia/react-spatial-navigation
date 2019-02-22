@@ -196,13 +196,15 @@ class SpatialNavigation {
     /**
      * Security check, if component doesn't exist, stay on the same focusKey
      */
-    if (!targetFocusKey) {
+    if (!targetComponent) {
       return targetFocusKey;
     }
 
     const children = filter(this.focusableComponents, (component) => component.parentFocusKey === targetFocusKey);
 
-    if (children.length > 0) {
+    if (children.length > 0 && this.isPropagateFocus(targetFocusKey)) {
+      this.onIntermediateNodeBecameFocused(targetFocusKey);
+
       /**
        * First of all trying to focus last focused child
        */
@@ -210,8 +212,6 @@ class SpatialNavigation {
 
       if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild &&
         this.isFocusableComponent(lastFocusedChildKey)) {
-        this.onIntermediateNodeBecameFocused(targetFocusKey);
-
         return this.getNextFocusKey(lastFocusedChildKey);
       }
 
@@ -222,19 +222,7 @@ class SpatialNavigation {
       const sortedYChildren = sortBy(sortedXChildren, (child) => child.layout.top);
       const {focusKey: childKey} = first(sortedYChildren);
 
-      /**
-       * If the target node is propagating focus, try to target first child
-       */
-      if (this.isPropagateFocus(targetFocusKey)) {
-        this.onIntermediateNodeBecameFocused(targetFocusKey);
-
-        return this.getNextFocusKey(childKey);
-      }
-
-      /**
-       * Otherwise focus first child
-       */
-      return childKey;
+      return this.getNextFocusKey(childKey);
     }
 
     /**
