@@ -20,15 +20,19 @@ var _shuffle = require('lodash/shuffle');
 
 var _shuffle2 = _interopRequireDefault(_shuffle);
 
+var _whyDidYouRender = require('@welldone-software/why-did-you-render');
+
+var _whyDidYouRender2 = _interopRequireDefault(_whyDidYouRender);
+
 var _reactNative = require('react-native');
 
 var _withFocusable = require('./withFocusable');
 
 var _withFocusable2 = _interopRequireDefault(_withFocusable);
 
-var _withSpatialNavigation = require('./withSpatialNavigation');
+var _spatialNavigation = require('./spatialNavigation');
 
-var _withSpatialNavigation2 = _interopRequireDefault(_withSpatialNavigation);
+var _spatialNavigation2 = _interopRequireDefault(_spatialNavigation);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38,6 +42,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-disable react/no-multi-comp */
 
+
+_spatialNavigation2.default.init();
+
+// SpatialNavigation.setKeyMap(keyMap); -> Custom key map
 
 var styles = _reactNative.StyleSheet.create({
   wrapper: {
@@ -214,7 +222,9 @@ Menu.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-var MenuFocusable = (0, _withFocusable2.default)()(Menu);
+var MenuFocusable = (0, _withFocusable2.default)({
+  trackChildren: true
+})(Menu);
 
 var Content = function (_React$PureComponent3) {
   _inherits(Content, _React$PureComponent3);
@@ -327,7 +337,7 @@ var Program = function (_React$PureComponent5) {
 
       var _props = this.props,
           color = _props.color,
-          onProgramPress = _props.onProgramPress,
+          onPress = _props.onPress,
           focused = _props.focused,
           title = _props.title;
 
@@ -339,7 +349,7 @@ var Program = function (_React$PureComponent5) {
       return _react2.default.createElement(
         _reactNative.TouchableOpacity,
         {
-          onPress: onProgramPress,
+          onPress: onPress,
           style: styles.programWrapper
         },
         _react2.default.createElement(_reactNative.View, { style: [style, styles.program, focused ? styles.focusedBorder : null] }),
@@ -358,7 +368,7 @@ var Program = function (_React$PureComponent5) {
 Program.propTypes = {
   title: _propTypes2.default.string.isRequired,
   color: _propTypes2.default.string.isRequired,
-  onProgramPress: _propTypes2.default.func.isRequired,
+  onPress: _propTypes2.default.func.isRequired,
   focused: _propTypes2.default.bool.isRequired
 
   // realFocusKey: PropTypes.string.isRequired
@@ -537,14 +547,14 @@ var Spatial = function (_React$PureComponent8) {
   return Spatial;
 }(_react2.default.PureComponent);
 
-var SpatialNavigable = (0, _withSpatialNavigation2.default)()(Spatial);
-
 var App = function App() {
   return _react2.default.createElement(
     _reactNative.View,
     null,
-    _react2.default.createElement(SpatialNavigable, null)
+    _react2.default.createElement(Spatial, null)
   );
 };
+
+(0, _whyDidYouRender2.default)(_react2.default);
 
 exports.default = App;

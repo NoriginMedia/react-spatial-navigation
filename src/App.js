@@ -2,9 +2,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shuffle from 'lodash/shuffle';
+import whyDidRender from '@welldone-software/why-did-you-render';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import withFocusable from './withFocusable';
-import withSpatialNavigation from './withSpatialNavigation';
+import SpatialNavigation from './spatialNavigation';
+
+SpatialNavigation.init();
+
+// SpatialNavigation.setKeyMap(keyMap); -> Custom key map
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -151,7 +156,9 @@ Menu.propTypes = {
   // realFocusKey: PropTypes.string.isRequired
 };
 
-const MenuFocusable = withFocusable()(Menu);
+const MenuFocusable = withFocusable({
+  trackChildren: true
+})(Menu);
 
 class Content extends React.PureComponent {
   constructor(props) {
@@ -221,14 +228,14 @@ class Program extends React.PureComponent {
   render() {
     // console.log('Program rendered: ', this.props.realFocusKey);
 
-    const {color, onProgramPress, focused, title} = this.props;
+    const {color, onPress, focused, title} = this.props;
 
     const style = {
       backgroundColor: color
     };
 
     return (<TouchableOpacity
-      onPress={onProgramPress}
+      onPress={onPress}
       style={styles.programWrapper}
     >
       <View style={[style, styles.program, focused ? styles.focusedBorder : null]} />
@@ -242,7 +249,7 @@ class Program extends React.PureComponent {
 Program.propTypes = {
   title: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  onProgramPress: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired,
   focused: PropTypes.bool.isRequired
 
   // realFocusKey: PropTypes.string.isRequired
@@ -365,10 +372,10 @@ class Spatial extends React.PureComponent {
   }
 }
 
-const SpatialNavigable = withSpatialNavigation()(Spatial);
-
 const App = () => (<View>
-  <SpatialNavigable />
+  <Spatial />
 </View>);
+
+whyDidRender(React);
 
 export default App;

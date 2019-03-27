@@ -1,7 +1,10 @@
 import withFocusable from './withFocusable';
-import withSpatialNavigation from './withSpatialNavigation';
+import SpatialNavigation from './spatialNavigation';
+
+const {init: initNavigation, setKeyMap} = SpatialNavigation;
 
 export {
   withFocusable,
-  withSpatialNavigation
+  initNavigation,
+  setKeyMap
 };

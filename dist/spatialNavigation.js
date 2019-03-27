@@ -27,6 +27,14 @@ var _findKey = require('lodash/findKey');
 
 var _findKey2 = _interopRequireDefault(_findKey);
 
+var _forEach = require('lodash/forEach');
+
+var _forEach2 = _interopRequireDefault(_forEach);
+
+var _difference = require('lodash/difference');
+
+var _difference2 = _interopRequireDefault(_difference);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -88,11 +96,23 @@ var SpatialNavigation = function () {
   function SpatialNavigation() {
     _classCallCheck(this, SpatialNavigation);
 
-    this.focusKey = null;
-    this.setFocus = null;
+    /**
+     * Storage for all focusable components
+     */
     this.focusableComponents = {};
-    this.tvEventListener = null;
-    this.keyMap = DEFAULT_KEY_MAP;
+
+    /**
+     * Storing current focused key
+     */
+    this.focusKey = null;
+
+    /**
+     * This collection contains focus keys of the elements that are having a child focused
+     * Might be handy for styling of certain parent components if their child is focused.
+     */
+    this.parentsHavingFocusedChild = [];
+
+    this.enabled = false;
 
     /**
      * Flag used to block key events from this service
@@ -100,23 +120,32 @@ var SpatialNavigation = function () {
      */
     this.paused = false;
 
+    this.keyEventListener = null;
+    this.keyMap = DEFAULT_KEY_MAP;
+
     this.onKeyEvent = this.onKeyEvent.bind(this);
     this.pause = this.pause.bind(this);
     this.resume = this.resume.bind(this);
+    this.setFocus = this.setFocus.bind(this);
+    this.init = this.init.bind(this);
+    this.setKeyMap = this.setKeyMap.bind(this);
   }
 
   _createClass(SpatialNavigation, [{
     key: 'init',
-    value: function init(setFocus) {
-      this.setFocus = setFocus;
-
+    value: function init() {
+      this.enabled = true;
       this.bindEventHandlers();
     }
   }, {
     key: 'destroy',
     value: function destroy() {
+      this.enabled = false;
       this.focusKey = null;
-      this.setFocus = null;
+      this.parentsHavingFocusedChild = [];
+      this.focusableComponents = {};
+      this.paused = false;
+      this.keyMap = DEFAULT_KEY_MAP;
 
       this.unbindEventHandlers();
     }
@@ -126,7 +155,7 @@ var SpatialNavigation = function () {
       var _this = this;
 
       if (window) {
-        this.tvEventListener = function (event) {
+        this.keyEventListener = function (event) {
           if (_this.paused === true) {
             return;
           }
@@ -152,15 +181,15 @@ var SpatialNavigation = function () {
           }
         };
 
-        window.addEventListener('keydown', this.tvEventListener);
+        window.addEventListener('keydown', this.keyEventListener);
       }
     }
   }, {
     key: 'unbindEventHandlers',
     value: function unbindEventHandlers() {
       if (window) {
-        window.removeEventListener('keydown', this.tvEventListener);
-        this.tvEventListener = null;
+        window.removeEventListener('keydown', this.keyEventListener);
+        this.keyEventListener = null;
       }
     }
   }, {
@@ -223,7 +252,7 @@ var SpatialNavigation = function () {
         var nextComponent = (0, _first3.default)(sortedSiblings);
 
         if (nextComponent) {
-          this.setFocus && this.setFocus(nextComponent.focusKey);
+          this.setFocus(nextComponent.focusKey);
         } else {
           var parentComponent = this.focusableComponents[parentFocusKey];
 
@@ -235,7 +264,8 @@ var SpatialNavigation = function () {
     }
 
     /**
-     * This function navigates to the target node OR goes down by the Tree if node has "propagateFocus"
+     * This function tries to determine the next component to Focus
+     * It's either the target node OR the one down by the Tree if node has "propagateFocus"
      * Based on "targetFocusKey"
      */
 
@@ -297,13 +327,17 @@ var SpatialNavigation = function () {
           onEnterPressHandler = _ref.onEnterPressHandler,
           onBecameFocusedHandler = _ref.onBecameFocusedHandler,
           forgetLastFocusedChild = _ref.forgetLastFocusedChild,
-          propagateFocus = _ref.propagateFocus;
+          propagateFocus = _ref.propagateFocus,
+          onUpdateFocus = _ref.onUpdateFocus,
+          onUpdateHasFocusedChild = _ref.onUpdateHasFocusedChild;
 
       this.focusableComponents[focusKey] = {
         focusKey: focusKey,
         parentFocusKey: parentFocusKey,
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
+        onUpdateFocus: onUpdateFocus,
+        onUpdateHasFocusedChild: onUpdateHasFocusedChild,
         propagateFocus: propagateFocus,
         forgetLastFocusedChild: forgetLastFocusedChild,
         lastFocusedChildKey: null,
@@ -316,6 +350,13 @@ var SpatialNavigation = function () {
           top: 0
         }
       };
+
+      /**
+       * If for some reason this component was already focused before it was added, call the update
+       */
+      if (focusKey === this.focusKey) {
+        this.setFocus(focusKey);
+      }
     }
   }, {
     key: 'removeFocusable',
@@ -342,7 +383,7 @@ var SpatialNavigation = function () {
          * If the component was also focused at this time, focus another one
          */
         if (isFocused) {
-          this.setFocus && this.setFocus(parentFocusKey);
+          this.setFocus(parentFocusKey);
         }
       }
     }
@@ -365,18 +406,25 @@ var SpatialNavigation = function () {
       return null;
     }
   }, {
-    key: 'getCurrentFocusedKey',
-    value: function getCurrentFocusedKey() {
-      return this.focusKey;
-    }
-  }, {
     key: 'setCurrentFocusedKey',
     value: function setCurrentFocusedKey(focusKey) {
+      if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
+        var oldComponent = this.focusableComponents[this.focusKey];
+
+        oldComponent.onUpdateFocus(false);
+      }
+
       this.focusKey = focusKey;
+
+      var newComponent = this.focusableComponents[this.focusKey];
+
+      newComponent && newComponent.onUpdateFocus(true);
     }
   }, {
-    key: 'getAllParentsFocusKeys',
-    value: function getAllParentsFocusKeys(focusKey) {
+    key: 'updateParentsWithFocusedChild',
+    value: function updateParentsWithFocusedChild(focusKey) {
+      var _this2 = this;
+
       var parents = [];
 
       var currentComponent = this.focusableComponents[focusKey];
@@ -401,7 +449,22 @@ var SpatialNavigation = function () {
         currentComponent = parentComponent;
       }
 
-      return parents;
+      var parentsToRemoveFlag = (0, _difference2.default)(this.parentsHavingFocusedChild, parents);
+      var parentsToAddFlag = (0, _difference2.default)(parents, this.parentsHavingFocusedChild);
+
+      (0, _forEach2.default)(parentsToRemoveFlag, function (parentFocusKey) {
+        var parentComponent = _this2.focusableComponents[parentFocusKey];
+
+        parentComponent && parentComponent.onUpdateHasFocusedChild(false);
+      });
+
+      (0, _forEach2.default)(parentsToAddFlag, function (parentFocusKey) {
+        var parentComponent = _this2.focusableComponents[parentFocusKey];
+
+        parentComponent && parentComponent.onUpdateHasFocusedChild(true);
+      });
+
+      this.parentsHavingFocusedChild = parents;
     }
   }, {
     key: 'getKeyMap',
@@ -437,6 +500,20 @@ var SpatialNavigation = function () {
     key: 'resume',
     value: function resume() {
       this.paused = false;
+    }
+  }, {
+    key: 'setFocus',
+    value: function setFocus(focusKey, overwriteFocusKey) {
+      if (!this.enabled) {
+        return;
+      }
+
+      var targetFocusKey = overwriteFocusKey && this.isFocusableComponent(overwriteFocusKey) ? overwriteFocusKey : focusKey;
+
+      var newFocusKey = this.getNextFocusKey(targetFocusKey);
+
+      this.setCurrentFocusedKey(newFocusKey);
+      this.updateParentsWithFocusedChild(newFocusKey);
     }
   }]);
 
