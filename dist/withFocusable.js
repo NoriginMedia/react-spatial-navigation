@@ -58,18 +58,16 @@ var _spatialNavigation = require('./spatialNavigation');
 
 var _spatialNavigation2 = _interopRequireDefault(_spatialNavigation);
 
-var _measureLayout = require('./measureLayout');
-
-var _measureLayout2 = _interopRequireDefault(_measureLayout);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } /* eslint-disable react/no-find-dom-node */
+
 
 var omitProps = function omitProps(keys) {
   return (0, _mapProps2.default)(function (props) {
     return (0, _omit2.default)(props, keys);
   });
-}; /* eslint-disable react/no-find-dom-node */
-
+};
 
 var withFocusable = function withFocusable() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -130,13 +128,21 @@ var withFocusable = function withFocusable() {
   }), (0, _withHandlers2.default)({
     onEnterPressHandler: function onEnterPressHandler(_ref4) {
       var _ref4$onEnterPress = _ref4.onEnterPress,
-          onEnterPress = _ref4$onEnterPress === undefined ? _noop2.default : _ref4$onEnterPress;
-      return onEnterPress;
+          onEnterPress = _ref4$onEnterPress === undefined ? _noop2.default : _ref4$onEnterPress,
+          rest = _objectWithoutProperties(_ref4, ['onEnterPress']);
+
+      return function () {
+        onEnterPress(rest);
+      };
     },
     onBecameFocusedHandler: function onBecameFocusedHandler(_ref5) {
       var _ref5$onBecameFocused = _ref5.onBecameFocused,
-          onBecameFocused = _ref5$onBecameFocused === undefined ? _noop2.default : _ref5$onBecameFocused;
-      return onBecameFocused;
+          onBecameFocused = _ref5$onBecameFocused === undefined ? _noop2.default : _ref5$onBecameFocused,
+          rest = _objectWithoutProperties(_ref5, ['onBecameFocused']);
+
+      return function (layout) {
+        onBecameFocused(layout, rest);
+      };
     },
     pauseSpatialNavigation: function pauseSpatialNavigation() {
       return _spatialNavigation2.default.pause;
@@ -145,23 +151,6 @@ var withFocusable = function withFocusable() {
       return _spatialNavigation2.default.resume;
     }
   }), (0, _lifecycle2.default)({
-    updateLayout: function updateLayout() {
-      var focusKey = this.props.realFocusKey;
-
-
-      var node = (0, _reactDom.findDOMNode)(this);
-
-      (0, _measureLayout2.default)(node, function (x, y, width, height, left, top) {
-        _spatialNavigation2.default.updateLayout(focusKey, {
-          x: x,
-          y: y,
-          width: width,
-          height: height,
-          left: left,
-          top: top
-        });
-      });
-    },
     componentDidMount: function componentDidMount() {
       var _props = this.props,
           focusKey = _props.realFocusKey,
@@ -176,8 +165,11 @@ var withFocusable = function withFocusable() {
           onUpdateHasFocusedChild = _props.onUpdateHasFocusedChild;
 
 
+      var node = (0, _reactDom.findDOMNode)(this);
+
       _spatialNavigation2.default.addFocusable({
         focusKey: focusKey,
+        node: node,
         parentFocusKey: parentFocusKey,
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
@@ -186,8 +178,6 @@ var withFocusable = function withFocusable() {
         propagateFocus: configPropagateFocus || propagateFocus,
         forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild
       });
-
-      this.updateLayout();
     },
     componentDidUpdate: function componentDidUpdate(prevProps) {
       var _props2 = this.props,
@@ -199,8 +189,6 @@ var withFocusable = function withFocusable() {
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(_spatialNavigation2.default.getNodeLayoutByFocusKey(focusKey));
       }
-
-      // this.updateLayout();
     },
     componentWillUnmount: function componentWillUnmount() {
       var focusKey = this.props.realFocusKey;

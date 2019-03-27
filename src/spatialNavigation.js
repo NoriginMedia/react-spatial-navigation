@@ -3,7 +3,9 @@ import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
 import findKey from 'lodash/findKey';
 import forEach from 'lodash/forEach';
+import forOwn from 'lodash/forOwn';
 import difference from 'lodash/difference';
+import measureLayout from './measureLayout';
 
 export const ROOT_FOCUS_KEY = 'SN:ROOT';
 
@@ -96,19 +98,23 @@ class SpatialNavigation {
   }
 
   init() {
-    this.enabled = true;
-    this.bindEventHandlers();
+    if (!this.enabled) {
+      this.enabled = true;
+      this.bindEventHandlers();
+    }
   }
 
   destroy() {
-    this.enabled = false;
-    this.focusKey = null;
-    this.parentsHavingFocusedChild = [];
-    this.focusableComponents = {};
-    this.paused = false;
-    this.keyMap = DEFAULT_KEY_MAP;
+    if (this.enabled) {
+      this.enabled = false;
+      this.focusKey = null;
+      this.parentsHavingFocusedChild = [];
+      this.focusableComponents = {};
+      this.paused = false;
+      this.keyMap = DEFAULT_KEY_MAP;
 
-    this.unbindEventHandlers();
+      this.unbindEventHandlers();
+    }
   }
 
   bindEventHandlers() {
@@ -259,6 +265,7 @@ class SpatialNavigation {
 
   addFocusable({
     focusKey,
+    node,
     parentFocusKey,
     onEnterPressHandler,
     onBecameFocusedHandler,
@@ -269,6 +276,7 @@ class SpatialNavigation {
   }) {
     this.focusableComponents[focusKey] = {
       focusKey,
+      node,
       parentFocusKey,
       onEnterPressHandler,
       onBecameFocusedHandler,
@@ -286,6 +294,8 @@ class SpatialNavigation {
         top: 0
       }
     };
+
+    this.updateLayout(focusKey);
 
     /**
      * If for some reason this component was already focused before it was added, call the update
@@ -318,12 +328,6 @@ class SpatialNavigation {
       if (isFocused) {
         this.setFocus(parentFocusKey);
       }
-    }
-  }
-
-  updateLayout(focusKey, layout) {
-    if (this.isFocusableComponent(focusKey)) {
-      this.focusableComponents[focusKey].layout = layout;
     }
   }
 
@@ -435,6 +439,34 @@ class SpatialNavigation {
 
     this.setCurrentFocusedKey(newFocusKey);
     this.updateParentsWithFocusedChild(newFocusKey);
+    this.updateAllLayouts();
+  }
+
+  updateAllLayouts() {
+    forOwn(this.focusableComponents, (component, focusKey) => {
+      this.updateLayout(focusKey);
+    });
+  }
+
+  updateLayout(focusKey) {
+    const component = this.focusableComponents[focusKey];
+
+    if (!component) {
+      return;
+    }
+
+    const {node} = component;
+
+    measureLayout(node, (x, y, width, height, left, top) => {
+      component.layout = {
+        x,
+        y,
+        width,
+        height,
+        left,
+        top
+      };
+    });
   }
 }
 

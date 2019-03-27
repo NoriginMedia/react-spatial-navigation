@@ -31,9 +31,17 @@ var _forEach = require('lodash/forEach');
 
 var _forEach2 = _interopRequireDefault(_forEach);
 
+var _forOwn = require('lodash/forOwn');
+
+var _forOwn2 = _interopRequireDefault(_forOwn);
+
 var _difference = require('lodash/difference');
 
 var _difference2 = _interopRequireDefault(_difference);
+
+var _measureLayout = require('./measureLayout');
+
+var _measureLayout2 = _interopRequireDefault(_measureLayout);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -134,20 +142,24 @@ var SpatialNavigation = function () {
   _createClass(SpatialNavigation, [{
     key: 'init',
     value: function init() {
-      this.enabled = true;
-      this.bindEventHandlers();
+      if (!this.enabled) {
+        this.enabled = true;
+        this.bindEventHandlers();
+      }
     }
   }, {
     key: 'destroy',
     value: function destroy() {
-      this.enabled = false;
-      this.focusKey = null;
-      this.parentsHavingFocusedChild = [];
-      this.focusableComponents = {};
-      this.paused = false;
-      this.keyMap = DEFAULT_KEY_MAP;
+      if (this.enabled) {
+        this.enabled = false;
+        this.focusKey = null;
+        this.parentsHavingFocusedChild = [];
+        this.focusableComponents = {};
+        this.paused = false;
+        this.keyMap = DEFAULT_KEY_MAP;
 
-      this.unbindEventHandlers();
+        this.unbindEventHandlers();
+      }
     }
   }, {
     key: 'bindEventHandlers',
@@ -323,6 +335,7 @@ var SpatialNavigation = function () {
     key: 'addFocusable',
     value: function addFocusable(_ref) {
       var focusKey = _ref.focusKey,
+          node = _ref.node,
           parentFocusKey = _ref.parentFocusKey,
           onEnterPressHandler = _ref.onEnterPressHandler,
           onBecameFocusedHandler = _ref.onBecameFocusedHandler,
@@ -333,6 +346,7 @@ var SpatialNavigation = function () {
 
       this.focusableComponents[focusKey] = {
         focusKey: focusKey,
+        node: node,
         parentFocusKey: parentFocusKey,
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
@@ -350,6 +364,8 @@ var SpatialNavigation = function () {
           top: 0
         }
       };
+
+      this.updateLayout(focusKey);
 
       /**
        * If for some reason this component was already focused before it was added, call the update
@@ -385,13 +401,6 @@ var SpatialNavigation = function () {
         if (isFocused) {
           this.setFocus(parentFocusKey);
         }
-      }
-    }
-  }, {
-    key: 'updateLayout',
-    value: function updateLayout(focusKey, layout) {
-      if (this.isFocusableComponent(focusKey)) {
-        this.focusableComponents[focusKey].layout = layout;
       }
     }
   }, {
@@ -514,6 +523,39 @@ var SpatialNavigation = function () {
 
       this.setCurrentFocusedKey(newFocusKey);
       this.updateParentsWithFocusedChild(newFocusKey);
+      this.updateAllLayouts();
+    }
+  }, {
+    key: 'updateAllLayouts',
+    value: function updateAllLayouts() {
+      var _this3 = this;
+
+      (0, _forOwn2.default)(this.focusableComponents, function (component, focusKey) {
+        _this3.updateLayout(focusKey);
+      });
+    }
+  }, {
+    key: 'updateLayout',
+    value: function updateLayout(focusKey) {
+      var component = this.focusableComponents[focusKey];
+
+      if (!component) {
+        return;
+      }
+
+      var node = component.node;
+
+
+      (0, _measureLayout2.default)(node, function (x, y, width, height, left, top) {
+        component.layout = {
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          left: left,
+          top: top
+        };
+      });
     }
   }]);
 
