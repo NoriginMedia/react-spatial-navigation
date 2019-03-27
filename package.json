@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "lodash": "^4.17.0",
-    "prop-types": "^15.5.8",
+    "prop-types": "^15.6.2",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
-    "recompose": "^0.28.0"
+    "recompose": "^0.30.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
