@@ -20,4 +20,3 @@ var initNavigation = _spatialNavigation2.default.init,
 exports.withFocusable = _withFocusable2.default;
 exports.initNavigation = initNavigation;
 exports.setKeyMap = setKeyMap;
-//# sourceMappingURL=index.js.map

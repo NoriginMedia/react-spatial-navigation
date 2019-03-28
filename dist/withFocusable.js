@@ -76,7 +76,7 @@ var withFocusable = function withFocusable() {
       _ref$forgetLastFocuse = _ref.forgetLastFocusedChild,
       configForgetLastFocusedChild = _ref$forgetLastFocuse === undefined ? false : _ref$forgetLastFocuse,
       _ref$trackChildren = _ref.trackChildren,
-      trackChildren = _ref$trackChildren === undefined ? false : _ref$trackChildren;
+      configTrackChildren = _ref$trackChildren === undefined ? false : _ref$trackChildren;
 
   return (0, _compose2.default)((0, _getContext2.default)({
     /**
@@ -105,11 +105,11 @@ var withFocusable = function withFocusable() {
         };
       };
     },
-    onUpdateHasFocusedChild: function onUpdateHasFocusedChild(oldState) {
+    onUpdateHasFocusedChild: function onUpdateHasFocusedChild(oldState, props) {
       return function () {
         var hasFocusedChild = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         return {
-          hasFocusedChild: trackChildren ? hasFocusedChild : oldState.hasFocusedChild
+          hasFocusedChild: configTrackChildren || props.trackChildren ? hasFocusedChild : oldState.hasFocusedChild
         };
       };
     }
@@ -198,8 +198,7 @@ var withFocusable = function withFocusable() {
         focusKey: focusKey
       });
     }
-  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild']));
+  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild', 'propagateFocus', 'forgetLastFocusedChild', 'trackChildren']));
 };
 
 exports.default = withFocusable;
-//# sourceMappingURL=withFocusable.js.map

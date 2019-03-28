@@ -4,7 +4,7 @@
   "main": "dist/",
   "scripts": {
     "eslint": "eslint src",
-    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react --source-maps",
+    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
     "start": "parcel index.html -d parcel"
   },
   "dependencies": {

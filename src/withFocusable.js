@@ -19,7 +19,7 @@ const omitProps = (keys) => mapProps((props) => omit(props, keys));
 const withFocusable = ({
   propagateFocus: configPropagateFocus = false,
   forgetLastFocusedChild: configForgetLastFocusedChild = false,
-  trackChildren = false
+  trackChildren: configTrackChildren = false
 } = {}) => compose(
   getContext({
     /**
@@ -42,8 +42,8 @@ const withFocusable = ({
     onUpdateFocus: () => (focused = false) => ({
       focused
     }),
-    onUpdateHasFocusedChild: (oldState) => (hasFocusedChild = false) => ({
-      hasFocusedChild: trackChildren ? hasFocusedChild : oldState.hasFocusedChild
+    onUpdateHasFocusedChild: (oldState, props) => (hasFocusedChild = false) => ({
+      hasFocusedChild: configTrackChildren || props.trackChildren ? hasFocusedChild : oldState.hasFocusedChild
     })
   }),
 
@@ -122,7 +122,10 @@ const withFocusable = ({
     'onBecameFocusedHandler',
     'onEnterPressHandler',
     'onUpdateFocus',
-    'onUpdateHasFocusedChild'
+    'onUpdateHasFocusedChild',
+    'propagateFocus',
+    'forgetLastFocusedChild',
+    'trackChildren'
   ])
 );
 

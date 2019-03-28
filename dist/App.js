@@ -558,4 +558,3 @@ var App = function App() {
 (0, _whyDidYouRender2.default)(_react2.default);
 
 exports.default = App;
-//# sourceMappingURL=App.js.map

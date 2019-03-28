@@ -50,4 +50,3 @@ var measureLayout = function measureLayout(node, callback) {
 };
 
 exports.default = measureLayout;
-//# sourceMappingURL=measureLayout.js.map
