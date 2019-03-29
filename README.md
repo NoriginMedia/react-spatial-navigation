@@ -144,7 +144,7 @@ No arguments needed.
 
 ### `setKeyMap`: function
 Function to set custom key codes.
-```
+```jsx
 setKeyMap({
   'left': 9001,
   'up': 9002,
@@ -249,7 +249,7 @@ This prop indicates that the component currently has some focused child on any d
 ### `setFocus`: function
 This method sets the focus to another component (when focus key is passed as param) or steals the focus to itself (when used w/o params).
 
-```
+```jsx
 setFocus(); // set focus to self
 setFocus('SOME_COMPONENT'); // set focus to another component if you know its focus key
 ```
