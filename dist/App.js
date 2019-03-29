@@ -20,10 +20,6 @@ var _shuffle = require('lodash/shuffle');
 
 var _shuffle2 = _interopRequireDefault(_shuffle);
 
-var _whyDidYouRender = require('@welldone-software/why-did-you-render');
-
-var _whyDidYouRender2 = _interopRequireDefault(_whyDidYouRender);
-
 var _reactNative = require('react-native');
 
 var _withFocusable = require('./withFocusable');
@@ -554,7 +550,5 @@ var App = function App() {
     _react2.default.createElement(Spatial, null)
   );
 };
-
-(0, _whyDidYouRender2.default)(_react2.default);
 
 exports.default = App;

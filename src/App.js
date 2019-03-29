@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shuffle from 'lodash/shuffle';
-import whyDidRender from '@welldone-software/why-did-you-render';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import withFocusable from './withFocusable';
 import SpatialNavigation from './spatialNavigation';
@@ -375,7 +374,5 @@ class Spatial extends React.PureComponent {
 const App = () => (<View>
   <Spatial />
 </View>);
-
-whyDidRender(React);
 
 export default App;
