@@ -289,12 +289,8 @@ class Category extends React.PureComponent {
         {programs.map((program, index) => ((<ProgramFocusable
           {...program}
           focusKey={`PROGRAM-${this.props.realFocusKey}-${index}`}
-          onPress={() => {
-            this.props.onProgramPress(program);
-          }}
-          onEnterPress={() => {
-            this.props.onProgramPress(program);
-          }}
+          onPress={this.props.onProgramPress}
+          onEnterPress={this.props.onProgramPress}
           key={program.title}
           onBecameFocused={this.onProgramFocused}
         />)))}

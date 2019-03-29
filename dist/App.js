@@ -423,12 +423,8 @@ var Category = function (_React$PureComponent6) {
           programs.map(function (program, index) {
             return _react2.default.createElement(ProgramFocusable, _extends({}, program, {
               focusKey: 'PROGRAM-' + _this7.props.realFocusKey + '-' + index,
-              onPress: function onPress() {
-                _this7.props.onProgramPress(program);
-              },
-              onEnterPress: function onEnterPress() {
-                _this7.props.onProgramPress(program);
-              },
+              onPress: _this7.props.onProgramPress,
+              onEnterPress: _this7.props.onProgramPress,
               key: program.title,
               onBecameFocused: _this7.onProgramFocused
             }));
