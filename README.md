@@ -3,9 +3,16 @@
 ## Article
 
 # Table of Contents
+* [Example](#example)
+* [Installation](#installation)
+* [Usage](#usage)
+* [API](#api)
+* [Development](#development)
+* [TODOs](#todos)
 
 # Example
-## Gif
+![Spatial Navigation example](resources/images/spatial-nav-example.gif)
+
 ## Link to testbed app
 
 # Installation
@@ -18,6 +25,5 @@
 
 # TODOs
 
-# Contributors
-
 # License
+MIT Licensed
