@@ -139,7 +139,7 @@ const MenuFocusable = withFocusable({
 
 ## Top level
 ### `initNavigation`: function
-Function that needs to called to enable Spatial Navigation system and bind key event listeners.
+Function that needs to be called to enable Spatial Navigation system and bind key event listeners.
 No arguments needed.
 
 ### `setKeyMap`: function
@@ -258,7 +258,7 @@ setFocus('SOME_COMPONENT'); // set focus to another component if you know its fo
 This function pauses key listeners. Useful when you need to temporary disable navigation. (e.g. when player controls are hidden during video playback and you want to bind the keys to show controls again).
 
 ### `resumeSpatialNavigation`: function
-This function resumes key listeners if it was paused with [pauseSpatialNavigation](#pauseSpatialNavigation)
+This function resumes key listeners if it was paused with [pauseSpatialNavigation](#pauseSpatialNavigation-function)
 
 # Development
 This library is using Parcel to serve the web build.
