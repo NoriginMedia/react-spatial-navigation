@@ -1,6 +1,9 @@
 # react-spatial-navigation
 ## Motivation
+The main motivation to create this package was to bring the best Developer Experience and Performance when working with Key Navigation and React. Ideally you wouldn't want to have any logic to define the navigation in your app. It should be as easy as just to tell which components should be navigable. With this package all you have to do is to initialize it, wrap your components with the HOC and set initial focus. The spatial navigation system will automatically figure out which components to focus next when you navigate with the directional keys.
+
 ## Article
+Will be published soon.
 
 # Table of Contents
 * [Example](#example)
@@ -261,6 +264,7 @@ This function pauses key listeners. Useful when you need to temporary disable na
 This function resumes key listeners if it was paused with [pauseSpatialNavigation](#pauseSpatialNavigation-function)
 
 # Development
+## Dev environment
 This library is using Parcel to serve the web build.
 
 To run the testbed app locally:
@@ -270,6 +274,24 @@ npm start
 This will start local server on `localhost:1234`
 
 Source code is in `src/App.js`
+
+## Dev notes
+### General notes
+* Focusable component are stored as a Tree structure. Each component has the reference to its parent as `parentFocusKey`.
+* Current algorithm calculates distance between the border of the current component in the direction of key press to the border of the next component.
+
+### `withFocusable` HOC
+* `realFocusKey` is created once at component mount in `withStateHandlers`. It either takes the `focusKey` prop value or is automatically generated.
+* `setFocus` method is bound with the current component `realFocusKey` so you can call it w/o params to focus component itself.
+* `parentFocusKey` is propagated to children components through context. This is done because the focusable components tree is not necessary the same as the DOM tree.
+* On mount component adds itself to `spatialNavigation` service storage of all focusable components.
+* On unmount component removes itself from the service. 
+
+### `spatialNavigation` Service
+* New components are added in `addFocusable`and removed in `removeFocusable`
+* Main function to change focus is `setFocus`. First it decides next focus key (`getNextFocusKey`), then set focus to the new component (`setCurrentFocusedKey`), then the service updates all components that has focused child and finally updates layout (coordinates and dimensions) for all focusable component.
+* `getNextFocusKey` is used to determine the good candidate to focus when you call `setFocus`. This method will either return the target focus key for the component you are trying to focus, or go down by the focusable tree and select the best child component to focus. This function is recoursive and going down by the focusable tree.
+* `smartNavigate` is similar to the previous one, but is called in response to a key press event. It tries to focus the best sibling candidate in the direction of key press, or delegates this task to a focusable parent, that will do the same attempt for its sibling and so on.
 
 # TODOs
 - [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
