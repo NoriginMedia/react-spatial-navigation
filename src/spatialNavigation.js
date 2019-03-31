@@ -6,6 +6,7 @@ import forEach from 'lodash/forEach';
 import forOwn from 'lodash/forOwn';
 import difference from 'lodash/difference';
 import measureLayout from './measureLayout';
+import VisualDebugger from './visualDebugger';
 
 export const ROOT_FOCUS_KEY = 'SN:ROOT';
 
@@ -95,13 +96,39 @@ class SpatialNavigation {
     this.setFocus = this.setFocus.bind(this);
     this.init = this.init.bind(this);
     this.setKeyMap = this.setKeyMap.bind(this);
+
+    this.debug = false;
+    this.visualDebugger = null;
   }
 
-  init() {
+  init(config = {debug: false}) {
     if (!this.enabled) {
       this.enabled = true;
       this.bindEventHandlers();
+      this.debug = config.debug;
+      if (this.debug) {
+        this.visualDebugger = new VisualDebugger();
+        this.startDrawLayouts();
+      }
     }
+  }
+
+  startDrawLayouts() {
+    const draw = () => {
+      requestAnimationFrame(() => {
+        this.visualDebugger.clearLayouts();
+        forOwn(this.focusableComponents, (component, focusKey) => {
+          this.visualDebugger.drawLayout(
+            component.layout,
+            focusKey,
+            component.parentFocusKey
+          );
+        });
+        draw();
+      });
+    };
+
+    draw();
   }
 
   destroy() {
@@ -161,6 +188,9 @@ class SpatialNavigation {
   }
 
   onKeyEvent(keyCode) {
+
+    this.visualDebugger && this.visualDebugger.clear();
+
     const direction = findKey(this.getKeyMap(), (code) => keyCode === code);
 
     this.smartNavigate(direction);
@@ -192,10 +222,14 @@ class SpatialNavigation {
       const currentReferenceX = currentReferencePoints.resultX;
       const currentReferenceY = currentReferencePoints.resultY;
 
+      this.visualDebugger && this.visualDebugger.drawPoint(currentReferenceX, currentReferenceY);
+
       const sortedSiblings = sortBy(siblings, (sibling) => {
         const siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, sibling.layout);
         const siblingReferenceX = siblingReferencePoints.resultX;
         const siblingReferenceY = siblingReferencePoints.resultY;
+
+        this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 8);
 
         return Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
           Math.pow((siblingReferenceY - currentReferenceY), 2));
