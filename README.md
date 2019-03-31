@@ -5,6 +5,9 @@ The main motivation to create this package was to bring the best Developer Exper
 ## Article
 Will be published soon.
 
+# Changelog
+[CHANGELOG.md](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CHANGELOG.md)
+
 # Table of Contents
 * [Example](#example)
 * [Installation](#installation)
