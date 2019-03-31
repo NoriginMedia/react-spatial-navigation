@@ -37,6 +37,8 @@ Will be published soon ¯\\\_(ツ)_/¯
 import {initNavigation, setKeyMap} from 'react-spatial-navigation';
 
 initNavigation();
+
+// Optional
 setKeyMap({
   'left': 9001,
   'up': 9002,
