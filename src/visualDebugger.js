@@ -47,7 +47,6 @@ class VisualDebugger {
     this.debugCtx.strokeStyle = color;
     this.debugCtx.strokeRect(x - (size / 2), y - (size / 2), size, size);
   }
-
 }
 
 export default VisualDebugger;

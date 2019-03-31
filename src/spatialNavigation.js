@@ -188,7 +188,6 @@ class SpatialNavigation {
   }
 
   onKeyEvent(keyCode) {
-
     this.visualDebugger && this.visualDebugger.clear();
 
     const direction = findKey(this.getKeyMap(), (code) => keyCode === code);
