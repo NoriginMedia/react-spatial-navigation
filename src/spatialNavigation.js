@@ -226,18 +226,31 @@ class SpatialNavigation {
 
       const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
       const isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
-      const coordinate = isVerticalDirection ? 'top' : 'left';
-
-      /**
-       * Get only the siblings with the coords on the way of our moving direction
-       */
-      const siblings = filter(this.focusableComponents, (component) => component.parentFocusKey === parentFocusKey &&
-        ((isIncrementalDirection && component.layout[coordinate] > layout[coordinate]) ||
-          (!isIncrementalDirection && component.layout[coordinate] < layout[coordinate])));
 
       const currentReferencePoints = SpatialNavigation.getReferencePoints(direction, false, layout);
       const currentReferenceX = currentReferencePoints.resultX;
       const currentReferenceY = currentReferencePoints.resultY;
+
+      /**
+       * Get only the siblings with the coords on the way of our moving direction
+       */
+      const siblings = filter(this.focusableComponents, (component) => {
+        if (component.parentFocusKey === parentFocusKey) {
+          const siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, component.layout);
+          const siblingReferenceX = siblingReferencePoints.resultX;
+          const siblingReferenceY = siblingReferencePoints.resultY;
+
+          if (isIncrementalDirection) {
+            return isVerticalDirection ?
+              siblingReferenceY >= currentReferenceY : siblingReferenceX >= currentReferenceX;
+          } else if (!isIncrementalDirection) {
+            return isVerticalDirection ?
+              siblingReferenceY <= currentReferenceY : siblingReferenceX <= currentReferenceX;
+          }
+        }
+
+        return false;
+      });
 
       if (this.debug) {
         this.log('smartNavigate', 'currentReferencePoints', `x: ${currentReferenceX}`, `y: ${currentReferenceY}`);

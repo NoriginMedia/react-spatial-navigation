@@ -15,8 +15,8 @@ var VisualDebugger = function () {
   function VisualDebugger() {
     _classCallCheck(this, VisualDebugger);
 
-    this.debugCtx = VisualDebugger.createCanvas('sn-debug');
-    this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts');
+    this.debugCtx = VisualDebugger.createCanvas('sn-debug', 1010);
+    this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts', 1000);
   }
 
   _createClass(VisualDebugger, [{
@@ -48,18 +48,19 @@ var VisualDebugger = function () {
       var size = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
 
       this.debugCtx.strokeStyle = color;
+      this.debugCtx.lineWidth = 3;
       this.debugCtx.strokeRect(x - size / 2, y - size / 2, size, size);
     }
   }], [{
     key: 'createCanvas',
-    value: function createCanvas(id) {
+    value: function createCanvas(id, zIndex) {
       var canvas = document.querySelector('#' + id) || document.createElement('canvas');
 
       canvas.setAttribute('id', id);
 
       var ctx = canvas.getContext('2d');
 
-      canvas.style = 'position: fixed; top: 0; left: 0';
+      canvas.style = 'position: fixed; top: 0; left: 0; z-index: ' + zIndex;
 
       document.body.appendChild(canvas);
 

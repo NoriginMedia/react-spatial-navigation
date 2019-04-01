@@ -290,18 +290,29 @@ var SpatialNavigation = function () {
 
         var isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
         var isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
-        var coordinate = isVerticalDirection ? 'top' : 'left';
+
+        var currentReferencePoints = SpatialNavigation.getReferencePoints(direction, false, layout);
+        var currentReferenceX = currentReferencePoints.resultX;
+        var currentReferenceY = currentReferencePoints.resultY;
 
         /**
          * Get only the siblings with the coords on the way of our moving direction
          */
         var siblings = (0, _filter2.default)(this.focusableComponents, function (component) {
-          return component.parentFocusKey === parentFocusKey && (isIncrementalDirection && component.layout[coordinate] > layout[coordinate] || !isIncrementalDirection && component.layout[coordinate] < layout[coordinate]);
-        });
+          if (component.parentFocusKey === parentFocusKey) {
+            var siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, component.layout);
+            var siblingReferenceX = siblingReferencePoints.resultX;
+            var siblingReferenceY = siblingReferencePoints.resultY;
 
-        var currentReferencePoints = SpatialNavigation.getReferencePoints(direction, false, layout);
-        var currentReferenceX = currentReferencePoints.resultX;
-        var currentReferenceY = currentReferencePoints.resultY;
+            if (isIncrementalDirection) {
+              return isVerticalDirection ? siblingReferenceY >= currentReferenceY : siblingReferenceX >= currentReferenceX;
+            } else if (!isIncrementalDirection) {
+              return isVerticalDirection ? siblingReferenceY <= currentReferenceY : siblingReferenceX <= currentReferenceX;
+            }
+          }
+
+          return false;
+        });
 
         if (this.debug) {
           this.log('smartNavigate', 'currentReferencePoints', 'x: ' + currentReferenceX, 'y: ' + currentReferenceY);
@@ -319,11 +330,11 @@ var SpatialNavigation = function () {
           var siblingReferenceX = siblingReferencePoints.resultX;
           var siblingReferenceY = siblingReferencePoints.resultY;
 
-          _this3.visualDebugger && _this3.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 8);
+          _this3.visualDebugger && _this3.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 6);
 
           var distance = Math.sqrt(Math.pow(siblingReferenceX - currentReferenceX, 2) + Math.pow(siblingReferenceY - currentReferenceY, 2));
 
-          _this3.log('smartNavigate', 'distance between ' + focusKey + ' and ' + sibling.focusKey + ' is', distance);
+          _this3.log('smartNavigate', 'distance between ' + focusKey + ' and ' + sibling.focusKey + ' is', distance, '(position x: ' + siblingReferenceX + ', y: ' + siblingReferenceY + ')');
 
           return distance;
         });
