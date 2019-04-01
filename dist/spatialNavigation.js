@@ -43,6 +43,10 @@ var _measureLayout = require('./measureLayout');
 
 var _measureLayout2 = _interopRequireDefault(_measureLayout);
 
+var _visualDebugger = require('./visualDebugger');
+
+var _visualDebugger2 = _interopRequireDefault(_visualDebugger);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -58,6 +62,8 @@ var DIRECTION_DOWN = 'down';
 var KEY_ENTER = 'enter';
 
 var DEFAULT_KEY_MAP = (_DEFAULT_KEY_MAP = {}, _defineProperty(_DEFAULT_KEY_MAP, DIRECTION_LEFT, 37), _defineProperty(_DEFAULT_KEY_MAP, DIRECTION_UP, 38), _defineProperty(_DEFAULT_KEY_MAP, DIRECTION_RIGHT, 39), _defineProperty(_DEFAULT_KEY_MAP, DIRECTION_DOWN, 40), _defineProperty(_DEFAULT_KEY_MAP, KEY_ENTER, 13), _DEFAULT_KEY_MAP);
+
+var DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
 
 var SpatialNavigation = function () {
   _createClass(SpatialNavigation, null, [{
@@ -137,15 +143,48 @@ var SpatialNavigation = function () {
     this.setFocus = this.setFocus.bind(this);
     this.init = this.init.bind(this);
     this.setKeyMap = this.setKeyMap.bind(this);
+
+    this.debug = false;
+    this.visualDebugger = null;
+
+    this.logIndex = 0;
   }
 
   _createClass(SpatialNavigation, [{
     key: 'init',
     value: function init() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref$debug = _ref.debug,
+          debug = _ref$debug === undefined ? false : _ref$debug,
+          _ref$visualDebug = _ref.visualDebug,
+          visualDebug = _ref$visualDebug === undefined ? false : _ref$visualDebug;
+
       if (!this.enabled) {
         this.enabled = true;
         this.bindEventHandlers();
+        this.debug = debug;
+        if (visualDebug) {
+          this.visualDebugger = new _visualDebugger2.default();
+          this.startDrawLayouts();
+        }
       }
+    }
+  }, {
+    key: 'startDrawLayouts',
+    value: function startDrawLayouts() {
+      var _this = this;
+
+      var draw = function draw() {
+        requestAnimationFrame(function () {
+          _this.visualDebugger.clearLayouts();
+          (0, _forOwn2.default)(_this.focusableComponents, function (component, focusKey) {
+            _this.visualDebugger.drawLayout(component.layout, focusKey, component.parentFocusKey);
+          });
+          draw();
+        });
+      };
+
+      draw();
     }
   }, {
     key: 'destroy',
@@ -164,15 +203,17 @@ var SpatialNavigation = function () {
   }, {
     key: 'bindEventHandlers',
     value: function bindEventHandlers() {
-      var _this = this;
+      var _this2 = this;
 
       if (window) {
         this.keyEventListener = function (event) {
-          if (_this.paused === true) {
+          if (_this2.paused === true) {
             return;
           }
 
-          var eventType = (0, _findKey2.default)(_this.getKeyMap(), function (code) {
+          _this2.logIndex++;
+
+          var eventType = (0, _findKey2.default)(_this2.getKeyMap(), function (code) {
             return event.keyCode === code;
           });
 
@@ -180,16 +221,16 @@ var SpatialNavigation = function () {
             return;
           }
 
-          if (eventType === KEY_ENTER && _this.focusKey) {
+          if (eventType === KEY_ENTER && _this2.focusKey) {
             event.preventDefault();
             event.stopPropagation();
 
-            _this.onEnterPress();
+            _this2.onEnterPress();
           } else {
             event.preventDefault();
             event.stopPropagation();
 
-            _this.onKeyEvent(event.keyCode);
+            _this2.onKeyEvent(event.keyCode);
           }
         };
 
@@ -214,6 +255,8 @@ var SpatialNavigation = function () {
   }, {
     key: 'onKeyEvent',
     value: function onKeyEvent(keyCode) {
+      this.visualDebugger && this.visualDebugger.clear();
+
       var direction = (0, _findKey2.default)(this.getKeyMap(), function (code) {
         return keyCode === code;
       });
@@ -229,7 +272,15 @@ var SpatialNavigation = function () {
   }, {
     key: 'smartNavigate',
     value: function smartNavigate(direction, fromParentFocusKey) {
+      var _this3 = this;
+
+      this.log('smartNavigate', 'direction', direction);
+      this.log('smartNavigate', 'fromParentFocusKey', fromParentFocusKey);
+      this.log('smartNavigate', 'this.focusKey', this.focusKey);
+
       var currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
+
+      this.log('smartNavigate', 'currentComponent', currentComponent ? currentComponent.focusKey : undefined, currentComponent ? currentComponent.node : undefined);
 
       if (currentComponent) {
         var parentFocusKey = currentComponent.parentFocusKey,
@@ -239,7 +290,6 @@ var SpatialNavigation = function () {
 
         var isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
         var isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
-
         var coordinate = isVerticalDirection ? 'top' : 'left';
 
         /**
@@ -253,15 +303,34 @@ var SpatialNavigation = function () {
         var currentReferenceX = currentReferencePoints.resultX;
         var currentReferenceY = currentReferencePoints.resultY;
 
+        if (this.debug) {
+          this.log('smartNavigate', 'currentReferencePoints', 'x: ' + currentReferenceX, 'y: ' + currentReferenceY);
+          this.log('smartNavigate', 'siblings', siblings.length + ' elements:', siblings.map(function (s) {
+            return s.focusKey;
+          }).join(', '), siblings.map(function (s) {
+            return s.node;
+          }));
+        }
+
+        this.visualDebugger && this.visualDebugger.drawPoint(currentReferenceX, currentReferenceY);
+
         var sortedSiblings = (0, _sortBy2.default)(siblings, function (sibling) {
           var siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, sibling.layout);
           var siblingReferenceX = siblingReferencePoints.resultX;
           var siblingReferenceY = siblingReferencePoints.resultY;
 
-          return Math.sqrt(Math.pow(siblingReferenceX - currentReferenceX, 2) + Math.pow(siblingReferenceY - currentReferenceY, 2));
+          _this3.visualDebugger && _this3.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 8);
+
+          var distance = Math.sqrt(Math.pow(siblingReferenceX - currentReferenceX, 2) + Math.pow(siblingReferenceY - currentReferenceY, 2));
+
+          _this3.log('smartNavigate', 'distance between ' + focusKey + ' and ' + sibling.focusKey + ' is', distance);
+
+          return distance;
         });
 
         var nextComponent = (0, _first3.default)(sortedSiblings);
+
+        this.log('smartNavigate', 'nextComponent', nextComponent ? nextComponent.focusKey : undefined, nextComponent ? nextComponent.node : undefined);
 
         if (nextComponent) {
           this.setFocus(nextComponent.focusKey);
@@ -272,6 +341,19 @@ var SpatialNavigation = function () {
 
           this.smartNavigate(direction, parentFocusKey);
         }
+      }
+    }
+  }, {
+    key: 'log',
+    value: function log(functionName, debugString) {
+      if (this.debug) {
+        var _console;
+
+        for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+          rest[_key - 2] = arguments[_key];
+        }
+
+        (_console = console).log.apply(_console, ['%c' + functionName + ' %c ' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black;', 'background: #333; color: #BADA55'].concat(rest));
       }
     }
 
@@ -333,16 +415,16 @@ var SpatialNavigation = function () {
     }
   }, {
     key: 'addFocusable',
-    value: function addFocusable(_ref) {
-      var focusKey = _ref.focusKey,
-          node = _ref.node,
-          parentFocusKey = _ref.parentFocusKey,
-          onEnterPressHandler = _ref.onEnterPressHandler,
-          onBecameFocusedHandler = _ref.onBecameFocusedHandler,
-          forgetLastFocusedChild = _ref.forgetLastFocusedChild,
-          propagateFocus = _ref.propagateFocus,
-          onUpdateFocus = _ref.onUpdateFocus,
-          onUpdateHasFocusedChild = _ref.onUpdateHasFocusedChild;
+    value: function addFocusable(_ref2) {
+      var focusKey = _ref2.focusKey,
+          node = _ref2.node,
+          parentFocusKey = _ref2.parentFocusKey,
+          onEnterPressHandler = _ref2.onEnterPressHandler,
+          onBecameFocusedHandler = _ref2.onBecameFocusedHandler,
+          forgetLastFocusedChild = _ref2.forgetLastFocusedChild,
+          propagateFocus = _ref2.propagateFocus,
+          onUpdateFocus = _ref2.onUpdateFocus,
+          onUpdateHasFocusedChild = _ref2.onUpdateHasFocusedChild;
 
       this.focusableComponents[focusKey] = {
         focusKey: focusKey,
@@ -376,8 +458,8 @@ var SpatialNavigation = function () {
     }
   }, {
     key: 'removeFocusable',
-    value: function removeFocusable(_ref2) {
-      var focusKey = _ref2.focusKey;
+    value: function removeFocusable(_ref3) {
+      var focusKey = _ref3.focusKey;
 
       var componentToRemove = this.focusableComponents[focusKey];
 
@@ -432,7 +514,7 @@ var SpatialNavigation = function () {
   }, {
     key: 'updateParentsWithFocusedChild',
     value: function updateParentsWithFocusedChild(focusKey) {
-      var _this2 = this;
+      var _this4 = this;
 
       var parents = [];
 
@@ -462,13 +544,13 @@ var SpatialNavigation = function () {
       var parentsToAddFlag = (0, _difference2.default)(parents, this.parentsHavingFocusedChild);
 
       (0, _forEach2.default)(parentsToRemoveFlag, function (parentFocusKey) {
-        var parentComponent = _this2.focusableComponents[parentFocusKey];
+        var parentComponent = _this4.focusableComponents[parentFocusKey];
 
         parentComponent && parentComponent.onUpdateHasFocusedChild(false);
       });
 
       (0, _forEach2.default)(parentsToAddFlag, function (parentFocusKey) {
-        var parentComponent = _this2.focusableComponents[parentFocusKey];
+        var parentComponent = _this4.focusableComponents[parentFocusKey];
 
         parentComponent && parentComponent.onUpdateHasFocusedChild(true);
       });
@@ -528,10 +610,10 @@ var SpatialNavigation = function () {
   }, {
     key: 'updateAllLayouts',
     value: function updateAllLayouts() {
-      var _this3 = this;
+      var _this5 = this;
 
       (0, _forOwn2.default)(this.focusableComponents, function (component, focusKey) {
-        _this3.updateLayout(focusKey);
+        _this5.updateLayout(focusKey);
       });
     }
   }, {
