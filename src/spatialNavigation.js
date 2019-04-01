@@ -99,14 +99,19 @@ class SpatialNavigation {
 
     this.debug = false;
     this.visualDebugger = null;
+
+    this.logIndex = 0;
   }
 
-  init(config = {debug: false}) {
+  init({
+    debug: debug = false,
+    visualDebug: visualDebug = false
+  } = {}) {
     if (!this.enabled) {
       this.enabled = true;
       this.bindEventHandlers();
-      this.debug = config.debug;
-      if (this.debug) {
+      this.debug = debug;
+      if (visualDebug) {
         this.visualDebugger = new VisualDebugger();
         this.startDrawLayouts();
       }
@@ -150,6 +155,8 @@ class SpatialNavigation {
         if (this.paused === true) {
           return;
         }
+
+        this.logIndex++;
 
         const eventType = findKey(this.getKeyMap(), (code) => event.keyCode === code);
 
@@ -200,14 +207,19 @@ class SpatialNavigation {
    * Based on the Direction
    */
   smartNavigate(direction, fromParentFocusKey) {
+    this.log('smartNavigate', 'direction', direction);
+    this.log('smartNavigate', 'fromParentFocusKey', fromParentFocusKey);
+    this.log('smartNavigate', 'this.focusKey', this.focusKey);
+
     const currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
+
+    this.log('smartNavigate', 'currentComponent', currentComponent ? currentComponent.focusKey : undefined);
 
     if (currentComponent) {
       const {parentFocusKey, focusKey, layout} = currentComponent;
 
       const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
       const isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
-
       const coordinate = isVerticalDirection ? 'top' : 'left';
 
       /**
@@ -221,6 +233,14 @@ class SpatialNavigation {
       const currentReferenceX = currentReferencePoints.resultX;
       const currentReferenceY = currentReferencePoints.resultY;
 
+      if (this.debug) {
+        this.log('smartNavigate', 'currentReferencePoints', `x: ${currentReferenceX}`, `y: ${currentReferenceY}`);
+        this.log(
+          'smartNavigate', 'siblings', `${siblings.length} elements:`,
+          siblings.map((s) => s.focusKey).join(', ')
+        );
+      }
+
       this.visualDebugger && this.visualDebugger.drawPoint(currentReferenceX, currentReferenceY);
 
       const sortedSiblings = sortBy(siblings, (sibling) => {
@@ -230,11 +250,17 @@ class SpatialNavigation {
 
         this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 8);
 
-        return Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
+        const distance = Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
           Math.pow((siblingReferenceY - currentReferenceY), 2));
+
+        this.log('smartNavigate', `distance between ${focusKey} and ${sibling.focusKey} is`, distance);
+
+        return distance;
       });
 
       const nextComponent = first(sortedSiblings);
+
+      this.log('smartNavigate', 'nextComponent', nextComponent ? nextComponent.focusKey : undefined);
 
       if (nextComponent) {
         this.setFocus(nextComponent.focusKey);
@@ -245,6 +271,19 @@ class SpatialNavigation {
 
         this.smartNavigate(direction, parentFocusKey);
       }
+    }
+  }
+
+  log(functionName, debugString, ...rest) {
+    if (this.debug) {
+      const colors = ['#0FF', '#FF0', '#F0F'];
+
+      console.log(
+        `%c${functionName} %c ${debugString}`,
+        `background: ${colors[this.logIndex % colors.length]}; color: black;`,
+        'background: #333; color: #BADA55',
+        ...rest
+      );
     }
   }
 
