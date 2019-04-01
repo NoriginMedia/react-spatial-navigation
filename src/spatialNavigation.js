@@ -24,6 +24,8 @@ const DEFAULT_KEY_MAP = {
   [KEY_ENTER]: 13
 };
 
+const DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
+
 class SpatialNavigation {
   /**
    * Returns the reference point to be used for directional calculations.
@@ -276,11 +278,9 @@ class SpatialNavigation {
 
   log(functionName, debugString, ...rest) {
     if (this.debug) {
-      const colors = ['#0FF', '#FF0', '#F0F'];
-
       console.log(
         `%c${functionName} %c ${debugString}`,
-        `background: ${colors[this.logIndex % colors.length]}; color: black;`,
+        `background: ${DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length]}; color: black;`,
         'background: #333; color: #BADA55',
         ...rest
       );
