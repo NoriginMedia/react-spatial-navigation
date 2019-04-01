@@ -6,6 +6,7 @@ import forEach from 'lodash/forEach';
 import forOwn from 'lodash/forOwn';
 import difference from 'lodash/difference';
 import measureLayout from './measureLayout';
+import VisualDebugger from './visualDebugger';
 
 export const ROOT_FOCUS_KEY = 'SN:ROOT';
 
@@ -22,6 +23,8 @@ const DEFAULT_KEY_MAP = {
   [DIRECTION_DOWN]: 40,
   [KEY_ENTER]: 13
 };
+
+const DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
 
 class SpatialNavigation {
   /**
@@ -95,13 +98,44 @@ class SpatialNavigation {
     this.setFocus = this.setFocus.bind(this);
     this.init = this.init.bind(this);
     this.setKeyMap = this.setKeyMap.bind(this);
+
+    this.debug = false;
+    this.visualDebugger = null;
+
+    this.logIndex = 0;
   }
 
-  init() {
+  init({
+    debug: debug = false,
+    visualDebug: visualDebug = false
+  } = {}) {
     if (!this.enabled) {
       this.enabled = true;
       this.bindEventHandlers();
+      this.debug = debug;
+      if (visualDebug) {
+        this.visualDebugger = new VisualDebugger();
+        this.startDrawLayouts();
+      }
     }
+  }
+
+  startDrawLayouts() {
+    const draw = () => {
+      requestAnimationFrame(() => {
+        this.visualDebugger.clearLayouts();
+        forOwn(this.focusableComponents, (component, focusKey) => {
+          this.visualDebugger.drawLayout(
+            component.layout,
+            focusKey,
+            component.parentFocusKey
+          );
+        });
+        draw();
+      });
+    };
+
+    draw();
   }
 
   destroy() {
@@ -123,6 +157,8 @@ class SpatialNavigation {
         if (this.paused === true) {
           return;
         }
+
+        this.logIndex++;
 
         const eventType = findKey(this.getKeyMap(), (code) => event.keyCode === code);
 
@@ -161,6 +197,8 @@ class SpatialNavigation {
   }
 
   onKeyEvent(keyCode) {
+    this.visualDebugger && this.visualDebugger.clear();
+
     const direction = findKey(this.getKeyMap(), (code) => keyCode === code);
 
     this.smartNavigate(direction);
@@ -171,14 +209,23 @@ class SpatialNavigation {
    * Based on the Direction
    */
   smartNavigate(direction, fromParentFocusKey) {
+    this.log('smartNavigate', 'direction', direction);
+    this.log('smartNavigate', 'fromParentFocusKey', fromParentFocusKey);
+    this.log('smartNavigate', 'this.focusKey', this.focusKey);
+
     const currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
+
+    this.log(
+      'smartNavigate', 'currentComponent',
+      currentComponent ? currentComponent.focusKey : undefined,
+      currentComponent ? currentComponent.node : undefined
+    );
 
     if (currentComponent) {
       const {parentFocusKey, focusKey, layout} = currentComponent;
 
       const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
       const isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
-
       const coordinate = isVerticalDirection ? 'top' : 'left';
 
       /**
@@ -192,16 +239,44 @@ class SpatialNavigation {
       const currentReferenceX = currentReferencePoints.resultX;
       const currentReferenceY = currentReferencePoints.resultY;
 
+      if (this.debug) {
+        this.log('smartNavigate', 'currentReferencePoints', `x: ${currentReferenceX}`, `y: ${currentReferenceY}`);
+        this.log(
+          'smartNavigate', 'siblings', `${siblings.length} elements:`,
+          siblings.map((s) => s.focusKey).join(', '),
+          siblings.map((s) => s.node)
+        );
+      }
+
+      this.visualDebugger && this.visualDebugger.drawPoint(currentReferenceX, currentReferenceY);
+
       const sortedSiblings = sortBy(siblings, (sibling) => {
         const siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, sibling.layout);
         const siblingReferenceX = siblingReferencePoints.resultX;
         const siblingReferenceY = siblingReferencePoints.resultY;
 
-        return Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
+        this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 6);
+
+        const distance = Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
           Math.pow((siblingReferenceY - currentReferenceY), 2));
+
+        this.log(
+          'smartNavigate',
+          `distance between ${focusKey} and ${sibling.focusKey} is`,
+          distance,
+          `(position x: ${siblingReferenceX}, y: ${siblingReferenceY})`
+        );
+
+        return distance;
       });
 
       const nextComponent = first(sortedSiblings);
+
+      this.log(
+        'smartNavigate', 'nextComponent',
+        nextComponent ? nextComponent.focusKey : undefined,
+        nextComponent ? nextComponent.node : undefined
+      );
 
       if (nextComponent) {
         this.setFocus(nextComponent.focusKey);
@@ -212,6 +287,17 @@ class SpatialNavigation {
 
         this.smartNavigate(direction, parentFocusKey);
       }
+    }
+  }
+
+  log(functionName, debugString, ...rest) {
+    if (this.debug) {
+      console.log(
+        `%c${functionName} %c ${debugString}`,
+        `background: ${DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length]}; color: black;`,
+        'background: #333; color: #BADA55',
+        ...rest
+      );
     }
   }
 
