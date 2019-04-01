@@ -255,12 +255,17 @@ class SpatialNavigation {
         const siblingReferenceX = siblingReferencePoints.resultX;
         const siblingReferenceY = siblingReferencePoints.resultY;
 
-        this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 8);
+        this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 6);
 
         const distance = Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
           Math.pow((siblingReferenceY - currentReferenceY), 2));
 
-        this.log('smartNavigate', `distance between ${focusKey} and ${sibling.focusKey} is`, distance);
+        this.log(
+          'smartNavigate',
+          `distance between ${focusKey} and ${sibling.focusKey} is`,
+          distance,
+          `(position x: ${siblingReferenceX}, y: ${siblingReferenceY})`
+        );
 
         return distance;
       });

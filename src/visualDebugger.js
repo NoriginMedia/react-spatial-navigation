@@ -3,18 +3,18 @@ const HEIGHT = window.innerHeight;
 
 class VisualDebugger {
   constructor() {
-    this.debugCtx = VisualDebugger.createCanvas('sn-debug');
-    this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts');
+    this.debugCtx = VisualDebugger.createCanvas('sn-debug', 1010);
+    this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts', 1000);
   }
 
-  static createCanvas(id) {
+  static createCanvas(id, zIndex) {
     const canvas = document.querySelector(`#${id}`) || document.createElement('canvas');
 
     canvas.setAttribute('id', id);
 
     const ctx = canvas.getContext('2d');
 
-    canvas.style = 'position: fixed; top: 0; left: 0';
+    canvas.style = `position: fixed; top: 0; left: 0; z-index: ${zIndex}`;
 
     document.body.appendChild(canvas);
 
@@ -45,6 +45,7 @@ class VisualDebugger {
 
   drawPoint(x, y, color = 'blue', size = 10) {
     this.debugCtx.strokeStyle = color;
+    this.debugCtx.lineWidth = 3;
     this.debugCtx.strokeRect(x - (size / 2), y - (size / 2), size, size);
   }
 }
