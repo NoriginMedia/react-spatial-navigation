@@ -148,7 +148,27 @@ const MenuFocusable = withFocusable({
 ## Top level
 ### `initNavigation`: function
 Function that needs to be called to enable Spatial Navigation system and bind key event listeners.
-No arguments needed.
+Accepts [initConfig](#initConfig) as a param.
+
+```jsx
+initNavigation({
+  debug: true,
+  visualDebug: true
+})
+```
+
+## Initialization Config
+### `debug`: boolean
+Enable console debugging
+
+* **false (default)**
+* **true**
+
+### `visualDebug`: boolean
+Enable visual debugging (all layouts, reference points and siblings refernce points are printed on canvases)
+
+* **false (default)**
+* **true**
 
 ### `setKeyMap`: function
 Function to set custom key codes.
@@ -307,8 +327,8 @@ Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spa
 - [ ] Unit tests
 - [ ] Publish to NPM
 - [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
-- [ ] Add debug mode to output most important steps when making decisions on the next focused component during navigation, printing reference to DOM element to highlight it on the screen.
-- [ ] Visual debugging. Draw debug canvas on top of focusable component to visually see its coordinates and dimensions.
+- [x] Add debug mode to output most important steps when making decisions on the next focused component during navigation, printing reference to DOM element to highlight it on the screen.
+- [x] Visual debugging. Draw debug canvas on top of focusable component to visually see its coordinates and dimensions.
 - [ ] Refactor with React Hooks instead of recompose.
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
 
