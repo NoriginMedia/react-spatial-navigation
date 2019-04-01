@@ -299,6 +299,10 @@ Source code is in `src/App.js`
 * `smartNavigate` is similar to the previous one, but is called in response to a key press event. It tries to focus the best sibling candidate in the direction of key press, or delegates this task to a focusable parent, that will do the same attempt for its sibling and so on.
 
 # TODOs
+- [ ] Issue templates
+- [ ] Contribution guide
+- [ ] Unit tests
+- [ ] Publish to NPM
 - [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
 - [ ] Add debug mode to output most important steps when making decisions on the next focused component during navigation, printing reference to DOM element to highlight it on the screen.
 - [ ] Visual debugging. Draw debug canvas on top of focusable component to visually see its coordinates and dimensions.
