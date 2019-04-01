@@ -215,7 +215,11 @@ class SpatialNavigation {
 
     const currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
 
-    this.log('smartNavigate', 'currentComponent', currentComponent ? currentComponent.focusKey : undefined);
+    this.log(
+      'smartNavigate', 'currentComponent',
+      currentComponent ? currentComponent.focusKey : undefined,
+      currentComponent ? currentComponent.node : undefined
+    );
 
     if (currentComponent) {
       const {parentFocusKey, focusKey, layout} = currentComponent;
@@ -239,7 +243,8 @@ class SpatialNavigation {
         this.log('smartNavigate', 'currentReferencePoints', `x: ${currentReferenceX}`, `y: ${currentReferenceY}`);
         this.log(
           'smartNavigate', 'siblings', `${siblings.length} elements:`,
-          siblings.map((s) => s.focusKey).join(', ')
+          siblings.map((s) => s.focusKey).join(', '),
+          siblings.map((s) => s.node)
         );
       }
 
@@ -262,7 +267,11 @@ class SpatialNavigation {
 
       const nextComponent = first(sortedSiblings);
 
-      this.log('smartNavigate', 'nextComponent', nextComponent ? nextComponent.focusKey : undefined);
+      this.log(
+        'smartNavigate', 'nextComponent',
+        nextComponent ? nextComponent.focusKey : undefined,
+        nextComponent ? nextComponent.node : undefined
+      );
 
       if (nextComponent) {
         this.setFocus(nextComponent.focusKey);
