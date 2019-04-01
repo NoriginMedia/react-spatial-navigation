@@ -7,7 +7,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Pull Request Process
 
-1. Update the README.md with details of changes to the API, update an example App if needed, update the code examples in README.md if applicable,update the Dev Notes at the end of README.md if needed.
+1. Update the README.md with details of changes to the API, update an example App if needed, update the code examples in README.md if applicable, update the Dev Notes at the end of README.md if needed.
 2. Once the Pull Request is reviewed, it will be merged by the Reviewer, otherwise you could do it yourself if you have a permission. Please use "Squash and Merge" and Delete your branch after.
 
 # Code of Conduct
