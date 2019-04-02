@@ -650,6 +650,15 @@ var SpatialNavigation = function () {
         };
       });
     }
+  }, {
+    key: 'updateDOMNode',
+    value: function updateDOMNode(focusKey, node) {
+      var component = this.focusableComponents[focusKey];
+
+      if (component && node) {
+        component.node = node;
+      }
+    }
   }]);
 
   return SpatialNavigation;

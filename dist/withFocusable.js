@@ -186,6 +186,10 @@ var withFocusable = function withFocusable() {
           onBecameFocusedHandler = _props2.onBecameFocusedHandler;
 
 
+      var node = (0, _reactDom.findDOMNode)(this);
+
+      _spatialNavigation2.default.updateDOMNode(focusKey, node);
+
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(_spatialNavigation2.default.getNodeLayoutByFocusKey(focusKey));
       }
