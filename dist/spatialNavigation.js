@@ -655,7 +655,7 @@ var SpatialNavigation = function () {
     value: function updateDOMNode(focusKey, node) {
       var component = this.focusableComponents[focusKey];
 
-      if (component) {
+      if (component && node) {
         component.node = node;
       }
     }
