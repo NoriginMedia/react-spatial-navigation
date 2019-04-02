@@ -103,6 +103,10 @@ const withFocusable = ({
     componentDidUpdate(prevProps) {
       const {focused, realFocusKey: focusKey, onBecameFocusedHandler} = this.props;
 
+      const node = findDOMNode(this);
+
+      SpatialNavigation.updateDOMNode(focusKey, node);
+
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));
       }

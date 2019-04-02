@@ -567,6 +567,14 @@ class SpatialNavigation {
       };
     });
   }
+
+  updateDOMNode(focusKey, node) {
+    const component = this.focusableComponents[focusKey];
+
+    if (component) {
+      component.node = node;
+    }
+  }
 }
 
 /**
