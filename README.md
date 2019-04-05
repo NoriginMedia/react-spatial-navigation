@@ -329,6 +329,7 @@ Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spa
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
 - [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
 - [ ] Add "preferable focused component" feature for components with children. By default it's first element, but it is useful to customize this behaviour.
+- [ ] Implement mouse support. On some TV devices (or in the Browser) it is possible to use mouse-like input, e.g. magic remote in LG TVs. This system should support switching between "key" and "pointer" modes and apply "focused" state accordingly.
 
 ---
 
