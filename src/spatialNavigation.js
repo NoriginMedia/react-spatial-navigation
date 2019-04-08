@@ -370,6 +370,7 @@ class SpatialNavigation {
     onBecameFocusedHandler,
     forgetLastFocusedChild,
     propagateFocus,
+    trackChildren,
     onUpdateFocus,
     onUpdateHasFocusedChild
   }) {
@@ -383,6 +384,7 @@ class SpatialNavigation {
       onUpdateHasFocusedChild,
       propagateFocus,
       forgetLastFocusedChild,
+      trackChildren,
       lastFocusedChildKey: null,
       layout: {
         x: 0,
@@ -482,13 +484,13 @@ class SpatialNavigation {
     forEach(parentsToRemoveFlag, (parentFocusKey) => {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
-      parentComponent && parentComponent.onUpdateHasFocusedChild(false);
+      parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(false);
     });
 
     forEach(parentsToAddFlag, (parentFocusKey) => {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
-      parentComponent && parentComponent.onUpdateHasFocusedChild(true);
+      parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(true);
     });
 
     this.parentsHavingFocusedChild = parents;

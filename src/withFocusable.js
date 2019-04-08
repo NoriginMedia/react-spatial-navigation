@@ -42,8 +42,8 @@ const withFocusable = ({
     onUpdateFocus: () => (focused = false) => ({
       focused
     }),
-    onUpdateHasFocusedChild: (oldState, props) => (hasFocusedChild = false) => ({
-      hasFocusedChild: configTrackChildren || props.trackChildren ? hasFocusedChild : oldState.hasFocusedChild
+    onUpdateHasFocusedChild: () => (hasFocusedChild = false) => ({
+      hasFocusedChild
     })
   }),
 
@@ -83,7 +83,8 @@ const withFocusable = ({
         onEnterPressHandler,
         onBecameFocusedHandler,
         onUpdateFocus,
-        onUpdateHasFocusedChild
+        onUpdateHasFocusedChild,
+        trackChildren
       } = this.props;
 
       const node = findDOMNode(this);
@@ -97,7 +98,8 @@ const withFocusable = ({
         onUpdateFocus,
         onUpdateHasFocusedChild,
         propagateFocus: (configPropagateFocus || propagateFocus),
-        forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild)
+        forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
+        trackChildren: (configTrackChildren || trackChildren)
       });
     },
     componentDidUpdate(prevProps) {

@@ -105,11 +105,11 @@ var withFocusable = function withFocusable() {
         };
       };
     },
-    onUpdateHasFocusedChild: function onUpdateHasFocusedChild(oldState, props) {
+    onUpdateHasFocusedChild: function onUpdateHasFocusedChild() {
       return function () {
         var hasFocusedChild = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         return {
-          hasFocusedChild: configTrackChildren || props.trackChildren ? hasFocusedChild : oldState.hasFocusedChild
+          hasFocusedChild: hasFocusedChild
         };
       };
     }
@@ -162,7 +162,8 @@ var withFocusable = function withFocusable() {
           onEnterPressHandler = _props.onEnterPressHandler,
           onBecameFocusedHandler = _props.onBecameFocusedHandler,
           onUpdateFocus = _props.onUpdateFocus,
-          onUpdateHasFocusedChild = _props.onUpdateHasFocusedChild;
+          onUpdateHasFocusedChild = _props.onUpdateHasFocusedChild,
+          trackChildren = _props.trackChildren;
 
 
       var node = (0, _reactDom.findDOMNode)(this);
@@ -176,7 +177,8 @@ var withFocusable = function withFocusable() {
         onUpdateFocus: onUpdateFocus,
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
         propagateFocus: configPropagateFocus || propagateFocus,
-        forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild
+        forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild,
+        trackChildren: configTrackChildren || trackChildren
       });
     },
     componentDidUpdate: function componentDidUpdate(prevProps) {

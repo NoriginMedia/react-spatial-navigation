@@ -434,6 +434,7 @@ var SpatialNavigation = function () {
           onBecameFocusedHandler = _ref2.onBecameFocusedHandler,
           forgetLastFocusedChild = _ref2.forgetLastFocusedChild,
           propagateFocus = _ref2.propagateFocus,
+          trackChildren = _ref2.trackChildren,
           onUpdateFocus = _ref2.onUpdateFocus,
           onUpdateHasFocusedChild = _ref2.onUpdateHasFocusedChild;
 
@@ -447,6 +448,7 @@ var SpatialNavigation = function () {
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
         propagateFocus: propagateFocus,
         forgetLastFocusedChild: forgetLastFocusedChild,
+        trackChildren: trackChildren,
         lastFocusedChildKey: null,
         layout: {
           x: 0,
@@ -557,13 +559,13 @@ var SpatialNavigation = function () {
       (0, _forEach2.default)(parentsToRemoveFlag, function (parentFocusKey) {
         var parentComponent = _this4.focusableComponents[parentFocusKey];
 
-        parentComponent && parentComponent.onUpdateHasFocusedChild(false);
+        parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(false);
       });
 
       (0, _forEach2.default)(parentsToAddFlag, function (parentFocusKey) {
         var parentComponent = _this4.focusableComponents[parentFocusKey];
 
-        parentComponent && parentComponent.onUpdateHasFocusedChild(true);
+        parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(true);
       });
 
       this.parentsHavingFocusedChild = parents;
