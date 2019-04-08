@@ -322,15 +322,14 @@ Source code is in `src/App.js`
 Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CONTRIBUTING.md)
 
 # TODOs
-- [x] Issue templates
-- [x] Contribution guide
 - [ ] Unit tests
 - [ ] Publish to NPM
 - [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
-- [x] Add debug mode to output most important steps when making decisions on the next focused component during navigation, printing reference to DOM element to highlight it on the screen.
-- [x] Visual debugging. Draw debug canvas on top of focusable component to visually see its coordinates and dimensions.
 - [ ] Refactor with React Hooks instead of recompose.
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
+- [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
+- [ ] Add "preferable focused component" feature for components with children. By default it's first element, but it is useful to customize this behaviour.
+- [ ] Implement mouse support. On some TV devices (or in the Browser) it is possible to use mouse-like input, e.g. magic remote in LG TVs. This system should support switching between "key" and "pointer" modes and apply "focused" state accordingly.
 
 ---
 
