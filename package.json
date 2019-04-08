@@ -1,12 +1,30 @@
 {
-  "name": "react-spatial-navigation",
-  "version": "1.0.0",
-  "main": "dist/",
+  "name": "@noriginmedia/react-spatial-navigation",
+  "version": "2.0.3",
+  "description": "HOC-based Spatial Navigation (key navigaition) solution for React",
+  "main": "dist/index.js",
   "scripts": {
     "eslint": "eslint src",
     "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
-    "start": "parcel index.html -d parcel"
+    "start": "parcel index.html -d parcel",
+    "publish": "npm publish --access public"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoriginMedia/react-spatial-navigation.git"
+  },
+  "keywords": [
+    "react",
+    "recompose",
+    "spatial-navigation",
+    "hoc"
+  ],
+  "author": "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NoriginMedia/react-spatial-navigation/issues"
+  },
+  "homepage": "https://github.com/NoriginMedia/react-spatial-navigation#readme",
   "dependencies": {
     "lodash": "^4.17.0",
     "prop-types": "^15.6.2",
