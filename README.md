@@ -272,7 +272,7 @@ Whether component is currently focused. It is only `true` if this exact componen
 This prop indicates that the component currently has some focused child on any depth of the focusable tree.
 
 ### `setFocus`: function
-This method sets the focus to another component (when focus key is passed as param) or steals the focus to itself (when used w/o params).
+This method sets the focus to another component (when focus key is passed as param) or steals the focus to itself (when used w/o params). It is also possible to set focus to a non-existent component, and it will be automatically picked up when component with that focus key will get mounted. This preemptive setting of the focus might be useful when rendering lists of data. You can assign focus key with the item index and set it to e.g. first item, then as soon as it will be rendered, that item will get focused.
 
 ```jsx
 setFocus(); // set focus to self
@@ -304,7 +304,7 @@ Source code is in `src/App.js`
 
 ### `withFocusable` HOC
 * `realFocusKey` is created once at component mount in `withStateHandlers`. It either takes the `focusKey` prop value or is automatically generated.
-* `setFocus` method is bound with the current component `realFocusKey` so you can call it w/o params to focus component itself.
+* `setFocus` method is bound with the current component `realFocusKey` so you can call it w/o params to focus component itself. Also the behaviour of this method can be described as an *attempt to set the focus*, because even if the target component doesn't exist yet, the target focus key will be stored and the focus will be picked up by the component with that focus key when it will get mounted.
 * `parentFocusKey` is propagated to children components through context. This is done because the focusable components tree is not necessary the same as the DOM tree.
 * On mount component adds itself to `spatialNavigation` service storage of all focusable components.
 * On unmount component removes itself from the service. 
