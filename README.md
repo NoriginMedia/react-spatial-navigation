@@ -22,13 +22,8 @@ Will be published soon.
 [Testbed Example](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/src/App.js)
 
 # Installation
-## NPM
-Will be published soon ¯\\\_(ツ)_/¯
-## package.json
-```json
-...
-"react-spatial-navigation": "git+https://github.com/NoriginMedia/react-spatial-navigation.git#master"
-...
+```bash
+npm i @noriginmedia/react-spatial-navigation --save
 ```
 
 # Usage
@@ -37,7 +32,7 @@ Will be published soon ¯\\\_(ツ)_/¯
 ```jsx
 // Somewhere at the root of the app
 
-import {initNavigation, setKeyMap} from 'react-spatial-navigation';
+import {initNavigation, setKeyMap} from '@noriginmedia/react-spatial-navigation';
 
 initNavigation();
 
@@ -53,7 +48,7 @@ setKeyMap({
 
 ## Making component focusable
 ```jsx
-import {withFocusable} from 'react-spatial-navigation';
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 ...
 
@@ -62,7 +57,7 @@ const FocusableComponent = withFocusable()(Component);
 
 ## Using config options
 ```jsx
-import {withFocusable} from 'react-spatial-navigation';
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 ...
 
@@ -75,7 +70,7 @@ const FocusableComponent = withFocusable({
 
 ## Using props on focusable components
 ```jsx
-import {withFocusable} from 'react-spatial-navigation';
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 ...
 
@@ -98,7 +93,7 @@ const ParentComponent = (props) => (<View>
 ## Using props inside wrapped components
 ### Basic usage
 ```jsx
-import {withFocusable} from 'react-spatial-navigation';
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 const Component = ({focused, setFocus}) => (<View>
   <View style={focused ? styles.focusedStyle : styles.defaultStyle} />
@@ -115,7 +110,7 @@ const FocusableComponent = withFocusable()(Component);
 ### Setting initial focus on child component, tracking children
 ```jsx
 import React, {PureComponent} from 'react';
-import {withFocusable} from 'react-spatial-navigation';
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 ...
 
