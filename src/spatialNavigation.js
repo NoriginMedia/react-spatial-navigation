@@ -533,8 +533,7 @@ class SpatialNavigation {
       return;
     }
 
-    const targetFocusKey = overwriteFocusKey && this.isFocusableComponent(overwriteFocusKey) ?
-      overwriteFocusKey : focusKey;
+    const targetFocusKey = overwriteFocusKey || focusKey;
 
     const newFocusKey = this.getNextFocusKey(targetFocusKey);
 

@@ -612,7 +612,7 @@ var SpatialNavigation = function () {
         return;
       }
 
-      var targetFocusKey = overwriteFocusKey && this.isFocusableComponent(overwriteFocusKey) ? overwriteFocusKey : focusKey;
+      var targetFocusKey = overwriteFocusKey || focusKey;
 
       var newFocusKey = this.getNextFocusKey(targetFocusKey);
 
