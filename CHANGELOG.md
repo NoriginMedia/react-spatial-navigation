@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Added more docs regarding preemptive `setFocus` on non-existent components
+
 ## [2.0.6]
 This release has few versions combined from v2.0.2.
 
@@ -16,7 +20,6 @@ This release has few versions combined from v2.0.2.
 
 ### Added
 - Published NPM package
-- Added more docs regarding preemptive `setFocus` on non-existent components
 
 ## [2.0.2]
 ### Fixed
