@@ -296,13 +296,17 @@ class SpatialNavigation {
       } else {
         const parentComponent = this.focusableComponents[parentFocusKey];
 
-        if (parentComponent) {
-          this.log('smartNavigate', `${parentComponent.focusKey} lastFocusedChildKey updated`, focusKey);
-          parentComponent.lastFocusedChildKey = focusKey;
-        }
+        this.saveLastFocusedChildKey(parentComponent, focusKey);
 
         this.smartNavigate(direction, parentFocusKey);
       }
+    }
+  }
+
+  saveLastFocusedChildKey(component, focusKey) {
+    if (component) {
+      this.log('saveLastFocusedChildKey', `${component.focusKey} lastFocusedChildKey set`, focusKey);
+      component.lastFocusedChildKey = focusKey;
     }
   }
 
@@ -454,6 +458,9 @@ class SpatialNavigation {
   setCurrentFocusedKey(focusKey) {
     if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
       const oldComponent = this.focusableComponents[this.focusKey];
+      const parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
+
+      this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
       oldComponent.onUpdateFocus(false);
     }

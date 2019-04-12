@@ -348,13 +348,18 @@ var SpatialNavigation = function () {
         } else {
           var parentComponent = this.focusableComponents[parentFocusKey];
 
-          if (parentComponent) {
-            this.log('smartNavigate', parentComponent.focusKey + ' lastFocusedChildKey updated', focusKey);
-            parentComponent.lastFocusedChildKey = focusKey;
-          }
+          this.saveLastFocusedChildKey(parentComponent, focusKey);
 
           this.smartNavigate(direction, parentFocusKey);
         }
+      }
+    }
+  }, {
+    key: 'saveLastFocusedChildKey',
+    value: function saveLastFocusedChildKey(component, focusKey) {
+      if (component) {
+        this.log('saveLastFocusedChildKey', component.focusKey + ' lastFocusedChildKey set', focusKey);
+        component.lastFocusedChildKey = focusKey;
       }
     }
   }, {
@@ -367,7 +372,7 @@ var SpatialNavigation = function () {
           rest[_key - 2] = arguments[_key];
         }
 
-        (_console = console).log.apply(_console, ['%c' + functionName + '%c' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black; padding: 0 5px;', 'background: #333; color: #BADA55; padding: 0 5px;'].concat(rest));
+        (_console = console).log.apply(_console, ['%c' + functionName + '%c' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black; padding: 1px 5px;', 'background: #333; color: #BADA55; padding: 1px 5px;'].concat(rest));
       }
     }
 
@@ -523,6 +528,9 @@ var SpatialNavigation = function () {
     value: function setCurrentFocusedKey(focusKey) {
       if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
         var oldComponent = this.focusableComponents[this.focusKey];
+        var parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
+
+        this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
         oldComponent.onUpdateFocus(false);
       }
