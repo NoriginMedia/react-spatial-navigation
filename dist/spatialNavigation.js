@@ -348,10 +348,18 @@ var SpatialNavigation = function () {
         } else {
           var parentComponent = this.focusableComponents[parentFocusKey];
 
-          parentComponent && (parentComponent.lastFocusedChildKey = focusKey);
+          this.saveLastFocusedChildKey(parentComponent, focusKey);
 
           this.smartNavigate(direction, parentFocusKey);
         }
+      }
+    }
+  }, {
+    key: 'saveLastFocusedChildKey',
+    value: function saveLastFocusedChildKey(component, focusKey) {
+      if (component) {
+        this.log('saveLastFocusedChildKey', component.focusKey + ' lastFocusedChildKey set', focusKey);
+        component.lastFocusedChildKey = focusKey;
       }
     }
   }, {
@@ -364,7 +372,7 @@ var SpatialNavigation = function () {
           rest[_key - 2] = arguments[_key];
         }
 
-        (_console = console).log.apply(_console, ['%c' + functionName + ' %c ' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black;', 'background: #333; color: #BADA55'].concat(rest));
+        (_console = console).log.apply(_console, ['%c' + functionName + '%c' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black; padding: 1px 5px;', 'background: #333; color: #BADA55; padding: 1px 5px;'].concat(rest));
       }
     }
 
@@ -400,6 +408,8 @@ var SpatialNavigation = function () {
 
 
         if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isFocusableComponent(lastFocusedChildKey)) {
+          this.log('getNextFocusKey', 'lastFocusedChildKey', lastFocusedChildKey);
+
           return this.getNextFocusKey(lastFocusedChildKey);
         }
 
@@ -416,12 +426,16 @@ var SpatialNavigation = function () {
         var _first = (0, _first3.default)(sortedYChildren),
             childKey = _first.focusKey;
 
+        this.log('getNextFocusKey', 'childKey', childKey);
+
         return this.getNextFocusKey(childKey);
       }
 
       /**
        * If no children, just return targetFocusKey back
        */
+      this.log('getNextFocusKey', 'targetFocusKey', targetFocusKey);
+
       return targetFocusKey;
     }
   }, {
@@ -514,6 +528,9 @@ var SpatialNavigation = function () {
     value: function setCurrentFocusedKey(focusKey) {
       if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
         var oldComponent = this.focusableComponents[this.focusKey];
+        var parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
+
+        this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
         oldComponent.onUpdateFocus(false);
       }
@@ -615,6 +632,8 @@ var SpatialNavigation = function () {
       var targetFocusKey = overwriteFocusKey || focusKey;
 
       var newFocusKey = this.getNextFocusKey(targetFocusKey);
+
+      this.log('setFocus', 'newFocusKey', newFocusKey);
 
       this.setCurrentFocusedKey(newFocusKey);
       this.updateParentsWithFocusedChild(newFocusKey);
