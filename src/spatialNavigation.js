@@ -296,7 +296,10 @@ class SpatialNavigation {
       } else {
         const parentComponent = this.focusableComponents[parentFocusKey];
 
-        parentComponent && (parentComponent.lastFocusedChildKey = focusKey);
+        if (parentComponent) {
+          this.log('smartNavigate', `${parentComponent.focusKey} lastFocusedChildKey updated`, focusKey);
+          parentComponent.lastFocusedChildKey = focusKey;
+        }
 
         this.smartNavigate(direction, parentFocusKey);
       }
@@ -306,9 +309,9 @@ class SpatialNavigation {
   log(functionName, debugString, ...rest) {
     if (this.debug) {
       console.log(
-        `%c${functionName} %c ${debugString}`,
-        `background: ${DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length]}; color: black;`,
-        'background: #333; color: #BADA55',
+        `%c${functionName}%c${debugString}`,
+        `background: ${DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length]}; color: black; padding: 1px 5px;`,
+        'background: #333; color: #BADA55; padding: 1px 5px;',
         ...rest
       );
     }
@@ -343,6 +346,8 @@ class SpatialNavigation {
         !targetComponent.forgetLastFocusedChild &&
         this.isFocusableComponent(lastFocusedChildKey)
       ) {
+        this.log('getNextFocusKey', 'lastFocusedChildKey', lastFocusedChildKey);
+
         return this.getNextFocusKey(lastFocusedChildKey);
       }
 
@@ -353,12 +358,16 @@ class SpatialNavigation {
       const sortedYChildren = sortBy(sortedXChildren, (child) => child.layout.top);
       const {focusKey: childKey} = first(sortedYChildren);
 
+      this.log('getNextFocusKey', 'childKey', childKey);
+
       return this.getNextFocusKey(childKey);
     }
 
     /**
      * If no children, just return targetFocusKey back
      */
+    this.log('getNextFocusKey', 'targetFocusKey', targetFocusKey);
+
     return targetFocusKey;
   }
 
@@ -536,6 +545,8 @@ class SpatialNavigation {
     const targetFocusKey = overwriteFocusKey || focusKey;
 
     const newFocusKey = this.getNextFocusKey(targetFocusKey);
+
+    this.log('setFocus', 'newFocusKey', newFocusKey);
 
     this.setCurrentFocusedKey(newFocusKey);
     this.updateParentsWithFocusedChild(newFocusKey);

@@ -348,7 +348,10 @@ var SpatialNavigation = function () {
         } else {
           var parentComponent = this.focusableComponents[parentFocusKey];
 
-          parentComponent && (parentComponent.lastFocusedChildKey = focusKey);
+          if (parentComponent) {
+            this.log('smartNavigate', parentComponent.focusKey + ' lastFocusedChildKey updated', focusKey);
+            parentComponent.lastFocusedChildKey = focusKey;
+          }
 
           this.smartNavigate(direction, parentFocusKey);
         }
@@ -364,7 +367,7 @@ var SpatialNavigation = function () {
           rest[_key - 2] = arguments[_key];
         }
 
-        (_console = console).log.apply(_console, ['%c' + functionName + ' %c ' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black;', 'background: #333; color: #BADA55'].concat(rest));
+        (_console = console).log.apply(_console, ['%c' + functionName + '%c' + debugString, 'background: ' + DEBUG_FN_COLORS[this.logIndex % DEBUG_FN_COLORS.length] + '; color: black; padding: 0 5px;', 'background: #333; color: #BADA55; padding: 0 5px;'].concat(rest));
       }
     }
 
@@ -400,6 +403,8 @@ var SpatialNavigation = function () {
 
 
         if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isFocusableComponent(lastFocusedChildKey)) {
+          this.log('getNextFocusKey', 'lastFocusedChildKey', lastFocusedChildKey);
+
           return this.getNextFocusKey(lastFocusedChildKey);
         }
 
@@ -416,12 +421,16 @@ var SpatialNavigation = function () {
         var _first = (0, _first3.default)(sortedYChildren),
             childKey = _first.focusKey;
 
+        this.log('getNextFocusKey', 'childKey', childKey);
+
         return this.getNextFocusKey(childKey);
       }
 
       /**
        * If no children, just return targetFocusKey back
        */
+      this.log('getNextFocusKey', 'targetFocusKey', targetFocusKey);
+
       return targetFocusKey;
     }
   }, {
@@ -615,6 +624,8 @@ var SpatialNavigation = function () {
       var targetFocusKey = overwriteFocusKey || focusKey;
 
       var newFocusKey = this.getNextFocusKey(targetFocusKey);
+
+      this.log('setFocus', 'newFocusKey', newFocusKey);
 
       this.setCurrentFocusedKey(newFocusKey);
       this.updateParentsWithFocusedChild(newFocusKey);
