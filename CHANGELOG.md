@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added more docs regarding preemptive `setFocus` on non-existent components
 
+### Changed
+- Save parent `lastFocusedChildKey` when a new component is focused
+
 ## [2.0.6]
 This release has few versions combined from v2.0.2.
 
