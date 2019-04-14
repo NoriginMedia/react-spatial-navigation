@@ -319,8 +319,8 @@ Source code is in `src/App.js`
 Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CONTRIBUTING.md)
 
 # TODOs
+- [ ] Get rid of `propagateFocus`, because it is used in 99% of the times when component has children
 - [ ] Unit tests
-- [ ] Publish to NPM
 - [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
 - [ ] Refactor with React Hooks instead of recompose.
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
