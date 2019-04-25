@@ -79,6 +79,7 @@ const withFocusable = ({
         realFocusKey: focusKey,
         propagateFocus = false,
         parentFocusKey,
+        preferredChildFocusKey,
         forgetLastFocusedChild = false,
         onEnterPressHandler,
         onBecameFocusedHandler,
@@ -93,6 +94,7 @@ const withFocusable = ({
         focusKey,
         node,
         parentFocusKey,
+        preferredChildFocusKey,
         onEnterPressHandler,
         onBecameFocusedHandler,
         onUpdateFocus,
@@ -103,11 +105,14 @@ const withFocusable = ({
       });
     },
     componentDidUpdate(prevProps) {
-      const {focused, realFocusKey: focusKey, onBecameFocusedHandler} = this.props;
+      const {focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey} = this.props;
 
       const node = findDOMNode(this);
 
-      SpatialNavigation.updateDOMNode(focusKey, node);
+      SpatialNavigation.updateFocusable(focusKey, {
+        node,
+        preferredChildFocusKey
+      });
 
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));

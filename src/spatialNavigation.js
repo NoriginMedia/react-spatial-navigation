@@ -341,28 +341,40 @@ class SpatialNavigation {
     if (children.length > 0 && this.isPropagateFocus(targetFocusKey)) {
       this.onIntermediateNodeBecameFocused(targetFocusKey);
 
+      const {lastFocusedChildKey, preferredChildFocusKey} = targetComponent;
+
+      this.log('getNextFocusKey', 'lastFocusedChildKey is', lastFocusedChildKey);
+      this.log('getNextFocusKey', 'preferredChildFocusKey is', preferredChildFocusKey);
+
       /**
        * First of all trying to focus last focused child
        */
-      const {lastFocusedChildKey} = targetComponent;
-
       if (lastFocusedChildKey &&
         !targetComponent.forgetLastFocusedChild &&
         this.isFocusableComponent(lastFocusedChildKey)
       ) {
-        this.log('getNextFocusKey', 'lastFocusedChildKey', lastFocusedChildKey);
+        this.log('getNextFocusKey', 'lastFocusedChildKey will be focused', lastFocusedChildKey);
 
         return this.getNextFocusKey(lastFocusedChildKey);
       }
 
       /**
-       * If there is no lastFocusedChild, trying to focus something by coordinates
+       * If there is no lastFocusedChild, trying to focus the preferred focused key
+       */
+      if (preferredChildFocusKey && this.isFocusableComponent(preferredChildFocusKey)) {
+        this.log('getNextFocusKey', 'preferredChildFocusKey will be focused', preferredChildFocusKey);
+
+        return this.getNextFocusKey(preferredChildFocusKey);
+      }
+
+      /**
+       * Otherwise, trying to focus something by coordinates
        */
       const sortedXChildren = sortBy(children, (child) => child.layout.left);
       const sortedYChildren = sortBy(sortedXChildren, (child) => child.layout.top);
       const {focusKey: childKey} = first(sortedYChildren);
 
-      this.log('getNextFocusKey', 'childKey', childKey);
+      this.log('getNextFocusKey', 'childKey will be focused', childKey);
 
       return this.getNextFocusKey(childKey);
     }
@@ -385,7 +397,8 @@ class SpatialNavigation {
     propagateFocus,
     trackChildren,
     onUpdateFocus,
-    onUpdateHasFocusedChild
+    onUpdateHasFocusedChild,
+    preferredChildFocusKey
   }) {
     this.focusableComponents[focusKey] = {
       focusKey,
@@ -399,6 +412,7 @@ class SpatialNavigation {
       forgetLastFocusedChild,
       trackChildren,
       lastFocusedChildKey: null,
+      preferredChildFocusKey,
       layout: {
         x: 0,
         y: 0,
@@ -587,11 +601,15 @@ class SpatialNavigation {
     });
   }
 
-  updateDOMNode(focusKey, node) {
+  updateFocusable(focusKey, {node, preferredChildFocusKey}) {
     const component = this.focusableComponents[focusKey];
 
-    if (component && node) {
-      component.node = node;
+    if (component) {
+      component.preferredChildFocusKey = preferredChildFocusKey;
+
+      if (node) {
+        component.node = node;
+      }
     }
   }
 }

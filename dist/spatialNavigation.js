@@ -401,20 +401,33 @@ var SpatialNavigation = function () {
       if (children.length > 0 && this.isPropagateFocus(targetFocusKey)) {
         this.onIntermediateNodeBecameFocused(targetFocusKey);
 
+        var lastFocusedChildKey = targetComponent.lastFocusedChildKey,
+            preferredChildFocusKey = targetComponent.preferredChildFocusKey;
+
+
+        this.log('getNextFocusKey', 'lastFocusedChildKey is', lastFocusedChildKey);
+        this.log('getNextFocusKey', 'preferredChildFocusKey is', preferredChildFocusKey);
+
         /**
          * First of all trying to focus last focused child
          */
-        var lastFocusedChildKey = targetComponent.lastFocusedChildKey;
-
-
         if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isFocusableComponent(lastFocusedChildKey)) {
-          this.log('getNextFocusKey', 'lastFocusedChildKey', lastFocusedChildKey);
+          this.log('getNextFocusKey', 'lastFocusedChildKey will be focused', lastFocusedChildKey);
 
           return this.getNextFocusKey(lastFocusedChildKey);
         }
 
         /**
-         * If there is no lastFocusedChild, trying to focus something by coordinates
+         * If there is no lastFocusedChild, trying to focus the preferred focused key
+         */
+        if (preferredChildFocusKey && this.isFocusableComponent(preferredChildFocusKey)) {
+          this.log('getNextFocusKey', 'preferredChildFocusKey will be focused', preferredChildFocusKey);
+
+          return this.getNextFocusKey(preferredChildFocusKey);
+        }
+
+        /**
+         * Otherwise, trying to focus something by coordinates
          */
         var sortedXChildren = (0, _sortBy2.default)(children, function (child) {
           return child.layout.left;
@@ -426,7 +439,7 @@ var SpatialNavigation = function () {
         var _first = (0, _first3.default)(sortedYChildren),
             childKey = _first.focusKey;
 
-        this.log('getNextFocusKey', 'childKey', childKey);
+        this.log('getNextFocusKey', 'childKey will be focused', childKey);
 
         return this.getNextFocusKey(childKey);
       }
@@ -450,7 +463,8 @@ var SpatialNavigation = function () {
           propagateFocus = _ref2.propagateFocus,
           trackChildren = _ref2.trackChildren,
           onUpdateFocus = _ref2.onUpdateFocus,
-          onUpdateHasFocusedChild = _ref2.onUpdateHasFocusedChild;
+          onUpdateHasFocusedChild = _ref2.onUpdateHasFocusedChild,
+          preferredChildFocusKey = _ref2.preferredChildFocusKey;
 
       this.focusableComponents[focusKey] = {
         focusKey: focusKey,
@@ -464,6 +478,7 @@ var SpatialNavigation = function () {
         forgetLastFocusedChild: forgetLastFocusedChild,
         trackChildren: trackChildren,
         lastFocusedChildKey: null,
+        preferredChildFocusKey: preferredChildFocusKey,
         layout: {
           x: 0,
           y: 0,
@@ -672,12 +687,19 @@ var SpatialNavigation = function () {
       });
     }
   }, {
-    key: 'updateDOMNode',
-    value: function updateDOMNode(focusKey, node) {
+    key: 'updateFocusable',
+    value: function updateFocusable(focusKey, _ref4) {
+      var node = _ref4.node,
+          preferredChildFocusKey = _ref4.preferredChildFocusKey;
+
       var component = this.focusableComponents[focusKey];
 
-      if (component && node) {
-        component.node = node;
+      if (component) {
+        component.preferredChildFocusKey = preferredChildFocusKey;
+
+        if (node) {
+          component.node = node;
+        }
       }
     }
   }]);
