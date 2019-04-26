@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.1.0]
 ### Added
 - Added more docs regarding preemptive `setFocus` on non-existent components
 - Added `preferredChildFocusKey` property to set focus on a specific component during focus propagation
