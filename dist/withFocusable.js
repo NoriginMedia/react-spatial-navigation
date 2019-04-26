@@ -157,6 +157,7 @@ var withFocusable = function withFocusable() {
           _props$propagateFocus = _props.propagateFocus,
           propagateFocus = _props$propagateFocus === undefined ? false : _props$propagateFocus,
           parentFocusKey = _props.parentFocusKey,
+          preferredChildFocusKey = _props.preferredChildFocusKey,
           _props$forgetLastFocu = _props.forgetLastFocusedChild,
           forgetLastFocusedChild = _props$forgetLastFocu === undefined ? false : _props$forgetLastFocu,
           onEnterPressHandler = _props.onEnterPressHandler,
@@ -172,6 +173,7 @@ var withFocusable = function withFocusable() {
         focusKey: focusKey,
         node: node,
         parentFocusKey: parentFocusKey,
+        preferredChildFocusKey: preferredChildFocusKey,
         onEnterPressHandler: onEnterPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
         onUpdateFocus: onUpdateFocus,
@@ -185,12 +187,16 @@ var withFocusable = function withFocusable() {
       var _props2 = this.props,
           focused = _props2.focused,
           focusKey = _props2.realFocusKey,
-          onBecameFocusedHandler = _props2.onBecameFocusedHandler;
+          onBecameFocusedHandler = _props2.onBecameFocusedHandler,
+          preferredChildFocusKey = _props2.preferredChildFocusKey;
 
 
       var node = (0, _reactDom.findDOMNode)(this);
 
-      _spatialNavigation2.default.updateDOMNode(focusKey, node);
+      _spatialNavigation2.default.updateFocusable(focusKey, {
+        node: node,
+        preferredChildFocusKey: preferredChildFocusKey
+      });
 
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(_spatialNavigation2.default.getNodeLayoutByFocusKey(focusKey));

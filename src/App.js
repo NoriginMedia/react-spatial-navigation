@@ -6,7 +6,10 @@ import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native
 import withFocusable from './withFocusable';
 import SpatialNavigation from './spatialNavigation';
 
-SpatialNavigation.init();
+SpatialNavigation.init({
+  debug: false,
+  visualDebug: false
+});
 
 // SpatialNavigation.setKeyMap(keyMap); -> Custom key map
 
@@ -340,6 +343,8 @@ class Categories extends React.PureComponent {
         key={category.title}
         propagateFocus
         onBecameFocused={this.onCategoryFocused}
+
+        // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
       />))}
     </ScrollView>);
   }

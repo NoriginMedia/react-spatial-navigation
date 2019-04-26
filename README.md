@@ -265,6 +265,9 @@ Focus key that is either the `focusKey` prop of the HOC, or automatically genera
 ### `parentFocusKey`: string
 Focus key of the parent component. If it is a top level focusable component, this prop will be `SN:ROOT`
 
+### `preferredChildFocusKey`: string
+Focus key of the child component focused during the focus propagation when the parent component is focused the first time or has `forgetLastFocusedChild` set
+
 ### `focused`: boolean
 Whether component is currently focused. It is only `true` if this exact component is focused, e.g. when this component propagates focus to child component, this value will be `false`.
 
@@ -325,7 +328,7 @@ Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spa
 - [ ] Refactor with React Hooks instead of recompose.
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
 - [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
-- [ ] Add "preferable focused component" feature for components with children. By default it's first element, but it is useful to customize this behaviour.
+- [x] Add "preferable focused component" feature for components with children. By default it's first element, but it is useful to customize this behaviour.
 - [ ] Implement mouse support. On some TV devices (or in the Browser) it is possible to use mouse-like input, e.g. magic remote in LG TVs. This system should support switching between "key" and "pointer" modes and apply "focused" state accordingly.
 
 ---
