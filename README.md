@@ -266,7 +266,7 @@ Focus key that is either the `focusKey` prop of the HOC, or automatically genera
 Focus key of the parent component. If it is a top level focusable component, this prop will be `SN:ROOT`
 
 ### `preferredChildFocusKey`: string
-Focus key of the child component is be focused during the focus propagation the first time the parent is focused
+Focus key of the child component focused during the focus propagation when the parent component is focused the first time or has `forgetLastFocusedChild` set
 
 ### `focused`: boolean
 Whether component is currently focused. It is only `true` if this exact component is focused, e.g. when this component propagates focus to child component, this value will be `false`.

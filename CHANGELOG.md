@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added more docs regarding preemptive `setFocus` on non-existent components
-- Added `preferredChildFocusKey` property to set focus on child different from the first one during focus propagation
+- Added `preferredChildFocusKey` property to set focus on a specific component during focus propagation
 
 ### Changed
 - Save parent `lastFocusedChildKey` when a new component is focused
