@@ -10,6 +10,19 @@ import VisualDebugger from './visualDebugger';
 
 export const ROOT_FOCUS_KEY = 'SN:ROOT';
 
+const ADJACENT_SLICE_THRESHOLD = 0.2;
+
+/**
+ * Adjacent slice is 5 times more important than diagonal
+ */
+const ADJACENT_SLICE_WEIGHT = 5;
+const DIAGONAL_SLICE_WEIGHT = 1;
+
+/**
+ * Main coordinate distance is 5 times more important
+ */
+const MAIN_COORDINATE_WEIGHT = 5;
+
 const DIRECTION_LEFT = 'left';
 const DIRECTION_RIGHT = 'right';
 const DIRECTION_UP = 'up';
@@ -26,42 +39,220 @@ const DEFAULT_KEY_MAP = {
 
 const DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
 
+/* eslint-disable no-nested-ternary */
 class SpatialNavigation {
   /**
-   * Returns the reference point to be used for directional calculations.
-   * @param direction - Direction which the key press has indicated
-   * @param sibling - whether or not this is a sibling (aka a potential item to move to)
-   * @param item - The layout of the object in question in order to perform calculations
+   * Used to determine the coordinate that will be used to filter items that are over the "edge"
    */
-  static getReferencePoints(direction, sibling, item) {
-    const itemX = item.left;
-    const itemY = item.top;
-    const itemWidth = item.width;
-    const itemHeight = item.height;
+  static getCutoffCoordinate(isVertical, isIncremental, isSibling, layout) {
+    const itemX = layout.left;
+    const itemY = layout.top;
+    const itemWidth = layout.width;
+    const itemHeight = layout.height;
+
+    const coordinate = isVertical ? itemY : itemX;
+    const itemSize = isVertical ? itemHeight : itemWidth;
+
+    return isIncremental ?
+      (isSibling ? coordinate : coordinate + itemSize) :
+      (isSibling ? coordinate + itemSize : coordinate);
+  }
+
+  /**
+   * Returns two corners (a and b) coordinates that are used as a reference points
+   * Where "a" is always leftmost and topmost corner, and "b" is rightmost bottommost corner
+   */
+  static getRefCorners(direction, isSibling, layout) {
+    const itemX = layout.left;
+    const itemY = layout.top;
+    const itemWidth = layout.width;
+    const itemHeight = layout.height;
 
     const result = {
-      resultX: itemX + (itemWidth / 2),
-      resultY: itemY + (itemHeight / 2)
+      a: {
+        x: 0,
+        y: 0
+      },
+      b: {
+        x: 0,
+        y: 0
+      }
     };
 
     switch (direction) {
-    case DIRECTION_RIGHT:
-      result.resultX = sibling ? itemX : itemX + itemWidth;
+    case DIRECTION_UP: {
+      const y = isSibling ? itemY + itemHeight : itemY;
+
+      result.a = {
+        x: itemX,
+        y
+      };
+
+      result.b = {
+        x: itemX + itemWidth,
+        y
+      };
+
       break;
-    case DIRECTION_LEFT:
-      result.resultX = sibling ? itemX + itemWidth : itemX;
+    }
+
+    case DIRECTION_DOWN: {
+      const y = isSibling ? itemY : itemY + itemHeight;
+
+      result.a = {
+        x: itemX,
+        y
+      };
+
+      result.b = {
+        x: itemX + itemWidth,
+        y
+      };
+
       break;
-    case DIRECTION_UP:
-      result.resultY = sibling ? itemY + itemHeight : itemY;
+    }
+
+    case DIRECTION_LEFT: {
+      const x = isSibling ? itemX + itemWidth : itemX;
+
+      result.a = {
+        x,
+        y: itemY
+      };
+
+      result.b = {
+        x,
+        y: itemY + itemHeight
+      };
+
       break;
-    case DIRECTION_DOWN:
-      result.resultY = sibling ? itemY : itemY + itemHeight;
+    }
+
+    case DIRECTION_RIGHT: {
+      const x = isSibling ? itemX : itemX + itemWidth;
+
+      result.a = {
+        x,
+        y: itemY
+      };
+
+      result.b = {
+        x,
+        y: itemY + itemHeight
+      };
+
       break;
+    }
+
     default:
       break;
     }
 
     return result;
+  }
+
+  /**
+   * Calculates if the sibling node is intersecting enough with the ref node by the secondary coordinate
+   */
+  static isAdjacentSlice(refCorners, siblingCorners, isVerticalDirection) {
+    const {a: refA, b: refB} = refCorners;
+    const {a: siblingA, b: siblingB} = siblingCorners;
+    const coordinate = isVerticalDirection ? 'x' : 'y';
+
+    const refCoordinateA = refA[coordinate];
+    const refCoordinateB = refB[coordinate];
+    const siblingCoordinateA = siblingA[coordinate];
+    const siblingCoordinateB = siblingB[coordinate];
+
+    const thresholdDistance = (refCoordinateB - refCoordinateA) * ADJACENT_SLICE_THRESHOLD;
+
+    const intersectionLength = Math.max(0, Math.min(refCoordinateB, siblingCoordinateB) -
+      Math.max(refCoordinateA, siblingCoordinateA));
+
+    return intersectionLength >= thresholdDistance;
+  }
+
+  static getPrimaryAxisDistance(refCorners, siblingCorners, isVerticalDirection) {
+    const {a: refA} = refCorners;
+    const {a: siblingA} = siblingCorners;
+    const coordinate = isVerticalDirection ? 'y' : 'x';
+
+    return Math.abs(siblingA[coordinate] - refA[coordinate]);
+  }
+
+  static getSecondaryAxisDistance(refCorners, siblingCorners, isVerticalDirection) {
+    const {a: refA, b: refB} = refCorners;
+    const {a: siblingA, b: siblingB} = siblingCorners;
+    const coordinate = isVerticalDirection ? 'x' : 'y';
+
+    const refCoordinateA = refA[coordinate];
+    const refCoordinateB = refB[coordinate];
+    const siblingCoordinateA = siblingA[coordinate];
+    const siblingCoordinateB = siblingB[coordinate];
+
+    const distancesToCompare = [];
+
+    distancesToCompare.push(Math.abs(siblingCoordinateA - refCoordinateA));
+    distancesToCompare.push(Math.abs(siblingCoordinateA - refCoordinateB));
+    distancesToCompare.push(Math.abs(siblingCoordinateB - refCoordinateA));
+    distancesToCompare.push(Math.abs(siblingCoordinateB - refCoordinateB));
+
+    return Math.min(...distancesToCompare);
+  }
+
+  /**
+   * Inspired by: https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design
+   * Ref Corners are the 2 corners of the current component in the direction of navigation
+   * They used as a base to measure adjacent slices
+   */
+  sortSiblingsByPriority(siblings, currentLayout, direction, focusKey) {
+    const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
+
+    const refCorners = SpatialNavigation.getRefCorners(direction, false, currentLayout);
+
+    return sortBy(siblings, (sibling) => {
+      const siblingCorners = SpatialNavigation.getRefCorners(direction, true, sibling.layout);
+
+      const isAdjacentSlice = SpatialNavigation.isAdjacentSlice(refCorners, siblingCorners, isVerticalDirection);
+
+      const primaryAxisFunction = isAdjacentSlice ?
+        SpatialNavigation.getPrimaryAxisDistance :
+        SpatialNavigation.getSecondaryAxisDistance;
+
+      const secondaryAxisFunction = isAdjacentSlice ?
+        SpatialNavigation.getSecondaryAxisDistance :
+        SpatialNavigation.getPrimaryAxisDistance;
+
+      const primaryAxisDistance = primaryAxisFunction(refCorners, siblingCorners, isVerticalDirection);
+      const secondaryAxisDistance = secondaryAxisFunction(refCorners, siblingCorners, isVerticalDirection);
+
+      /**
+       * The higher this value is, the less prioritised the candidate is
+       */
+      const totalDistancePoints = (primaryAxisDistance * MAIN_COORDINATE_WEIGHT) + secondaryAxisDistance;
+      const priority = totalDistancePoints / (isAdjacentSlice ? ADJACENT_SLICE_WEIGHT : DIAGONAL_SLICE_WEIGHT);
+
+      this.log(
+        'smartNavigate',
+        `distance (primary, secondary, total weighted) for ${sibling.focusKey} relative to ${focusKey} is`,
+        primaryAxisDistance,
+        secondaryAxisDistance,
+        totalDistancePoints
+      );
+
+      this.log(
+        'smartNavigate',
+        `priority for ${sibling.focusKey} relative to ${focusKey} is`,
+        priority
+      );
+
+      if (this.visualDebugger) {
+        this.visualDebugger.drawPoint(siblingCorners.a.x, siblingCorners.a.y, 'yellow', 6);
+        this.visualDebugger.drawPoint(siblingCorners.b.x, siblingCorners.b.y, 'yellow', 6);
+      }
+
+      return priority;
+    });
   }
 
   constructor() {
@@ -227,33 +418,35 @@ class SpatialNavigation {
       const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
       const isIncrementalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_RIGHT;
 
-      const currentReferencePoints = SpatialNavigation.getReferencePoints(direction, false, layout);
-      const currentReferenceX = currentReferencePoints.resultX;
-      const currentReferenceY = currentReferencePoints.resultY;
+      const currentCutoffCoordinate = SpatialNavigation.getCutoffCoordinate(
+        isVerticalDirection,
+        isIncrementalDirection,
+        false,
+        layout
+      );
 
       /**
        * Get only the siblings with the coords on the way of our moving direction
        */
       const siblings = filter(this.focusableComponents, (component) => {
         if (component.parentFocusKey === parentFocusKey) {
-          const siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, component.layout);
-          const siblingReferenceX = siblingReferencePoints.resultX;
-          const siblingReferenceY = siblingReferencePoints.resultY;
+          const siblingCutoffCoordinate = SpatialNavigation.getCutoffCoordinate(
+            isVerticalDirection,
+            isIncrementalDirection,
+            true,
+            component.layout
+          );
 
-          if (isIncrementalDirection) {
-            return isVerticalDirection ?
-              siblingReferenceY >= currentReferenceY : siblingReferenceX >= currentReferenceX;
-          } else if (!isIncrementalDirection) {
-            return isVerticalDirection ?
-              siblingReferenceY <= currentReferenceY : siblingReferenceX <= currentReferenceX;
-          }
+          return isIncrementalDirection ?
+            siblingCutoffCoordinate >= currentCutoffCoordinate :
+            siblingCutoffCoordinate <= currentCutoffCoordinate;
         }
 
         return false;
       });
 
       if (this.debug) {
-        this.log('smartNavigate', 'currentReferencePoints', `x: ${currentReferenceX}`, `y: ${currentReferenceY}`);
+        this.log('smartNavigate', 'currentCutoffCoordinate', currentCutoffCoordinate);
         this.log(
           'smartNavigate', 'siblings', `${siblings.length} elements:`,
           siblings.map((s) => s.focusKey).join(', '),
@@ -261,27 +454,19 @@ class SpatialNavigation {
         );
       }
 
-      this.visualDebugger && this.visualDebugger.drawPoint(currentReferenceX, currentReferenceY);
+      if (this.visualDebugger) {
+        const refCorners = SpatialNavigation.getRefCorners(direction, false, layout);
 
-      const sortedSiblings = sortBy(siblings, (sibling) => {
-        const siblingReferencePoints = SpatialNavigation.getReferencePoints(direction, true, sibling.layout);
-        const siblingReferenceX = siblingReferencePoints.resultX;
-        const siblingReferenceY = siblingReferencePoints.resultY;
+        this.visualDebugger.drawPoint(refCorners.a.x, refCorners.a.y);
+        this.visualDebugger.drawPoint(refCorners.b.x, refCorners.b.y);
+      }
 
-        this.visualDebugger && this.visualDebugger.drawPoint(siblingReferenceX, siblingReferenceY, 'yellow', 6);
-
-        const distance = Math.sqrt(Math.pow((siblingReferenceX - currentReferenceX), 2) +
-          Math.pow((siblingReferenceY - currentReferenceY), 2));
-
-        this.log(
-          'smartNavigate',
-          `distance between ${focusKey} and ${sibling.focusKey} is`,
-          distance,
-          `(position x: ${siblingReferenceX}, y: ${siblingReferenceY})`
-        );
-
-        return distance;
-      });
+      const sortedSiblings = this.sortSiblingsByPriority(
+        siblings,
+        layout,
+        direction,
+        focusKey
+      );
 
       const nextComponent = first(sortedSiblings);
 
@@ -323,8 +508,8 @@ class SpatialNavigation {
 
   /**
    * This function tries to determine the next component to Focus
-   * It's either the target node OR the one down by the Tree if node has "propagateFocus"
-   * Based on "targetFocusKey"
+   * It's either the target node OR the one down by the Tree if node has children components
+   * Based on "targetFocusKey" that means the "intended component to focus"
    */
   getNextFocusKey(targetFocusKey) {
     const targetComponent = this.focusableComponents[targetFocusKey];
@@ -338,7 +523,7 @@ class SpatialNavigation {
 
     const children = filter(this.focusableComponents, (component) => component.parentFocusKey === targetFocusKey);
 
-    if (children.length > 0 && this.isPropagateFocus(targetFocusKey)) {
+    if (children.length > 0) {
       this.onIntermediateNodeBecameFocused(targetFocusKey);
 
       const {lastFocusedChildKey, preferredChildFocusKey} = targetComponent;
@@ -394,7 +579,6 @@ class SpatialNavigation {
     onEnterPressHandler,
     onBecameFocusedHandler,
     forgetLastFocusedChild,
-    propagateFocus,
     trackChildren,
     onUpdateFocus,
     onUpdateHasFocusedChild,
@@ -408,7 +592,6 @@ class SpatialNavigation {
       onBecameFocusedHandler,
       onUpdateFocus,
       onUpdateHasFocusedChild,
-      propagateFocus,
       forgetLastFocusedChild,
       trackChildren,
       lastFocusedChildKey: null,
@@ -535,10 +718,6 @@ class SpatialNavigation {
       ...this.getKeyMap(),
       ...keyMap
     };
-  }
-
-  isPropagateFocus(focusKey) {
-    return this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].propagateFocus;
   }
 
   isFocusableComponent(focusKey) {

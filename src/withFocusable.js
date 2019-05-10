@@ -17,7 +17,6 @@ import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
 const omitProps = (keys) => mapProps((props) => omit(props, keys));
 
 const withFocusable = ({
-  propagateFocus: configPropagateFocus = false,
   forgetLastFocusedChild: configForgetLastFocusedChild = false,
   trackChildren: configTrackChildren = false
 } = {}) => compose(
@@ -77,7 +76,6 @@ const withFocusable = ({
     componentDidMount() {
       const {
         realFocusKey: focusKey,
-        propagateFocus = false,
         parentFocusKey,
         preferredChildFocusKey,
         forgetLastFocusedChild = false,
@@ -99,7 +97,6 @@ const withFocusable = ({
         onBecameFocusedHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
-        propagateFocus: (configPropagateFocus || propagateFocus),
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
         trackChildren: (configTrackChildren || trackChildren)
       });
@@ -134,7 +131,6 @@ const withFocusable = ({
     'onEnterPressHandler',
     'onUpdateFocus',
     'onUpdateHasFocusedChild',
-    'propagateFocus',
     'forgetLastFocusedChild',
     'trackChildren'
   ])

@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Improved the main navigation algorithm. Instead of calculating distance between center of the borders between 2 items in the direction of navigation, the new algorithm now prioritises the distance by the main coordinate and then takes into account the distance by the secondary coordinate. Inspired by this [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design)
+
+### Removed
+- Removed `propagateFocus` config option and prop for `withFocusable` HOC because it was always used for items with children items anyway
 
 ## [2.1.0]
 ### Added

@@ -71,8 +71,6 @@ var omitProps = function omitProps(keys) {
 
 var withFocusable = function withFocusable() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      _ref$propagateFocus = _ref.propagateFocus,
-      configPropagateFocus = _ref$propagateFocus === undefined ? false : _ref$propagateFocus,
       _ref$forgetLastFocuse = _ref.forgetLastFocusedChild,
       configForgetLastFocusedChild = _ref$forgetLastFocuse === undefined ? false : _ref$forgetLastFocuse,
       _ref$trackChildren = _ref.trackChildren,
@@ -154,8 +152,6 @@ var withFocusable = function withFocusable() {
     componentDidMount: function componentDidMount() {
       var _props = this.props,
           focusKey = _props.realFocusKey,
-          _props$propagateFocus = _props.propagateFocus,
-          propagateFocus = _props$propagateFocus === undefined ? false : _props$propagateFocus,
           parentFocusKey = _props.parentFocusKey,
           preferredChildFocusKey = _props.preferredChildFocusKey,
           _props$forgetLastFocu = _props.forgetLastFocusedChild,
@@ -178,7 +174,6 @@ var withFocusable = function withFocusable() {
         onBecameFocusedHandler: onBecameFocusedHandler,
         onUpdateFocus: onUpdateFocus,
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
-        propagateFocus: configPropagateFocus || propagateFocus,
         forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild,
         trackChildren: configTrackChildren || trackChildren
       });
@@ -210,7 +205,7 @@ var withFocusable = function withFocusable() {
         focusKey: focusKey
       });
     }
-  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild', 'propagateFocus', 'forgetLastFocusedChild', 'trackChildren']));
+  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild', 'forgetLastFocusedChild', 'trackChildren']));
 };
 
 exports.default = withFocusable;
