@@ -259,7 +259,6 @@ var Content = function (_React$PureComponent3) {
         _react2.default.createElement(Active, { program: this.state.currentProgram }),
         _react2.default.createElement(CategoriesFocusable, {
           focusKey: 'CATEGORIES',
-          propagateFocus: true,
           onProgramPress: this.onProgramPress
         })
       );
@@ -494,7 +493,6 @@ var Categories = function (_React$PureComponent7) {
           }, category, {
             onProgramPress: _this9.props.onProgramPress,
             key: category.title,
-            propagateFocus: true,
             onBecameFocused: _this9.onCategoryFocused
 
             // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
@@ -530,12 +528,10 @@ var Spatial = function (_React$PureComponent8) {
         _reactNative.View,
         { style: styles.wrapper },
         _react2.default.createElement(MenuFocusable, {
-          focusKey: 'MENU',
-          propagateFocus: true
+          focusKey: 'MENU'
         }),
         _react2.default.createElement(ContentFocusable, {
-          focusKey: 'CONTENT',
-          propagateFocus: true
+          focusKey: 'CONTENT'
         })
       );
     }
