@@ -64,7 +64,6 @@ import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 ...
 
 const FocusableComponent = withFocusable({
-  propagateFocus: true,
   trackChildren: true,
   forgetLastFocusedChild: true
 })(Component);
@@ -80,8 +79,7 @@ const FocusableComponent = withFocusable()(Component);
 
 const ParentComponent = (props) => (<View>
   ...
-  <FocusableComponent 
-    propagateFocus
+  <FocusableComponent
     trackChildren
     forgetLastFocusedChild
     focusKey={'FOCUSABLE_COMPONENT'}
@@ -135,8 +133,7 @@ class Menu extends PureComponent {
 }
 
 const MenuFocusable = withFocusable({
-  trackChildren: true,
-  propagateFocus: true
+  trackChildren: true
 })(Menu);
 ```
 
@@ -186,12 +183,6 @@ const FocusableComponent = withFocusable({...})(Component);
 ```
 
 ## Config
-### `propagateFocus`: boolean
-Determine whether to automatically propagate focus to child focusable component when this component gets focused.
-
-* **false (default)**
-* **true**
-
 ### `trackChildren`: boolean
 Determine whether to track when any child component is focused. Wrapped component can rely on `hasFocusedChild` prop when this mode is enabled. Otherwise `hasFocusedChild` will be always `false`.
 
@@ -206,9 +197,6 @@ Determine whether this component should not remember the last focused child comp
 
 ## Props that can be applied to HOC
 All these props are optional.
-
-### `propagateFocus`: boolean
-Same as in [config](#config).
 
 ### `trackChildren`: boolean
 Same as in [config](#config).
@@ -238,7 +226,7 @@ const onPress = ({prop1, prop2}) => {...};
 ```
 
 ### `onBecameFocused`: function
-Callback function that is called when the item becomes focused directly or during propagation of the focus to the children components. For example when you have nested tree of 5 focusable components, each of which has `propagateFocus`, this callback will be called on every level of propagation.
+Callback function that is called when the item becomes focused directly or during propagation of the focus to the children components. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus propagation.
 
 Payload:
 Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
@@ -322,9 +310,9 @@ Source code is in `src/App.js`
 Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CONTRIBUTING.md)
 
 # TODOs
-- [ ] Get rid of `propagateFocus`, because it is used in 99% of the times when component has children
+- [x] Get rid of `propagateFocus`, because it is used in 99% of the times when component has children
 - [ ] Unit tests
-- [ ] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
+- [x] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
 - [ ] Refactor with React Hooks instead of recompose.
 - [ ] Implement HOC for react-native tvOS and AndroidTV components.
 - [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.

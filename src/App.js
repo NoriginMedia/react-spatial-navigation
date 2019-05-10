@@ -186,7 +186,6 @@ class Content extends React.PureComponent {
       <Active program={this.state.currentProgram} />
       <CategoriesFocusable
         focusKey={'CATEGORIES'}
-        propagateFocus
         onProgramPress={this.onProgramPress}
       />
     </View>);
@@ -341,7 +340,6 @@ class Categories extends React.PureComponent {
         {...category}
         onProgramPress={this.props.onProgramPress}
         key={category.title}
-        propagateFocus
         onBecameFocused={this.onCategoryFocused}
 
         // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
@@ -362,11 +360,9 @@ class Spatial extends React.PureComponent {
     return (<View style={styles.wrapper}>
       <MenuFocusable
         focusKey={'MENU'}
-        propagateFocus
       />
       <ContentFocusable
         focusKey={'CONTENT'}
-        propagateFocus
       />
     </View>);
   }
