@@ -113,7 +113,11 @@ var SpatialNavigation = function () {
          * The higher this value is, the less prioritised the candidate is
          */
         var totalDistancePoints = primaryAxisDistance * MAIN_COORDINATE_WEIGHT + secondaryAxisDistance;
-        var priority = totalDistancePoints / (isAdjacentSlice ? ADJACENT_SLICE_WEIGHT : DIAGONAL_SLICE_WEIGHT);
+
+        /**
+         * + 1 here is in case of distance is zero, but we still want to apply Adjacent priority weight
+         */
+        var priority = (totalDistancePoints + 1) / (isAdjacentSlice ? ADJACENT_SLICE_WEIGHT : DIAGONAL_SLICE_WEIGHT);
 
         _this.log('smartNavigate', 'distance (primary, secondary, total weighted) for ' + sibling.focusKey + ' relative to ' + focusKey + ' is', primaryAxisDistance, secondaryAxisDistance, totalDistancePoints);
 
