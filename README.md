@@ -5,7 +5,7 @@
 The main motivation to create this package was to bring the best Developer Experience and Performance when working with Key Navigation and React. Ideally you wouldn't want to have any logic to define the navigation in your app. It should be as easy as just to tell which components should be navigable. With this package all you have to do is to initialize it, wrap your components with the HOC and set initial focus. The spatial navigation system will automatically figure out which components to focus next when you navigate with the directional keys.
 
 ## Article
-Will be published soon.
+[Smart TV Navigation with React](https://medium.com/norigintech/smart-tv-navigation-with-react-86bd5f3037b7)
 
 # Changelog
 [CHANGELOG.md](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CHANGELOG.md)
