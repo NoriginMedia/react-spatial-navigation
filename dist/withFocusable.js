@@ -89,7 +89,18 @@ var withFocusable = function withFocusable() {
 
     return {
       realFocusKey: realFocusKey,
-      setFocus: _spatialNavigation2.default.setFocus.bind(null, realFocusKey),
+
+      /**
+       * This method is used to imperatively set focus to a component.
+       * It is blocked in the Native mode because the native engine decides what to focus by itself.
+       */
+      setFocus: _spatialNavigation2.default.isNativeMode() ? _noop2.default : _spatialNavigation2.default.setFocus.bind(null, realFocusKey),
+
+      /**
+       * In Native mode this is the only way to mark component as focused.
+       * This method always steals focus onto current component no matter which arguments are passed in.
+       */
+      stealFocus: _spatialNavigation2.default.setFocus.bind(null, realFocusKey, realFocusKey),
       focused: false,
       hasFocusedChild: false,
       parentFocusKey: parentFocusKey || _spatialNavigation.ROOT_FOCUS_KEY
@@ -163,7 +174,7 @@ var withFocusable = function withFocusable() {
           trackChildren = _props.trackChildren;
 
 
-      var node = (0, _reactDom.findDOMNode)(this);
+      var node = _spatialNavigation2.default.isNativeMode() ? null : (0, _reactDom.findDOMNode)(this);
 
       _spatialNavigation2.default.addFocusable({
         focusKey: focusKey,
@@ -186,7 +197,7 @@ var withFocusable = function withFocusable() {
           preferredChildFocusKey = _props2.preferredChildFocusKey;
 
 
-      var node = (0, _reactDom.findDOMNode)(this);
+      var node = _spatialNavigation2.default.isNativeMode() ? null : (0, _reactDom.findDOMNode)(this);
 
       _spatialNavigation2.default.updateFocusable(focusKey, {
         node: node,

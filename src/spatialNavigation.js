@@ -277,6 +277,7 @@ class SpatialNavigation {
     this.parentsHavingFocusedChild = [];
 
     this.enabled = false;
+    this.nativeMode = false;
 
     /**
      * Flag used to block key events from this service
@@ -302,15 +303,21 @@ class SpatialNavigation {
 
   init({
     debug: debug = false,
-    visualDebug: visualDebug = false
+    visualDebug: visualDebug = false,
+    nativeMode: nativeMode = false
   } = {}) {
     if (!this.enabled) {
       this.enabled = true;
-      this.bindEventHandlers();
+      this.nativeMode = nativeMode;
+
       this.debug = debug;
-      if (visualDebug) {
-        this.visualDebugger = new VisualDebugger();
-        this.startDrawLayouts();
+
+      if (!this.nativeMode) {
+        this.bindEventHandlers();
+        if (visualDebug) {
+          this.visualDebugger = new VisualDebugger();
+          this.startDrawLayouts();
+        }
       }
     }
   }
@@ -336,6 +343,7 @@ class SpatialNavigation {
   destroy() {
     if (this.enabled) {
       this.enabled = false;
+      this.nativeMode = false;
       this.focusKey = null;
       this.parentsHavingFocusedChild = [];
       this.focusableComponents = {};
@@ -521,7 +529,7 @@ class SpatialNavigation {
     /**
      * Security check, if component doesn't exist, stay on the same focusKey
      */
-    if (!targetComponent) {
+    if (!targetComponent || this.nativeMode) {
       return targetFocusKey;
     }
 
@@ -610,6 +618,10 @@ class SpatialNavigation {
       }
     };
 
+    if (this.nativeMode) {
+      return;
+    }
+
     this.updateLayout(focusKey);
 
     /**
@@ -636,6 +648,10 @@ class SpatialNavigation {
        */
       parentComponent && parentComponent.lastFocusedChildKey === focusKey &&
         (parentComponent.lastFocusedChildKey = null);
+
+      if (this.nativeMode) {
+        return;
+      }
 
       /**
        * If the component was also focused at this time, focus another one
@@ -754,10 +770,17 @@ class SpatialNavigation {
 
     this.setCurrentFocusedKey(newFocusKey);
     this.updateParentsWithFocusedChild(newFocusKey);
-    this.updateAllLayouts();
+
+    if (!this.nativeMode) {
+      this.updateAllLayouts();
+    }
   }
 
   updateAllLayouts() {
+    if (this.nativeMode) {
+      return;
+    }
+
     forOwn(this.focusableComponents, (component, focusKey) => {
       this.updateLayout(focusKey);
     });
@@ -766,7 +789,7 @@ class SpatialNavigation {
   updateLayout(focusKey) {
     const component = this.focusableComponents[focusKey];
 
-    if (!component) {
+    if (!component || this.nativeMode) {
       return;
     }
 
@@ -785,6 +808,10 @@ class SpatialNavigation {
   }
 
   updateFocusable(focusKey, {node, preferredChildFocusKey}) {
+    if (this.nativeMode) {
+      return;
+    }
+
     const component = this.focusableComponents[focusKey];
 
     if (component) {
@@ -794,6 +821,10 @@ class SpatialNavigation {
         component.node = node;
       }
     }
+  }
+
+  isNativeMode() {
+    return this.nativeMode;
   }
 }
 
