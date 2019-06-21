@@ -140,14 +140,14 @@ const MenuFocusable = withFocusable({
 ### Using in Native environment
 Since in native environment the focus is controlled by the native engine, we can only "sync" with it by setting focus on the component itself when it gets focused.
 Native navigation system automatically converts all `Touchable` component to focusable components and enhances them with the callbacks such as `onFocus` and `onBlur`.
-Read more here: [React Native on TVs](https://facebook.github.io/react-native/docs/building-for-apple-tv)
+Read more here: [React Native on TVs](https://facebook.github.io/react-native/docs/building-for-apple-tv).
 
 ```jsx
 import {withFocusable} from '@noriginmedia/react-spatial-navigation';
 
 const Component = ({focused, stealFocus}) => (<View>
   <View style={focused ? styles.focusedStyle : styles.defaultStyle} />
-  <TouchableOpacity 
+  <TouchableOpacity
     onFocus={stealFocus}
   />
 </View>);
