@@ -137,12 +137,30 @@ const MenuFocusable = withFocusable({
 })(Menu);
 ```
 
+### Using in Native environment
+Since in native environment the focus is controlled by the native engine, we can only "sync" with it by setting focus on the component itself when it gets focused.
+Native navigation system automatically converts all `Touchable` component to focusable components and enhances them with the callbacks such as `onFocus` and `onBlur`.
+Read more here: [React Native on TVs](https://facebook.github.io/react-native/docs/building-for-apple-tv).
+
+```jsx
+import {withFocusable} from '@noriginmedia/react-spatial-navigation';
+
+const Component = ({focused, stealFocus}) => (<View>
+  <View style={focused ? styles.focusedStyle : styles.defaultStyle} />
+  <TouchableOpacity
+    onFocus={stealFocus}
+  />
+</View>);
+
+const FocusableComponent = withFocusable()(Component);
+```
+
 # API
 
 ## Top level
 ### `initNavigation`: function
 Function that needs to be called to enable Spatial Navigation system and bind key event listeners.
-Accepts [initConfig](#initConfig) as a param.
+Accepts [Initialization Config](#initialization-config) as a param.
 
 ```jsx
 initNavigation({
@@ -151,15 +169,31 @@ initNavigation({
 })
 ```
 
-## Initialization Config
-### `debug`: boolean
+#### Initialization Config
+##### `debug`: boolean
 Enable console debugging
 
 * **false (default)**
 * **true**
 
-### `visualDebug`: boolean
+##### `visualDebug`: boolean
 Enable visual debugging (all layouts, reference points and siblings refernce points are printed on canvases)
+
+* **false (default)**
+* **true**
+
+##### `nativeMode`: boolean
+Enable Native mode. It will block certain web-only functionality such as:
+- adding window key listeners
+- measuring DOM layout
+- `onBecameFocused` callback doesn't return coordinates
+- coordinates calculations when navigating
+- down-tree propagation
+- last focused child
+- preferred focus key
+
+Native mode should be only used to keep the tree of focusable components and to sync the `focused` flag to enable styling for focused components.
+In Native mode you can only `stealFocus` to some component to flag it as `focused`, normal `setFocus` method is blocked because it will not propagate to native layer.
 
 * **false (default)**
 * **true**
@@ -182,14 +216,14 @@ Main HOC wrapper function. Accepts [config](#config) as a param.
 const FocusableComponent = withFocusable({...})(Component);
 ```
 
-## Config
-### `trackChildren`: boolean
+#### Config
+##### `trackChildren`: boolean
 Determine whether to track when any child component is focused. Wrapped component can rely on `hasFocusedChild` prop when this mode is enabled. Otherwise `hasFocusedChild` will be always `false`.
 
 * **false (default)** - Disabled by default because it causes unnecessary render call when `hasFocusedChild` changes
 * **true**
 
-### `forgetLastFocusedChild`: boolean
+##### `forgetLastFocusedChild`: boolean
 Determine whether this component should not remember the last focused child components. By default when focus goes away from the component and then it gets focused again, it will focus the last focused child. This functionality is enabled by default.
 
 * **false (default)**
@@ -263,11 +297,24 @@ Whether component is currently focused. It is only `true` if this exact componen
 This prop indicates that the component currently has some focused child on any depth of the focusable tree.
 
 ### `setFocus`: function
-This method sets the focus to another component (when focus key is passed as param) or steals the focus to itself (when used w/o params). It is also possible to set focus to a non-existent component, and it will be automatically picked up when component with that focus key will get mounted. This preemptive setting of the focus might be useful when rendering lists of data. You can assign focus key with the item index and set it to e.g. first item, then as soon as it will be rendered, that item will get focused.
+This method sets the focus to another component (when focus key is passed as param) or steals the focus to itself (when used w/o params). It is also possible to set focus to a non-existent component, and it will be automatically picked up when component with that focus key will get mounted.
+This preemptive setting of the focus might be useful when rendering lists of data. 
+You can assign focus key with the item index and set it to e.g. first item, then as soon as it will be rendered, that item will get focused.
+In Native mode this method is ignored (`noop`).
 
 ```jsx
 setFocus(); // set focus to self
 setFocus('SOME_COMPONENT'); // set focus to another component if you know its focus key
+```
+
+### `stealFocus`: function
+This method works exactly like `setFocus`, but it always sets focus to current component no matter which params you pass in.
+This is the only way to set focus in Native mode.
+
+```jsx
+<TouchableOpacity 
+  onFocus={stealFocus}
+/>
 ```
 
 ### `pauseSpatialNavigation`: function
@@ -302,21 +349,19 @@ Source code is in `src/App.js`
 
 ### `spatialNavigation` Service
 * New components are added in `addFocusable`and removed in `removeFocusable`
-* Main function to change focus is `setFocus`. First it decides next focus key (`getNextFocusKey`), then set focus to the new component (`setCurrentFocusedKey`), then the service updates all components that has focused child and finally updates layout (coordinates and dimensions) for all focusable component.
+* Main function to change focus in web environment is `setFocus`. First it decides next focus key (`getNextFocusKey`), then set focus to the new component (`setCurrentFocusedKey`), then the service updates all components that has focused child and finally updates layout (coordinates and dimensions) for all focusable component.
 * `getNextFocusKey` is used to determine the good candidate to focus when you call `setFocus`. This method will either return the target focus key for the component you are trying to focus, or go down by the focusable tree and select the best child component to focus. This function is recoursive and going down by the focusable tree.
 * `smartNavigate` is similar to the previous one, but is called in response to a key press event. It tries to focus the best sibling candidate in the direction of key press, or delegates this task to a focusable parent, that will do the same attempt for its sibling and so on.
+* In Native environment the only way to set focus is `stealFocus`. This service mostly works as a "sync" between native navigation system and JS to apply `focused` state and keep the tree structure of focusable components. All the layout and coordinates measurement features are disabled because native engine takes care of it.
 
 ## Contributing
 Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spatial-navigation/blob/master/CONTRIBUTING.md)
 
 # TODOs
-- [x] Get rid of `propagateFocus`, because it is used in 99% of the times when component has children
 - [ ] Unit tests
-- [x] Implement more advanced coordination calculation [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design).
 - [ ] Refactor with React Hooks instead of recompose.
-- [ ] Implement HOC for react-native tvOS and AndroidTV components.
+- [x] Native environment support
 - [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
-- [x] Add "preferable focused component" feature for components with children. By default it's first element, but it is useful to customize this behaviour.
 - [ ] Implement mouse support. On some TV devices (or in the Browser) it is possible to use mouse-like input, e.g. magic remote in LG TVs. This system should support switching between "key" and "pointer" modes and apply "focused" state accordingly.
 
 ---

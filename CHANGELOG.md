@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.3.0]
+### Added
+- Added support for Native environment. Now if the service is initialized with `nativeMode` flag, it will skip creating window event listeners, measuring coordinates and other web-only features. It will still continue to register all focusable components and update `focused` flag on them.
+- Added new method `stealFocus` to `withFocusable` hoc. It works exactly the same as `setFocus` apart from that it doesn't care about arguments passed to this method. This is useful when binding it to a callback that passed some params back that you don't care about.
+
+## [2.2.1]
 ### Changed
 - Improved the main navigation algorithm. Instead of calculating distance between center of the borders between 2 items in the direction of navigation, the new algorithm now prioritises the distance by the main coordinate and then takes into account the distance by the secondary coordinate. Inspired by this [algorithm](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox_OS_for_TV/TV_remote_control_navigation#Algorithm_design)
 

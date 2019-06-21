@@ -330,6 +330,7 @@ var SpatialNavigation = function () {
     this.parentsHavingFocusedChild = [];
 
     this.enabled = false;
+    this.nativeMode = false;
 
     /**
      * Flag used to block key events from this service
@@ -360,15 +361,22 @@ var SpatialNavigation = function () {
           _ref$debug = _ref.debug,
           debug = _ref$debug === undefined ? false : _ref$debug,
           _ref$visualDebug = _ref.visualDebug,
-          visualDebug = _ref$visualDebug === undefined ? false : _ref$visualDebug;
+          visualDebug = _ref$visualDebug === undefined ? false : _ref$visualDebug,
+          _ref$nativeMode = _ref.nativeMode,
+          nativeMode = _ref$nativeMode === undefined ? false : _ref$nativeMode;
 
       if (!this.enabled) {
         this.enabled = true;
-        this.bindEventHandlers();
+        this.nativeMode = nativeMode;
+
         this.debug = debug;
-        if (visualDebug) {
-          this.visualDebugger = new _visualDebugger2.default();
-          this.startDrawLayouts();
+
+        if (!this.nativeMode) {
+          this.bindEventHandlers();
+          if (visualDebug) {
+            this.visualDebugger = new _visualDebugger2.default();
+            this.startDrawLayouts();
+          }
         }
       }
     }
@@ -394,6 +402,7 @@ var SpatialNavigation = function () {
     value: function destroy() {
       if (this.enabled) {
         this.enabled = false;
+        this.nativeMode = false;
         this.focusKey = null;
         this.parentsHavingFocusedChild = [];
         this.focusableComponents = {};
@@ -576,7 +585,7 @@ var SpatialNavigation = function () {
       /**
        * Security check, if component doesn't exist, stay on the same focusKey
        */
-      if (!targetComponent) {
+      if (!targetComponent || this.nativeMode) {
         return targetFocusKey;
       }
 
@@ -673,6 +682,10 @@ var SpatialNavigation = function () {
         }
       };
 
+      if (this.nativeMode) {
+        return;
+      }
+
       this.updateLayout(focusKey);
 
       /**
@@ -702,6 +715,10 @@ var SpatialNavigation = function () {
          * If the component was stored as lastFocusedChild, clear lastFocusedChildKey from parent
          */
         parentComponent && parentComponent.lastFocusedChildKey === focusKey && (parentComponent.lastFocusedChildKey = null);
+
+        if (this.nativeMode) {
+          return;
+        }
 
         /**
          * If the component was also focused at this time, focus another one
@@ -831,12 +848,19 @@ var SpatialNavigation = function () {
 
       this.setCurrentFocusedKey(newFocusKey);
       this.updateParentsWithFocusedChild(newFocusKey);
-      this.updateAllLayouts();
+
+      if (!this.nativeMode) {
+        this.updateAllLayouts();
+      }
     }
   }, {
     key: 'updateAllLayouts',
     value: function updateAllLayouts() {
       var _this5 = this;
+
+      if (this.nativeMode) {
+        return;
+      }
 
       (0, _forOwn2.default)(this.focusableComponents, function (component, focusKey) {
         _this5.updateLayout(focusKey);
@@ -847,7 +871,7 @@ var SpatialNavigation = function () {
     value: function updateLayout(focusKey) {
       var component = this.focusableComponents[focusKey];
 
-      if (!component) {
+      if (!component || this.nativeMode) {
         return;
       }
 
@@ -871,6 +895,10 @@ var SpatialNavigation = function () {
       var node = _ref4.node,
           preferredChildFocusKey = _ref4.preferredChildFocusKey;
 
+      if (this.nativeMode) {
+        return;
+      }
+
       var component = this.focusableComponents[focusKey];
 
       if (component) {
@@ -880,6 +908,11 @@ var SpatialNavigation = function () {
           component.node = node;
         }
       }
+    }
+  }, {
+    key: 'isNativeMode',
+    value: function isNativeMode() {
+      return this.nativeMode;
     }
   }]);
 
