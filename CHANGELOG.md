@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.1]
+### Added
+- Added [throttle](https://github.com/NoriginMedia/react-spatial-navigation#initialization-config) property to throttle the function fired by the event listener.
+
 ## [2.3.0]
 ### Added
 - Added support for Native environment. Now if the service is initialized with `nativeMode` flag, it will skip creating window event listeners, measuring coordinates and other web-only features. It will still continue to register all focusable components and update `focused` flag on them.

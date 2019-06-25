@@ -35,6 +35,10 @@ var _forOwn = require('lodash/forOwn');
 
 var _forOwn2 = _interopRequireDefault(_forOwn);
 
+var _throttle = require('lodash/throttle');
+
+var _throttle2 = _interopRequireDefault(_throttle);
+
 var _difference = require('lodash/difference');
 
 var _difference2 = _interopRequireDefault(_difference);
@@ -331,6 +335,7 @@ var SpatialNavigation = function () {
 
     this.enabled = false;
     this.nativeMode = false;
+    this.throttle = 0;
 
     /**
      * Flag used to block key events from this service
@@ -363,7 +368,9 @@ var SpatialNavigation = function () {
           _ref$visualDebug = _ref.visualDebug,
           visualDebug = _ref$visualDebug === undefined ? false : _ref$visualDebug,
           _ref$nativeMode = _ref.nativeMode,
-          nativeMode = _ref$nativeMode === undefined ? false : _ref$nativeMode;
+          nativeMode = _ref$nativeMode === undefined ? false : _ref$nativeMode,
+          _ref$throttle = _ref.throttle,
+          throttle = _ref$throttle === undefined ? 0 : _ref$throttle;
 
       if (!this.enabled) {
         this.enabled = true;
@@ -372,6 +379,9 @@ var SpatialNavigation = function () {
         this.debug = debug;
 
         if (!this.nativeMode) {
+          if (Number.isInteger(throttle) && throttle > 0) {
+            this.throttle = throttle;
+          }
           this.bindEventHandlers();
           if (visualDebug) {
             this.visualDebugger = new _visualDebugger2.default();
@@ -403,6 +413,7 @@ var SpatialNavigation = function () {
       if (this.enabled) {
         this.enabled = false;
         this.nativeMode = false;
+        this.throttle = 0;
         this.focusKey = null;
         this.parentsHavingFocusedChild = [];
         this.focusableComponents = {};
@@ -446,7 +457,7 @@ var SpatialNavigation = function () {
           }
         };
 
-        window.addEventListener('keydown', this.keyEventListener);
+        window.addEventListener('keydown', (0, _throttle2.default)(this.keyEventListener, this.throttle));
       }
     }
   }, {
