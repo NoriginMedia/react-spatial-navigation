@@ -279,6 +279,7 @@ class SpatialNavigation {
 
     this.enabled = false;
     this.nativeMode = false;
+    this.throttle = 0;
 
     /**
      * Flag used to block key events from this service
@@ -349,6 +350,7 @@ class SpatialNavigation {
     if (this.enabled) {
       this.enabled = false;
       this.nativeMode = false;
+      this.throttle = 0;
       this.focusKey = null;
       this.parentsHavingFocusedChild = [];
       this.focusableComponents = {};
