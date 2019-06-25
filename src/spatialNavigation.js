@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import findKey from 'lodash/findKey';
 import forEach from 'lodash/forEach';
 import forOwn from 'lodash/forOwn';
+import lodashThrottle from 'lodash/throttle';
 import difference from 'lodash/difference';
 import measureLayout from './measureLayout';
 import VisualDebugger from './visualDebugger';
@@ -304,7 +305,8 @@ class SpatialNavigation {
   init({
     debug: debug = false,
     visualDebug: visualDebug = false,
-    nativeMode: nativeMode = false
+    nativeMode: nativeMode = false,
+    throttle: throttle = 0
   } = {}) {
     if (!this.enabled) {
       this.enabled = true;
@@ -313,6 +315,9 @@ class SpatialNavigation {
       this.debug = debug;
 
       if (!this.nativeMode) {
+        if (Number.isInteger(throttle) && throttle > 0) {
+          this.throttle = throttle;
+        }
         this.bindEventHandlers();
         if (visualDebug) {
           this.visualDebugger = new VisualDebugger();
@@ -382,7 +387,7 @@ class SpatialNavigation {
         }
       };
 
-      window.addEventListener('keydown', this.keyEventListener);
+      window.addEventListener('keydown', lodashThrottle(this.keyEventListener, this.throttle));
     }
   }
 

@@ -198,6 +198,11 @@ In Native mode you can only `stealFocus` to some component to flag it as `focuse
 * **false (default)**
 * **true**
 
+##### `throttle`: integer
+Enable to throttle the function fired by the event listener.
+
+* **0 (default)**
+
 ### `setKeyMap`: function
 Function to set custom key codes.
 ```jsx
