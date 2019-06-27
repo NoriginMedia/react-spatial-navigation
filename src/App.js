@@ -115,6 +115,8 @@ const programs = shuffle([{
   color: '#c0ee33'
 }]);
 
+const RETURN_KEY = 8;
+
 /* eslint-disable react/prefer-stateless-function */
 class MenuItem extends React.PureComponent {
   render() {
@@ -133,8 +135,26 @@ MenuItem.propTypes = {
 const MenuItemFocusable = withFocusable()(MenuItem);
 
 class Menu extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.onPressKey = this.onPressKey.bind(this);
+  }
+
   componentDidMount() {
     this.props.setFocus();
+
+    window.addEventListener('keydown', this.onPressKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onPressKey);
+  }
+
+  onPressKey(event) {
+    if (event.keyCode === RETURN_KEY) {
+      this.props.setFocus();
+    }
   }
 
   render() {

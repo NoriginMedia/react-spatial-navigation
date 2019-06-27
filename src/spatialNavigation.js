@@ -696,7 +696,7 @@ class SpatialNavigation {
     newComponent && newComponent.onUpdateFocus(true);
   }
 
-  updateParentsWithFocusedChild(focusKey) {
+  updateParentsHasFocusedChild(focusKey) {
     const parents = [];
 
     let currentComponent = this.focusableComponents[focusKey];
@@ -736,6 +736,25 @@ class SpatialNavigation {
     this.parentsHavingFocusedChild = parents;
   }
 
+  updateParentsLastFocusedChild(focusKey) {
+    let currentComponent = this.focusableComponents[focusKey];
+
+    /**
+     * Recursively iterate the tree up and update all the parent's lastFocusedChild
+     */
+    while (currentComponent) {
+      const {parentFocusKey} = currentComponent;
+
+      const parentComponent = this.focusableComponents[parentFocusKey];
+
+      if (parentComponent) {
+        this.saveLastFocusedChildKey(parentComponent, currentComponent.focusKey);
+      }
+
+      currentComponent = parentComponent;
+    }
+  }
+
   getKeyMap() {
     return this.keyMap;
   }
@@ -771,12 +790,14 @@ class SpatialNavigation {
 
     const targetFocusKey = overwriteFocusKey || focusKey;
 
+    const lastFocusedKey = this.focusKey;
     const newFocusKey = this.getNextFocusKey(targetFocusKey);
 
     this.log('setFocus', 'newFocusKey', newFocusKey);
 
     this.setCurrentFocusedKey(newFocusKey);
-    this.updateParentsWithFocusedChild(newFocusKey);
+    this.updateParentsHasFocusedChild(newFocusKey);
+    this.updateParentsLastFocusedChild(lastFocusedKey);
 
     if (!this.nativeMode) {
       this.updateAllLayouts();
