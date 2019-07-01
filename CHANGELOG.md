@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.2]
+### Fixed
+- Fixed an issue where the `lastFocusedChildKey` were not saved for all focusable parents when focus is jumping to another tree branch with `setFocus`.
+
 ## [2.3.1]
 ### Added
 - Added [throttle](https://github.com/NoriginMedia/react-spatial-navigation#initialization-config) property to throttle the function fired by the event listener.
