@@ -148,6 +148,8 @@ var programs = (0, _shuffle2.default)([{
   color: '#c0ee33'
 }]);
 
+var RETURN_KEY = 8;
+
 /* eslint-disable react/prefer-stateless-function */
 
 var MenuItem = function (_React$PureComponent) {
@@ -182,16 +184,33 @@ var MenuItemFocusable = (0, _withFocusable2.default)()(MenuItem);
 var Menu = function (_React$PureComponent2) {
   _inherits(Menu, _React$PureComponent2);
 
-  function Menu() {
+  function Menu(props) {
     _classCallCheck(this, Menu);
 
-    return _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).apply(this, arguments));
+    var _this2 = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, props));
+
+    _this2.onPressKey = _this2.onPressKey.bind(_this2);
+    return _this2;
   }
 
   _createClass(Menu, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.props.setFocus();
+
+      window.addEventListener('keydown', this.onPressKey);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('keydown', this.onPressKey);
+    }
+  }, {
+    key: 'onPressKey',
+    value: function onPressKey(event) {
+      if (event.keyCode === RETURN_KEY) {
+        this.props.setFocus();
+      }
     }
   }, {
     key: 'render',
