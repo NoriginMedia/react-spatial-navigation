@@ -487,7 +487,7 @@ var SpatialNavigation = function () {
     value: function onArrowPress() {
       var component = this.focusableComponents[this.focusKey];
 
-      return component.onArrowPressHandler && component.onArrowPressHandler.apply(component, arguments);
+      return component && component.onArrowPressHandler && component.onArrowPressHandler.apply(component, arguments);
     }
   }, {
     key: 'onKeyEvent',
