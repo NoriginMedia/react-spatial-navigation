@@ -453,7 +453,14 @@ var SpatialNavigation = function () {
             event.preventDefault();
             event.stopPropagation();
 
-            _this3.onKeyEvent(event.keyCode);
+            var preventDefaultNavigation = _this3.onArrowPress(eventType) === false;
+
+            if (preventDefaultNavigation) {
+              _this3.log('keyEventListener', 'default navigation prevented');
+              _this3.visualDebugger && _this3.visualDebugger.clear();
+            } else {
+              _this3.onKeyEvent(event.keyCode);
+            }
           }
         };
 
@@ -474,6 +481,13 @@ var SpatialNavigation = function () {
       var component = this.focusableComponents[this.focusKey];
 
       component.onEnterPressHandler && component.onEnterPressHandler();
+    }
+  }, {
+    key: 'onArrowPress',
+    value: function onArrowPress() {
+      var component = this.focusableComponents[this.focusKey];
+
+      return component.onArrowPressHandler && component.onArrowPressHandler.apply(component, arguments);
     }
   }, {
     key: 'onKeyEvent',
@@ -664,6 +678,7 @@ var SpatialNavigation = function () {
           node = _ref2.node,
           parentFocusKey = _ref2.parentFocusKey,
           onEnterPressHandler = _ref2.onEnterPressHandler,
+          onArrowPressHandler = _ref2.onArrowPressHandler,
           onBecameFocusedHandler = _ref2.onBecameFocusedHandler,
           forgetLastFocusedChild = _ref2.forgetLastFocusedChild,
           trackChildren = _ref2.trackChildren,
@@ -676,6 +691,7 @@ var SpatialNavigation = function () {
         node: node,
         parentFocusKey: parentFocusKey,
         onEnterPressHandler: onEnterPressHandler,
+        onArrowPressHandler: onArrowPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
         onUpdateFocus: onUpdateFocus,
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
@@ -874,6 +890,8 @@ var SpatialNavigation = function () {
       }
 
       var targetFocusKey = overwriteFocusKey || focusKey;
+
+      this.log('setFocus', 'targetFocusKey', targetFocusKey);
 
       var lastFocusedKey = this.focusKey;
       var newFocusKey = this.getNextFocusKey(targetFocusKey);

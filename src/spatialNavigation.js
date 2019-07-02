@@ -416,7 +416,7 @@ class SpatialNavigation {
   onArrowPress(...args) {
     const component = this.focusableComponents[this.focusKey];
 
-    return component.onArrowPressHandler && component.onArrowPressHandler(...args);
+    return component && component.onArrowPressHandler && component.onArrowPressHandler(...args);
   }
 
   onKeyEvent(keyCode) {

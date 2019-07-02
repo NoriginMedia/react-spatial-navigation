@@ -144,10 +144,23 @@ var withFocusable = function withFocusable() {
         onEnterPress(rest);
       };
     },
-    onBecameFocusedHandler: function onBecameFocusedHandler(_ref5) {
-      var _ref5$onBecameFocused = _ref5.onBecameFocused,
-          onBecameFocused = _ref5$onBecameFocused === undefined ? _noop2.default : _ref5$onBecameFocused,
-          rest = _objectWithoutProperties(_ref5, ['onBecameFocused']);
+    onArrowPressHandler: function onArrowPressHandler(_ref5) {
+      var _ref5$onArrowPress = _ref5.onArrowPress,
+          onArrowPress = _ref5$onArrowPress === undefined ? _noop2.default : _ref5$onArrowPress,
+          rest = _objectWithoutProperties(_ref5, ['onArrowPress']);
+
+      return function () {
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return onArrowPress.apply(undefined, args.concat([rest]));
+      };
+    },
+    onBecameFocusedHandler: function onBecameFocusedHandler(_ref6) {
+      var _ref6$onBecameFocused = _ref6.onBecameFocused,
+          onBecameFocused = _ref6$onBecameFocused === undefined ? _noop2.default : _ref6$onBecameFocused,
+          rest = _objectWithoutProperties(_ref6, ['onBecameFocused']);
 
       return function (layout) {
         onBecameFocused(layout, rest);
@@ -168,6 +181,7 @@ var withFocusable = function withFocusable() {
           _props$forgetLastFocu = _props.forgetLastFocusedChild,
           forgetLastFocusedChild = _props$forgetLastFocu === undefined ? false : _props$forgetLastFocu,
           onEnterPressHandler = _props.onEnterPressHandler,
+          onArrowPressHandler = _props.onArrowPressHandler,
           onBecameFocusedHandler = _props.onBecameFocusedHandler,
           onUpdateFocus = _props.onUpdateFocus,
           onUpdateHasFocusedChild = _props.onUpdateHasFocusedChild,
@@ -182,6 +196,7 @@ var withFocusable = function withFocusable() {
         parentFocusKey: parentFocusKey,
         preferredChildFocusKey: preferredChildFocusKey,
         onEnterPressHandler: onEnterPressHandler,
+        onArrowPressHandler: onArrowPressHandler,
         onBecameFocusedHandler: onBecameFocusedHandler,
         onUpdateFocus: onUpdateFocus,
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
@@ -216,7 +231,7 @@ var withFocusable = function withFocusable() {
         focusKey: focusKey
       });
     }
-  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild', 'forgetLastFocusedChild', 'trackChildren']));
+  }), _pure2.default, omitProps(['onBecameFocusedHandler', 'onEnterPressHandler', 'onArrowPressHandler', 'onUpdateFocus', 'onUpdateHasFocusedChild', 'forgetLastFocusedChild', 'trackChildren']));
 };
 
 exports.default = withFocusable;

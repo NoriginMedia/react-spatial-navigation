@@ -404,6 +404,7 @@ var Category = function (_React$PureComponent6) {
     _this6.scrollRef = null;
 
     _this6.onProgramFocused = _this6.onProgramFocused.bind(_this6);
+    _this6.onProgramArrowPress = _this6.onProgramArrowPress.bind(_this6);
     return _this6;
   }
 
@@ -415,6 +416,20 @@ var Category = function (_React$PureComponent6) {
       this.scrollRef.scrollTo({
         x: x
       });
+    }
+  }, {
+    key: 'onProgramArrowPress',
+    value: function onProgramArrowPress(direction, _ref2) {
+      var categoryIndex = _ref2.categoryIndex,
+          programIndex = _ref2.programIndex;
+
+      if (direction === 'right' && programIndex === programs.length - 1 && categoryIndex < categories.length - 1) {
+        this.props.setFocus('CATEGORY-' + (categoryIndex + 1));
+
+        return false;
+      }
+
+      return true;
     }
   }, {
     key: 'render',
@@ -447,7 +462,10 @@ var Category = function (_React$PureComponent6) {
               onPress: _this7.props.onProgramPress,
               onEnterPress: _this7.props.onProgramPress,
               key: program.title,
-              onBecameFocused: _this7.onProgramFocused
+              onBecameFocused: _this7.onProgramFocused,
+              onArrowPress: _this7.onProgramArrowPress,
+              programIndex: index,
+              categoryIndex: _this7.props.categoryIndex
             }));
           })
         )
@@ -461,7 +479,9 @@ var Category = function (_React$PureComponent6) {
 Category.propTypes = {
   title: _propTypes2.default.string.isRequired,
   onProgramPress: _propTypes2.default.func.isRequired,
-  realFocusKey: _propTypes2.default.string.isRequired
+  realFocusKey: _propTypes2.default.string.isRequired,
+  categoryIndex: _propTypes2.default.number.isRequired,
+  setFocus: _propTypes2.default.func.isRequired
 };
 
 var CategoryFocusable = (0, _withFocusable2.default)()(Category);
@@ -482,8 +502,8 @@ var Categories = function (_React$PureComponent7) {
 
   _createClass(Categories, [{
     key: 'onCategoryFocused',
-    value: function onCategoryFocused(_ref2) {
-      var y = _ref2.y;
+    value: function onCategoryFocused(_ref3) {
+      var y = _ref3.y;
 
       this.scrollRef.scrollTo({
         y: y
@@ -512,7 +532,8 @@ var Categories = function (_React$PureComponent7) {
           }, category, {
             onProgramPress: _this9.props.onProgramPress,
             key: category.title,
-            onBecameFocused: _this9.onCategoryFocused
+            onBecameFocused: _this9.onCategoryFocused,
+            categoryIndex: index
 
             // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
           }));
