@@ -392,7 +392,7 @@ Please follow the [Contribution Guide](https://github.com/NoriginMedia/react-spa
 - [ ] Unit tests
 - [ ] Refactor with React Hooks instead of recompose.
 - [x] Native environment support
-- [ ] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
+- [x] Add custom navigation logic per component. I.e. possibility to override default decision making algorithm and decide where to navigate next based on direction.
 - [ ] Implement mouse support. On some TV devices (or in the Browser) it is possible to use mouse-like input, e.g. magic remote in LG TVs. This system should support switching between "key" and "pointer" modes and apply "focused" state accordingly.
 
 ---
