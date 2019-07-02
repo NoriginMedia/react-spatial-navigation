@@ -84,6 +84,7 @@ const ParentComponent = (props) => (<View>
     forgetLastFocusedChild
     focusKey={'FOCUSABLE_COMPONENT'}
     onEnterPress={props.onItemPress}
+    onArrowPress={props.onArrowPress}
     onBecameFocused={props.onItemFocused}
   />
   ...
@@ -259,7 +260,32 @@ const onPress = ({prop1, prop2}) => {...};
 <FocusableItem 
   prop1={111}
   prop2={222}
-  onPress={onPress}
+  onEnterPress={onPress}
+/>
+...
+```
+
+### `onArrowPress`: function
+Callback function that is called when the item is currently focused and an arrow (LEFT, RIGHT, UP, DOWN) key is pressed.
+
+Payload:
+1. The directional arrow (left, right, up, down): string
+2. All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
+
+Prevent default navigation:
+By returning `false` the default navigation behavior is prevented.
+
+```jsx
+const onPress = (direction, {prop1, prop2}) => {
+  ...
+  return false;
+};
+
+...
+<FocusableItem 
+  prop1={111}
+  prop2={222}
+  onArrowPress={onPress}
 />
 ...
 ```

@@ -385,7 +385,14 @@ class SpatialNavigation {
           event.preventDefault();
           event.stopPropagation();
 
-          this.onKeyEvent(event.keyCode);
+          const preventDefaultNavigation = this.onArrowPress(eventType) === false;
+
+          if (preventDefaultNavigation) {
+            this.log('keyEventListener', 'default navigation prevented');
+            this.visualDebugger && this.visualDebugger.clear();
+          } else {
+            this.onKeyEvent(event.keyCode);
+          }
         }
       };
 
@@ -404,6 +411,12 @@ class SpatialNavigation {
     const component = this.focusableComponents[this.focusKey];
 
     component.onEnterPressHandler && component.onEnterPressHandler();
+  }
+
+  onArrowPress(...args) {
+    const component = this.focusableComponents[this.focusKey];
+
+    return component && component.onArrowPressHandler && component.onArrowPressHandler(...args);
   }
 
   onKeyEvent(keyCode) {
@@ -596,6 +609,7 @@ class SpatialNavigation {
     node,
     parentFocusKey,
     onEnterPressHandler,
+    onArrowPressHandler,
     onBecameFocusedHandler,
     forgetLastFocusedChild,
     trackChildren,
@@ -608,6 +622,7 @@ class SpatialNavigation {
       node,
       parentFocusKey,
       onEnterPressHandler,
+      onArrowPressHandler,
       onBecameFocusedHandler,
       onUpdateFocus,
       onUpdateHasFocusedChild,
@@ -789,6 +804,8 @@ class SpatialNavigation {
     }
 
     const targetFocusKey = overwriteFocusKey || focusKey;
+
+    this.log('setFocus', 'targetFocusKey', targetFocusKey);
 
     const lastFocusedKey = this.focusKey;
     const newFocusKey = this.getNextFocusKey(targetFocusKey);

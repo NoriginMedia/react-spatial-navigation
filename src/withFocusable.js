@@ -73,6 +73,10 @@ const withFocusable = ({
     }) => () => {
       onEnterPress(rest);
     },
+    onArrowPressHandler: ({
+      onArrowPress = noop,
+      ...rest
+    }) => (...args) => onArrowPress(...args, rest),
     onBecameFocusedHandler: ({
       onBecameFocused = noop,
       ...rest
@@ -91,6 +95,7 @@ const withFocusable = ({
         preferredChildFocusKey,
         forgetLastFocusedChild = false,
         onEnterPressHandler,
+        onArrowPressHandler,
         onBecameFocusedHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
@@ -105,6 +110,7 @@ const withFocusable = ({
         parentFocusKey,
         preferredChildFocusKey,
         onEnterPressHandler,
+        onArrowPressHandler,
         onBecameFocusedHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
@@ -140,6 +146,7 @@ const withFocusable = ({
   omitProps([
     'onBecameFocusedHandler',
     'onEnterPressHandler',
+    'onArrowPressHandler',
     'onUpdateFocus',
     'onUpdateHasFocusedChild',
     'forgetLastFocusedChild',

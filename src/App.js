@@ -285,12 +285,23 @@ class Category extends React.PureComponent {
     this.scrollRef = null;
 
     this.onProgramFocused = this.onProgramFocused.bind(this);
+    this.onProgramArrowPress = this.onProgramArrowPress.bind(this);
   }
 
   onProgramFocused({x}) {
     this.scrollRef.scrollTo({
       x
     });
+  }
+
+  onProgramArrowPress(direction, {categoryIndex, programIndex}) {
+    if (direction === 'right' && programIndex === programs.length - 1 && categoryIndex < categories.length - 1) {
+      this.props.setFocus(`CATEGORY-${categoryIndex + 1}`);
+
+      return false;
+    }
+
+    return true;
   }
 
   render() {
@@ -315,6 +326,9 @@ class Category extends React.PureComponent {
           onEnterPress={this.props.onProgramPress}
           key={program.title}
           onBecameFocused={this.onProgramFocused}
+          onArrowPress={this.onProgramArrowPress}
+          programIndex={index}
+          categoryIndex={this.props.categoryIndex}
         />)))}
       </ScrollView>
     </View>);
@@ -324,7 +338,9 @@ class Category extends React.PureComponent {
 Category.propTypes = {
   title: PropTypes.string.isRequired,
   onProgramPress: PropTypes.func.isRequired,
-  realFocusKey: PropTypes.string.isRequired
+  realFocusKey: PropTypes.string.isRequired,
+  categoryIndex: PropTypes.number.isRequired,
+  setFocus: PropTypes.func.isRequired
 };
 
 const CategoryFocusable = withFocusable()(Category);
@@ -361,6 +377,7 @@ class Categories extends React.PureComponent {
         onProgramPress={this.props.onProgramPress}
         key={category.title}
         onBecameFocused={this.onCategoryFocused}
+        categoryIndex={index}
 
         // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
       />))}
