@@ -343,7 +343,8 @@ var SpatialNavigation = function () {
      */
     this.paused = false;
 
-    this.keyEventListener = null;
+    this.keyDownEventListener = null;
+    this.keyUpEventListener = null;
     this.keyMap = DEFAULT_KEY_MAP;
 
     this.onKeyEvent = this.onKeyEvent.bind(this);
@@ -429,7 +430,7 @@ var SpatialNavigation = function () {
       var _this3 = this;
 
       if (window) {
-        this.keyEventListener = function (event) {
+        this.keyDownEventListener = function (event) {
           if (_this3.paused === true) {
             return;
           }
@@ -456,7 +457,7 @@ var SpatialNavigation = function () {
             var preventDefaultNavigation = _this3.onArrowPress(eventType) === false;
 
             if (preventDefaultNavigation) {
-              _this3.log('keyEventListener', 'default navigation prevented');
+              _this3.log('keyDownEventListener', 'default navigation prevented');
               _this3.visualDebugger && _this3.visualDebugger.clear();
             } else {
               _this3.onKeyEvent(event.keyCode);
@@ -464,15 +465,32 @@ var SpatialNavigation = function () {
           }
         };
 
-        window.addEventListener('keydown', (0, _throttle2.default)(this.keyEventListener, this.throttle));
+        // Apply throttle only if the option we got is > 0 to avoid limiting the listener to every animation frame
+        if (this.throttle) {
+          this.keyDownEventListener = (0, _throttle2.default)(this.keyDownEventListener.bind(this), this.throttle);
+
+          // When throttling then make sure to only throttle key down and flush in the case of key up
+          this.keyUpEventListener = function () {
+            return _this3.keyDownEventListener.flush();
+          };
+
+          window.addEventListener('keyup', this.keyUpEventListener);
+        }
+
+        window.addEventListener('keydown', this.keyDownEventListener);
       }
     }
   }, {
     key: 'unbindEventHandlers',
     value: function unbindEventHandlers() {
       if (window) {
-        window.removeEventListener('keydown', this.keyEventListener);
-        this.keyEventListener = null;
+        window.removeEventListener('keydown', this.keyDownEventListener);
+        this.keyDownEventListener = null;
+
+        if (this.throttle) {
+          window.removeEventListener('keyup', this.keyUpEventListener);
+          this.keyUpEventListener = null;
+        }
       }
     }
   }, {
