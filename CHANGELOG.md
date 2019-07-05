@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0]
+### Fixed
+- Throttling is now only applied if the throttle option supplied was greater than 0
+### Added
+- Key up now flushes any throttled input
+
 ## [2.4.0]
 ### Added
 - added support for `onArrowPress` property, it enables to add a custom behavior when arrows are pressed and can prevent the default navigation.
