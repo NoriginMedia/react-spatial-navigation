@@ -82,6 +82,11 @@ var DEFAULT_KEY_MAP = (_DEFAULT_KEY_MAP = {}, _defineProperty(_DEFAULT_KEY_MAP, 
 
 var DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
 
+var THROTTLE_OPTIONS = {
+  leading: true,
+  trailing: false
+};
+
 /* eslint-disable no-nested-ternary */
 
 var SpatialNavigation = function () {
@@ -467,11 +472,11 @@ var SpatialNavigation = function () {
 
         // Apply throttle only if the option we got is > 0 to avoid limiting the listener to every animation frame
         if (this.throttle) {
-          this.keyDownEventListener = (0, _throttle2.default)(this.keyDownEventListener.bind(this), this.throttle);
+          this.keyDownEventListener = (0, _throttle2.default)(this.keyDownEventListener.bind(this), this.throttle, THROTTLE_OPTIONS);
 
-          // When throttling then make sure to only throttle key down and flush in the case of key up
+          // When throttling then make sure to only throttle key down and cancel any queued functions in case of key up
           this.keyUpEventListener = function () {
-            return _this3.keyDownEventListener.flush();
+            return _this3.keyDownEventListener.cancel();
           };
 
           window.addEventListener('keyup', this.keyUpEventListener);

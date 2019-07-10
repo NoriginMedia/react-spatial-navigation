@@ -40,6 +40,11 @@ const DEFAULT_KEY_MAP = {
 
 const DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
 
+const THROTTLE_OPTIONS = {
+  leading: true,
+  trailing: false
+};
+
 /* eslint-disable no-nested-ternary */
 class SpatialNavigation {
   /**
@@ -399,10 +404,11 @@ class SpatialNavigation {
 
       // Apply throttle only if the option we got is > 0 to avoid limiting the listener to every animation frame
       if (this.throttle) {
-        this.keyDownEventListener = lodashThrottle(this.keyDownEventListener.bind(this), this.throttle);
+        this.keyDownEventListener =
+          lodashThrottle(this.keyDownEventListener.bind(this), this.throttle, THROTTLE_OPTIONS);
 
-        // When throttling then make sure to only throttle key down and flush in the case of key up
-        this.keyUpEventListener = () => this.keyDownEventListener.flush();
+        // When throttling then make sure to only throttle key down and cancel any queued functions in case of key up
+        this.keyUpEventListener = () => this.keyDownEventListener.cancel();
 
         window.addEventListener('keyup', this.keyUpEventListener);
       }
