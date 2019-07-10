@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0]
+### Fixed
+- Key up triggers `.cancel()` instead of `.flush()`
+### Added
+- Throttling now applies options to disable trailing functions
+
 ## [2.5.0]
 ### Fixed
 - Throttling is now only applied if the throttle option supplied was greater than 0
