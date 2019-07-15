@@ -25,11 +25,14 @@
     "url": "https://github.com/NoriginMedia/react-spatial-navigation/issues"
   },
   "homepage": "https://github.com/NoriginMedia/react-spatial-navigation#readme",
+  "peerDependencies": {
+    "react": ">=16.5.1",
+    "react-dom": ">=16.5.1",
+    "react-native-web": "^0.11.2"
+  },
   "dependencies": {
     "lodash": "^4.17.0",
     "prop-types": "^15.6.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
     "recompose": "^0.30.0"
   },
   "devDependencies": {
@@ -43,6 +46,8 @@
     "eslint-config-norigin": "git+https://github.com/NoriginMedia/eslint-config-norigin.git#v3.7.0",
     "parcel-bundler": "^1.11.0",
     "pre-commit": "^1.2.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-native-web": "^0.11.2"
   },
   "pre-commit": [
