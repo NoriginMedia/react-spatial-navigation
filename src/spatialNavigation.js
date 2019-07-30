@@ -575,7 +575,10 @@ class SpatialNavigation {
       return targetFocusKey;
     }
 
-    const children = filter(this.focusableComponents, (component) => component.parentFocusKey === targetFocusKey);
+    const children = filter(
+      this.focusableComponents,
+      (component) => component.parentFocusKey === targetFocusKey && component.enabled
+    );
 
     if (children.length > 0) {
       this.onIntermediateNodeBecameFocused(targetFocusKey);
@@ -590,7 +593,7 @@ class SpatialNavigation {
        */
       if (lastFocusedChildKey &&
         !targetComponent.forgetLastFocusedChild &&
-        this.isFocusableComponent(lastFocusedChildKey)
+        this.isEnabledFocusableComponent(lastFocusedChildKey)
       ) {
         this.log('getNextFocusKey', 'lastFocusedChildKey will be focused', lastFocusedChildKey);
 
@@ -600,7 +603,7 @@ class SpatialNavigation {
       /**
        * If there is no lastFocusedChild, trying to focus the preferred focused key
        */
-      if (preferredChildFocusKey && this.isFocusableComponent(preferredChildFocusKey)) {
+      if (preferredChildFocusKey && this.isEnabledFocusableComponent(preferredChildFocusKey)) {
         this.log('getNextFocusKey', 'preferredChildFocusKey will be focused', preferredChildFocusKey);
 
         return this.getNextFocusKey(preferredChildFocusKey);
@@ -719,7 +722,7 @@ class SpatialNavigation {
   }
 
   setCurrentFocusedKey(focusKey) {
-    if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
+    if (this.isEnabledFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
       const oldComponent = this.focusableComponents[this.focusKey];
       const parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
 
@@ -809,8 +812,12 @@ class SpatialNavigation {
     return !!this.focusableComponents[focusKey];
   }
 
+  isEnabledFocusableComponent(focusKey) {
+    return this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].enabled;
+  }
+
   onIntermediateNodeBecameFocused(focusKey) {
-    this.isFocusableComponent(focusKey) &&
+    this.isEnabledFocusableComponent(focusKey) &&
       this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
   }
 
