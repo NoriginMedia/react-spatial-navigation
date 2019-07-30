@@ -843,6 +843,12 @@ class SpatialNavigation {
     const lastFocusedKey = this.focusKey;
     const newFocusKey = this.getNextFocusKey(targetFocusKey);
 
+    if (!this.isEnabledFocusableComponent(newFocusKey)) {
+      this.log('setFocus', 'noEnabledFocusTargets', newFocusKey);
+
+      return;
+    }
+
     this.log('setFocus', 'newFocusKey', newFocusKey);
 
     this.setCurrentFocusedKey(newFocusKey);
