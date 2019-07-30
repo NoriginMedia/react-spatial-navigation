@@ -483,7 +483,7 @@ class SpatialNavigation {
        * Get only the siblings with the coords on the way of our moving direction
        */
       const siblings = filter(this.focusableComponents, (component) => {
-        if (component.parentFocusKey === parentFocusKey) {
+        if (component.parentFocusKey === parentFocusKey && component.enabled) {
           const siblingCutoffCoordinate = SpatialNavigation.getCutoffCoordinate(
             isVerticalDirection,
             isIncrementalDirection,
@@ -637,7 +637,8 @@ class SpatialNavigation {
     trackChildren,
     onUpdateFocus,
     onUpdateHasFocusedChild,
-    preferredChildFocusKey
+    preferredChildFocusKey,
+    enabled
   }) {
     this.focusableComponents[focusKey] = {
       focusKey,
@@ -652,6 +653,7 @@ class SpatialNavigation {
       trackChildren,
       lastFocusedChildKey: null,
       preferredChildFocusKey,
+      enabled,
       layout: {
         x: 0,
         y: 0,
@@ -874,7 +876,7 @@ class SpatialNavigation {
     });
   }
 
-  updateFocusable(focusKey, {node, preferredChildFocusKey}) {
+  updateFocusable(focusKey, {node, preferredChildFocusKey, enabled}) {
     if (this.nativeMode) {
       return;
     }
@@ -883,6 +885,7 @@ class SpatialNavigation {
 
     if (component) {
       component.preferredChildFocusKey = preferredChildFocusKey;
+      component.enabled = enabled;
 
       if (node) {
         component.node = node;

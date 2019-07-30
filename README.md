@@ -244,6 +244,12 @@ Same as in [config](#config).
 ### `forgetLastFocusedChild`: boolean
 Same as in [config](#config).
 
+### `enabled`: boolean
+Determine whether this component should be focusable. This allows a focusable component to be ignored as a navigation target despite being mounted (e.g. due to being off-screen, hidden, or temporarily disabled).
+
+* **false**
+* **true (default)**
+
 ### `focusKey`: string
 String that is used as a component focus key. Should be **unique**, otherwise it will override previously stored component with the same focus key in the Spatial Navigation service storage of focusable components. If this is not specified, the focus key will be generated automatically.
 

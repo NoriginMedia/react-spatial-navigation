@@ -99,7 +99,8 @@ const withFocusable = ({
         onBecameFocusedHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
-        trackChildren
+        trackChildren,
+        enabled = true
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? null : findDOMNode(this);
@@ -115,17 +116,19 @@ const withFocusable = ({
         onUpdateFocus,
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
-        trackChildren: (configTrackChildren || trackChildren)
+        trackChildren: (configTrackChildren || trackChildren),
+        enabled
       });
     },
     componentDidUpdate(prevProps) {
-      const {focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey} = this.props;
+      const {focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey, enabled = true} = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? null : findDOMNode(this);
 
       SpatialNavigation.updateFocusable(focusKey, {
         node,
-        preferredChildFocusKey
+        preferredChildFocusKey,
+        enabled
       });
 
       if (!prevProps.focused && focused) {
