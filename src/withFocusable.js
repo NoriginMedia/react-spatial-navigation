@@ -121,7 +121,9 @@ const withFocusable = ({
       });
     },
     componentDidUpdate(prevProps) {
-      const {focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey, enabled = true} = this.props;
+      const {
+        focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey, enabled = true
+      } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? null : findDOMNode(this);
 
