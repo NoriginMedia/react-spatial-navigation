@@ -432,6 +432,13 @@ class SpatialNavigation {
   onEnterPress() {
     const component = this.focusableComponents[this.focusKey];
 
+    /* Suppress onEnterPress if the focused item happens to lose its 'enabled' status. */
+    if (!component.enabled) {
+      this.log('onEnterPress', 'componentNotEnabled');
+
+      return;
+    }
+
     component.onEnterPressHandler && component.onEnterPressHandler();
   }
 
