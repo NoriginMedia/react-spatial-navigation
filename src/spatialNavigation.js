@@ -466,6 +466,7 @@ class SpatialNavigation {
       currentComponent ? currentComponent.node : undefined
     );
 
+    /* We will not check whether currentComponent is enabled; it's fine to navigate AWAY from a disabled component. */
     if (currentComponent) {
       const {parentFocusKey, focusKey, layout} = currentComponent;
 
@@ -543,6 +544,7 @@ class SpatialNavigation {
   }
 
   saveLastFocusedChildKey(component, focusKey) {
+    /* We won't check whether component is enabled; it's fine to save a disabled component as the lastFocusedChild. */
     if (component) {
       this.log('saveLastFocusedChildKey', `${component.focusKey} lastFocusedChildKey set`, focusKey);
       component.lastFocusedChildKey = focusKey;
