@@ -185,7 +185,9 @@ var withFocusable = function withFocusable() {
           onBecameFocusedHandler = _props.onBecameFocusedHandler,
           onUpdateFocus = _props.onUpdateFocus,
           onUpdateHasFocusedChild = _props.onUpdateHasFocusedChild,
-          trackChildren = _props.trackChildren;
+          trackChildren = _props.trackChildren,
+          _props$focusable = _props.focusable,
+          focusable = _props$focusable === undefined ? true : _props$focusable;
 
 
       var node = _spatialNavigation2.default.isNativeMode() ? null : (0, _reactDom.findDOMNode)(this);
@@ -201,7 +203,8 @@ var withFocusable = function withFocusable() {
         onUpdateFocus: onUpdateFocus,
         onUpdateHasFocusedChild: onUpdateHasFocusedChild,
         forgetLastFocusedChild: configForgetLastFocusedChild || forgetLastFocusedChild,
-        trackChildren: configTrackChildren || trackChildren
+        trackChildren: configTrackChildren || trackChildren,
+        focusable: focusable
       });
     },
     componentDidUpdate: function componentDidUpdate(prevProps) {
@@ -209,14 +212,17 @@ var withFocusable = function withFocusable() {
           focused = _props2.focused,
           focusKey = _props2.realFocusKey,
           onBecameFocusedHandler = _props2.onBecameFocusedHandler,
-          preferredChildFocusKey = _props2.preferredChildFocusKey;
+          preferredChildFocusKey = _props2.preferredChildFocusKey,
+          _props2$focusable = _props2.focusable,
+          focusable = _props2$focusable === undefined ? true : _props2$focusable;
 
 
       var node = _spatialNavigation2.default.isNativeMode() ? null : (0, _reactDom.findDOMNode)(this);
 
       _spatialNavigation2.default.updateFocusable(focusKey, {
         node: node,
-        preferredChildFocusKey: preferredChildFocusKey
+        preferredChildFocusKey: preferredChildFocusKey,
+        focusable: focusable
       });
 
       if (!prevProps.focused && focused) {

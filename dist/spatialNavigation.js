@@ -503,6 +503,13 @@ var SpatialNavigation = function () {
     value: function onEnterPress() {
       var component = this.focusableComponents[this.focusKey];
 
+      /* Suppress onEnterPress if the focused item happens to lose its 'focused' status. */
+      if (!component.focusable) {
+        this.log('onEnterPress', 'componentNotFocusable');
+
+        return;
+      }
+
       component.onEnterPressHandler && component.onEnterPressHandler();
     }
   }, {
@@ -540,6 +547,7 @@ var SpatialNavigation = function () {
 
       this.log('smartNavigate', 'currentComponent', currentComponent ? currentComponent.focusKey : undefined, currentComponent ? currentComponent.node : undefined);
 
+      /* We will not check whether currentComponent is focusable; it's fine to navigate AWAY from a disabled component. */
       if (currentComponent) {
         var parentFocusKey = currentComponent.parentFocusKey,
             focusKey = currentComponent.focusKey,
@@ -555,7 +563,7 @@ var SpatialNavigation = function () {
          * Get only the siblings with the coords on the way of our moving direction
          */
         var siblings = (0, _filter2.default)(this.focusableComponents, function (component) {
-          if (component.parentFocusKey === parentFocusKey) {
+          if (component.parentFocusKey === parentFocusKey && component.focusable) {
             var siblingCutoffCoordinate = SpatialNavigation.getCutoffCoordinate(isVerticalDirection, isIncrementalDirection, true, component.layout);
 
             return isIncrementalDirection ? siblingCutoffCoordinate >= currentCutoffCoordinate : siblingCutoffCoordinate <= currentCutoffCoordinate;
@@ -600,6 +608,7 @@ var SpatialNavigation = function () {
   }, {
     key: 'saveLastFocusedChildKey',
     value: function saveLastFocusedChildKey(component, focusKey) {
+      /* We won't check whether component is focusable; it's fine to save a disabled component as the lastFocusedChild. */
       if (component) {
         this.log('saveLastFocusedChildKey', component.focusKey + ' lastFocusedChildKey set', focusKey);
         component.lastFocusedChildKey = focusKey;
@@ -638,7 +647,7 @@ var SpatialNavigation = function () {
       }
 
       var children = (0, _filter2.default)(this.focusableComponents, function (component) {
-        return component.parentFocusKey === targetFocusKey;
+        return component.parentFocusKey === targetFocusKey && component.focusable;
       });
 
       if (children.length > 0) {
@@ -654,7 +663,7 @@ var SpatialNavigation = function () {
         /**
          * First of all trying to focus last focused child
          */
-        if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isFocusableComponent(lastFocusedChildKey)) {
+        if (lastFocusedChildKey && !targetComponent.forgetLastFocusedChild && this.isParticipatingFocusableComponent(lastFocusedChildKey)) {
           this.log('getNextFocusKey', 'lastFocusedChildKey will be focused', lastFocusedChildKey);
 
           return this.getNextFocusKey(lastFocusedChildKey);
@@ -663,7 +672,7 @@ var SpatialNavigation = function () {
         /**
          * If there is no lastFocusedChild, trying to focus the preferred focused key
          */
-        if (preferredChildFocusKey && this.isFocusableComponent(preferredChildFocusKey)) {
+        if (preferredChildFocusKey && this.isParticipatingFocusableComponent(preferredChildFocusKey)) {
           this.log('getNextFocusKey', 'preferredChildFocusKey will be focused', preferredChildFocusKey);
 
           return this.getNextFocusKey(preferredChildFocusKey);
@@ -707,7 +716,8 @@ var SpatialNavigation = function () {
           trackChildren = _ref2.trackChildren,
           onUpdateFocus = _ref2.onUpdateFocus,
           onUpdateHasFocusedChild = _ref2.onUpdateHasFocusedChild,
-          preferredChildFocusKey = _ref2.preferredChildFocusKey;
+          preferredChildFocusKey = _ref2.preferredChildFocusKey,
+          focusable = _ref2.focusable;
 
       this.focusableComponents[focusKey] = {
         focusKey: focusKey,
@@ -722,6 +732,7 @@ var SpatialNavigation = function () {
         trackChildren: trackChildren,
         lastFocusedChildKey: null,
         preferredChildFocusKey: preferredChildFocusKey,
+        focusable: focusable,
         layout: {
           x: 0,
           y: 0,
@@ -792,7 +803,7 @@ var SpatialNavigation = function () {
   }, {
     key: 'setCurrentFocusedKey',
     value: function setCurrentFocusedKey(focusKey) {
-      if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
+      if (this.isParticipatingFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
         var oldComponent = this.focusableComponents[this.focusKey];
         var parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
 
@@ -890,10 +901,21 @@ var SpatialNavigation = function () {
     value: function isFocusableComponent(focusKey) {
       return !!this.focusableComponents[focusKey];
     }
+
+    /**
+     * Checks whether the focusableComponent is actually participating in spatial navigation (in other words, is a
+     * 'focusable' focusableComponent). Seems less confusing than calling it isFocusableFocusableComponent()
+     */
+
+  }, {
+    key: 'isParticipatingFocusableComponent',
+    value: function isParticipatingFocusableComponent(focusKey) {
+      return this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].focusable;
+    }
   }, {
     key: 'onIntermediateNodeBecameFocused',
     value: function onIntermediateNodeBecameFocused(focusKey) {
-      this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
+      this.isParticipatingFocusableComponent(focusKey) && this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
     }
   }, {
     key: 'pause',
@@ -918,6 +940,12 @@ var SpatialNavigation = function () {
 
       var lastFocusedKey = this.focusKey;
       var newFocusKey = this.getNextFocusKey(targetFocusKey);
+
+      if (!this.isParticipatingFocusableComponent(newFocusKey)) {
+        this.log('setFocus', 'noParticipatingFocusTargets', newFocusKey);
+
+        return;
+      }
 
       this.log('setFocus', 'newFocusKey', newFocusKey);
 
@@ -969,7 +997,8 @@ var SpatialNavigation = function () {
     key: 'updateFocusable',
     value: function updateFocusable(focusKey, _ref4) {
       var node = _ref4.node,
-          preferredChildFocusKey = _ref4.preferredChildFocusKey;
+          preferredChildFocusKey = _ref4.preferredChildFocusKey,
+          focusable = _ref4.focusable;
 
       if (this.nativeMode) {
         return;
@@ -979,6 +1008,7 @@ var SpatialNavigation = function () {
 
       if (component) {
         component.preferredChildFocusKey = preferredChildFocusKey;
+        component.focusable = focusable;
 
         if (node) {
           component.node = node;

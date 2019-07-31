@@ -196,7 +196,11 @@ var Menu = function (_React$PureComponent2) {
   _createClass(Menu, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.props.setFocus();
+      var _this3 = this;
+
+      setTimeout(function () {
+        _this3.props.setFocus();
+      }, 0);
 
       window.addEventListener('keydown', this.onPressKey);
     }
@@ -250,14 +254,14 @@ var Content = function (_React$PureComponent3) {
   function Content(props) {
     _classCallCheck(this, Content);
 
-    var _this3 = _possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (Content.__proto__ || Object.getPrototypeOf(Content)).call(this, props));
 
-    _this3.state = {
+    _this4.state = {
       currentProgram: null
     };
 
-    _this3.onProgramPress = _this3.onProgramPress.bind(_this3);
-    return _this3;
+    _this4.onProgramPress = _this4.onProgramPress.bind(_this4);
+    return _this4;
   }
 
   _createClass(Content, [{
@@ -399,13 +403,13 @@ var Category = function (_React$PureComponent6) {
   function Category(props) {
     _classCallCheck(this, Category);
 
-    var _this6 = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this, props));
 
-    _this6.scrollRef = null;
+    _this7.scrollRef = null;
 
-    _this6.onProgramFocused = _this6.onProgramFocused.bind(_this6);
-    _this6.onProgramArrowPress = _this6.onProgramArrowPress.bind(_this6);
-    return _this6;
+    _this7.onProgramFocused = _this7.onProgramFocused.bind(_this7);
+    _this7.onProgramArrowPress = _this7.onProgramArrowPress.bind(_this7);
+    return _this7;
   }
 
   _createClass(Category, [{
@@ -434,7 +438,7 @@ var Category = function (_React$PureComponent6) {
   }, {
     key: 'render',
     value: function render() {
-      var _this7 = this;
+      var _this8 = this;
 
       // console.log('Category rendered: ', this.props.realFocusKey);
 
@@ -452,20 +456,20 @@ var Category = function (_React$PureComponent6) {
             horizontal: true,
             ref: function ref(reference) {
               if (reference) {
-                _this7.scrollRef = reference;
+                _this8.scrollRef = reference;
               }
             }
           },
           programs.map(function (program, index) {
             return _react2.default.createElement(ProgramFocusable, _extends({}, program, {
-              focusKey: 'PROGRAM-' + _this7.props.realFocusKey + '-' + index,
-              onPress: _this7.props.onProgramPress,
-              onEnterPress: _this7.props.onProgramPress,
+              focusKey: 'PROGRAM-' + _this8.props.realFocusKey + '-' + index,
+              onPress: _this8.props.onProgramPress,
+              onEnterPress: _this8.props.onProgramPress,
               key: program.title,
-              onBecameFocused: _this7.onProgramFocused,
-              onArrowPress: _this7.onProgramArrowPress,
+              onBecameFocused: _this8.onProgramFocused,
+              onArrowPress: _this8.onProgramArrowPress,
               programIndex: index,
-              categoryIndex: _this7.props.categoryIndex
+              categoryIndex: _this8.props.categoryIndex
             }));
           })
         )
@@ -492,12 +496,12 @@ var Categories = function (_React$PureComponent7) {
   function Categories(props) {
     _classCallCheck(this, Categories);
 
-    var _this8 = _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (Categories.__proto__ || Object.getPrototypeOf(Categories)).call(this, props));
 
-    _this8.scrollRef = null;
+    _this9.scrollRef = null;
 
-    _this8.onCategoryFocused = _this8.onCategoryFocused.bind(_this8);
-    return _this8;
+    _this9.onCategoryFocused = _this9.onCategoryFocused.bind(_this9);
+    return _this9;
   }
 
   _createClass(Categories, [{
@@ -512,7 +516,7 @@ var Categories = function (_React$PureComponent7) {
   }, {
     key: 'render',
     value: function render() {
-      var _this9 = this;
+      var _this10 = this;
 
       // console.log('Categories rendered: ', this.props.realFocusKey);
 
@@ -521,7 +525,7 @@ var Categories = function (_React$PureComponent7) {
         {
           ref: function ref(reference) {
             if (reference) {
-              _this9.scrollRef = reference;
+              _this10.scrollRef = reference;
             }
           },
           style: styles.categoriesWrapper
@@ -530,9 +534,9 @@ var Categories = function (_React$PureComponent7) {
           return _react2.default.createElement(CategoryFocusable, _extends({
             focusKey: 'CATEGORY-' + index
           }, category, {
-            onProgramPress: _this9.props.onProgramPress,
+            onProgramPress: _this10.props.onProgramPress,
             key: category.title,
-            onBecameFocused: _this9.onCategoryFocused,
+            onBecameFocused: _this10.onCategoryFocused,
             categoryIndex: index
 
             // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
