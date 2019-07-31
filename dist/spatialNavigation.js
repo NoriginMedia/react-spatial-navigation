@@ -547,7 +547,6 @@ var SpatialNavigation = function () {
 
       this.log('smartNavigate', 'currentComponent', currentComponent ? currentComponent.focusKey : undefined, currentComponent ? currentComponent.node : undefined);
 
-      /* We will not check whether currentComponent is focusable; it's fine to navigate AWAY from a disabled component. */
       if (currentComponent) {
         var parentFocusKey = currentComponent.parentFocusKey,
             focusKey = currentComponent.focusKey,
@@ -608,7 +607,6 @@ var SpatialNavigation = function () {
   }, {
     key: 'saveLastFocusedChildKey',
     value: function saveLastFocusedChildKey(component, focusKey) {
-      /* We won't check whether component is focusable; it's fine to save a disabled component as the lastFocusedChild. */
       if (component) {
         this.log('saveLastFocusedChildKey', component.focusKey + ' lastFocusedChildKey set', focusKey);
         component.lastFocusedChildKey = focusKey;
@@ -803,7 +801,7 @@ var SpatialNavigation = function () {
   }, {
     key: 'setCurrentFocusedKey',
     value: function setCurrentFocusedKey(focusKey) {
-      if (this.isParticipatingFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
+      if (this.isFocusableComponent(this.focusKey) && focusKey !== this.focusKey) {
         var oldComponent = this.focusableComponents[this.focusKey];
         var parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
 
@@ -940,12 +938,6 @@ var SpatialNavigation = function () {
 
       var lastFocusedKey = this.focusKey;
       var newFocusKey = this.getNextFocusKey(targetFocusKey);
-
-      if (!this.isParticipatingFocusableComponent(newFocusKey)) {
-        this.log('setFocus', 'noParticipatingFocusTargets', newFocusKey);
-
-        return;
-      }
 
       this.log('setFocus', 'newFocusKey', newFocusKey);
 
