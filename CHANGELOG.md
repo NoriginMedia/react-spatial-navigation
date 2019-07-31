@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.7.0]
+### Added
+- `focusable` prop that enables component as a focusable target. Default is true. Usable when you need to temporarily disable focusable behaviour on the component. E.g. disabled button state.
+### Changed
+- Moved `react` and `react-dom` to peer dependencies
 
 ## [2.6.0]
 ### Fixed

@@ -142,7 +142,9 @@ class Menu extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.setFocus();
+    setTimeout(() => {
+      this.props.setFocus();
+    }, 0);
 
     window.addEventListener('keydown', this.onPressKey);
   }

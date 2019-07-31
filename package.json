@@ -22,7 +22,8 @@
   "author": "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
   "contributors": [
     "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
-    "Jamie Birch <jamie.birch@s-and-t.com>"
+    "Jamie Birch <jamie.birch@s-and-t.com>",
+    "Antonio Salvati <antonio.salvati@noriginmedia.com>"
   ],
   "license": "MIT",
   "bugs": {
@@ -35,7 +36,7 @@
     "react-native-web": "^0.11.2"
   },
   "dependencies": {
-    "lodash": "^4.17.0",
+    "lodash": "^4.17.13",
     "prop-types": "^15.6.2",
     "recompose": "^0.30.0"
   },
