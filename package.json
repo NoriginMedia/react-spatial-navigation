@@ -1,6 +1,6 @@
 {
   "name": "@noriginmedia/react-spatial-navigation",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "HOC-based Spatial Navigation (key navigation) solution for React",
   "main": "dist/index.js",
   "scripts": {
@@ -20,6 +20,10 @@
     "hoc"
   ],
   "author": "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
+  "contributors": [
+    "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
+    "Jamie Birch <jamie.birch@s-and-t.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/NoriginMedia/react-spatial-navigation/issues"
