@@ -3,10 +3,15 @@
   "version": "2.7.2",
   "description": "HOC-based Spatial Navigation (key navigation) solution for React",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "eslint": "eslint src",
     "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
     "start": "parcel index.html -d parcel",
+    "prepublishOnly": "npm run eslint",
+    "prepare": "npm run dist",
     "publish": "npm publish --access public"
   },
   "repository": {
