@@ -432,7 +432,14 @@ class SpatialNavigation {
   onEnterPress() {
     const component = this.focusableComponents[this.focusKey];
 
-    /* Suppress onEnterPress if the focused item happens to lose its 'focused' status. */
+    /* Guard against last-focused component being unmounted at time of onEnterPress (e.g due to UI fading out) */
+    if (!component) {
+      this.log('onEnterPress', 'noComponent');
+
+      return;
+    }
+
+    /* Suppress onEnterPress if the last-focused item happens to lose its 'focused' status. */
     if (!component.focusable) {
       this.log('onEnterPress', 'componentNotFocusable');
 
@@ -444,6 +451,16 @@ class SpatialNavigation {
 
   onArrowPress(...args) {
     const component = this.focusableComponents[this.focusKey];
+
+    /* Guard against last-focused component being unmounted at time of onArrowPress (e.g due to UI fading out) */
+    if (!component) {
+      this.log('onArrowPress', 'noComponent');
+
+      return undefined;
+    }
+
+    /* It's okay to navigate AWAY from an item that has lost its 'focused' status, so we don't inspect
+     * component.focusable. */
 
     return component && component.onArrowPressHandler && component.onArrowPressHandler(...args);
   }
