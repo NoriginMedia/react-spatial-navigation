@@ -103,7 +103,7 @@ const withFocusable = ({
         focusable = true
       } = this.props;
 
-      const node = SpatialNavigation.isNativeMode() ? null : findDOMNode(this);
+      const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
 
       SpatialNavigation.addFocusable({
         focusKey,
@@ -125,7 +125,7 @@ const withFocusable = ({
         focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey, focusable = true
       } = this.props;
 
-      const node = SpatialNavigation.isNativeMode() ? null : findDOMNode(this);
+      const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
 
       SpatialNavigation.updateFocusable(focusKey, {
         node,

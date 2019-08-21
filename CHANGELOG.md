@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.3]
+### Fixed
+- Fixed missing reference to a component in native mode
+
 ## [2.8.2]
 ### Added
 - Added guard checks for Enter press and Arrow press to check whether component exists
