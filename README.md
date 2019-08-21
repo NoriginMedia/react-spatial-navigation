@@ -187,7 +187,7 @@ Enable visual debugging (all layouts, reference points and siblings refernce poi
 Enable Native mode. It will block certain web-only functionality such as:
 - adding window key listeners
 - measuring DOM layout
-- `onBecameFocused` callback doesn't return coordinates
+- `onBecameFocused` callback doesn't return coordinates, but still has node ref to lazy measure layout
 - coordinates calculations when navigating
 - down-tree propagation
 - last focused child
@@ -306,7 +306,7 @@ Payload:
 Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
 
 ```jsx
-const onFocused = ({width, height, x, y, top, left}, {prop1, prop2}) => {...};
+const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
 
 ...
 <FocusableItem 
