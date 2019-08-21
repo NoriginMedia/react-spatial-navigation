@@ -670,7 +670,13 @@ class SpatialNavigation {
         width: 0,
         height: 0,
         left: 0,
-        top: 0
+        top: 0,
+
+        /**
+         * Node ref is also duplicated in layout to be reported in onBecameFocused callback
+         * E.g. used in native environments to lazy-measure the layout on focus
+         */
+        node
       }
     };
 
@@ -889,7 +895,8 @@ class SpatialNavigation {
         width,
         height,
         left,
-        top
+        top,
+        node
       };
     });
   }
