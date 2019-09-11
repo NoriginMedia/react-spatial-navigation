@@ -374,7 +374,9 @@ class SpatialNavigation {
           return;
         }
 
-        this.logIndex++;
+        if (this.debug) {
+          this.logIndex += 1;
+        }
 
         const eventType = findKey(this.getKeyMap(), (code) => event.keyCode === code);
 
