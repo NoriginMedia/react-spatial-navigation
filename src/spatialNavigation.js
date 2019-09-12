@@ -300,7 +300,7 @@ class SpatialNavigation {
     this.pause = this.pause.bind(this);
     this.resume = this.resume.bind(this);
     this.setFocus = this.setFocus.bind(this);
-    this.smartNavigateByDirection = this.smartNavigateByDirection.bind(this);
+    this.navigateByDirection = this.navigateByDirection.bind(this);
     this.init = this.init.bind(this);
     this.setKeyMap = this.setKeyMap.bind(this);
 
@@ -473,9 +473,9 @@ class SpatialNavigation {
    * @param {string} direction
    *
    * @example
-   * smartNavigateByDirection('right') // The focus is moved to right
+   * navigateByDirection('right') // The focus is moved to right
    */
-  smartNavigateByDirection(direction) {
+  navigateByDirection(direction) {
     if (this.paused === true) {
       return;
     }
@@ -483,10 +483,10 @@ class SpatialNavigation {
     const validDirections = [DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT];
 
     if (validDirections.includes(direction)) {
-      this.log('smartNavigateByDirection', 'direction', direction);
+      this.log('navigateByDirection', 'direction', direction);
       this.smartNavigate(direction);
     } else {
-      this.log('smartNavigateByDirection', `Invalid direction. You passed: \`${direction}\`, but you can use only these: `, validDirections);
+      this.log('navigateByDirection', `Invalid direction. You passed: \`${direction}\`, but you can use only these: `, validDirections);
     }
   }
 

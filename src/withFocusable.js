@@ -39,7 +39,7 @@ const withFocusable = ({
        */
       setFocus: SpatialNavigation.isNativeMode() ? noop : SpatialNavigation.setFocus.bind(null, realFocusKey),
 
-      smartNavigateByDirection: SpatialNavigation.smartNavigateByDirection,
+      navigateByDirection: SpatialNavigation.navigateByDirection,
 
       /**
        * In Native mode this is the only way to mark component as focused.

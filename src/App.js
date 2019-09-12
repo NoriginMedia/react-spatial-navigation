@@ -1,7 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {shuffle, throttle} from 'lodash';
+import shuffle from 'lodash/shuffle';
+import throttle from 'lodash/throttle';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import withFocusable from './withFocusable';
 import SpatialNavigation from './spatialNavigation';
@@ -120,6 +121,7 @@ const RETURN_KEY = 8;
 /* eslint-disable react/prefer-stateless-function */
 class MenuItem extends React.PureComponent {
   render() {
+    // console.log('Menu item rendered: ', this.props.realFocusKey);
     return (
       <TouchableOpacity
         style={[styles.menuItem, this.props.focused ? styles.focusedBorder : null]}
@@ -130,6 +132,8 @@ class MenuItem extends React.PureComponent {
 
 MenuItem.propTypes = {
   focused: PropTypes.bool.isRequired
+
+  // realFocusKey: PropTypes.string.isRequired
 };
 
 const MenuItemFocusable = withFocusable()(MenuItem);
@@ -158,6 +162,7 @@ class Menu extends React.PureComponent {
   }
 
   render() {
+    // console.log('Menu rendered: ', this.props.realFocusKey);
     const rootStyle = [styles.menu, this.props.hasFocusedChild ? styles.menuFocused : null];
 
     return (
@@ -176,6 +181,8 @@ class Menu extends React.PureComponent {
 Menu.propTypes = {
   setFocus: PropTypes.func.isRequired,
   hasFocusedChild: PropTypes.bool.isRequired
+
+  // realFocusKey: PropTypes.string.isRequired
 };
 
 const MenuFocusable = withFocusable({
@@ -200,6 +207,8 @@ class Content extends React.PureComponent {
   }
 
   render() {
+    // console.log('content rendered: ', this.props.realFocusKey);
+
     return (
       <View style={styles.content}>
         <Active program={this.state.currentProgram} />
@@ -211,6 +220,10 @@ class Content extends React.PureComponent {
     );
   }
 }
+
+Content.propTypes = {
+  // realFocusKey: PropTypes.string.isRequired
+};
 
 const ContentFocusable = withFocusable()(Content);
 
@@ -245,6 +258,8 @@ Active.defaultProps = {
 
 class Program extends React.PureComponent {
   render() {
+    // console.log('Program rendered: ', this.props.realFocusKey);
+
     const {color, onPress, focused, title} = this.props;
 
     const style = {
@@ -270,6 +285,8 @@ Program.propTypes = {
   color: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   focused: PropTypes.bool.isRequired
+
+  // realFocusKey: PropTypes.string.isRequired
 };
 
 const ProgramFocusable = withFocusable()(Program);
@@ -299,6 +316,8 @@ class Category extends React.PureComponent {
   }
 
   render() {
+    // console.log('Category rendered: ', this.props.realFocusKey);
+
     return (
       <View style={styles.categoryWrapper}>
         <Text style={styles.categoryTitle}>
@@ -357,6 +376,8 @@ class Categories extends React.PureComponent {
   }
 
   render() {
+    // console.log('Categories rendered: ', this.props.realFocusKey);
+
     return (
       <ScrollView
         ref={(reference) => {
@@ -374,6 +395,8 @@ class Categories extends React.PureComponent {
             key={category.title}
             onBecameFocused={this.onCategoryFocused}
             categoryIndex={index}
+
+            // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
           />
         ))}
       </ScrollView>
@@ -412,16 +435,16 @@ class Spatial extends React.PureComponent {
   throttledWheelHandler(event) {
     event.preventDefault();
     const {deltaY, deltaX} = event;
-    const {smartNavigateByDirection} = this.props;
+    const {navigateByDirection} = this.props;
 
     if (deltaY > 1) {
-      smartNavigateByDirection('down');
+      navigateByDirection('down');
     } else if (deltaY < 0) {
-      smartNavigateByDirection('up');
+      navigateByDirection('up');
     } else if (deltaX > 1) {
-      smartNavigateByDirection('right');
+      navigateByDirection('right');
     } else if (deltaX < 1) {
-      smartNavigateByDirection('left');
+      navigateByDirection('left');
     }
   }
 
@@ -440,7 +463,7 @@ class Spatial extends React.PureComponent {
 }
 
 Spatial.propTypes = {
-  smartNavigateByDirection: PropTypes.func.isRequired
+  navigateByDirection: PropTypes.func.isRequired
 };
 
 const SpatialFocusable = withFocusable()(Spatial);
