@@ -122,11 +122,8 @@ const RETURN_KEY = 8;
 class MenuItem extends React.PureComponent {
   render() {
     // console.log('Menu item rendered: ', this.props.realFocusKey);
-    return (
-      <TouchableOpacity
-        style={[styles.menuItem, this.props.focused ? styles.focusedBorder : null]}
-      />
-    );
+
+    return (<TouchableOpacity style={[styles.menuItem, this.props.focused ? styles.focusedBorder : null]} />);
   }
 }
 
@@ -163,18 +160,15 @@ class Menu extends React.PureComponent {
 
   render() {
     // console.log('Menu rendered: ', this.props.realFocusKey);
-    const rootStyle = [styles.menu, this.props.hasFocusedChild ? styles.menuFocused : null];
 
-    return (
-      <View style={rootStyle} >
-        <MenuItemFocusable focusKey={'MENU-1'} />
-        <MenuItemFocusable focusKey={'MENU-2'} />
-        <MenuItemFocusable focusKey={'MENU-3'} />
-        <MenuItemFocusable focusKey={'MENU-4'} />
-        <MenuItemFocusable focusKey={'MENU-5'} />
-        <MenuItemFocusable focusKey={'MENU-6'} />
-      </View>
-    );
+    return (<View style={[styles.menu, this.props.hasFocusedChild ? styles.menuFocused : null]}>
+      <MenuItemFocusable focusKey={'MENU-1'} />
+      <MenuItemFocusable focusKey={'MENU-2'} />
+      <MenuItemFocusable focusKey={'MENU-3'} />
+      <MenuItemFocusable focusKey={'MENU-4'} />
+      <MenuItemFocusable focusKey={'MENU-5'} />
+      <MenuItemFocusable focusKey={'MENU-6'} />
+    </View>);
   }
 }
 
@@ -209,15 +203,13 @@ class Content extends React.PureComponent {
   render() {
     // console.log('content rendered: ', this.props.realFocusKey);
 
-    return (
-      <View style={styles.content}>
-        <Active program={this.state.currentProgram} />
-        <CategoriesFocusable
-          focusKey={'CATEGORIES'}
-          onProgramPress={this.onProgramPress}
-        />
-      </View>
-    );
+    return (<View style={styles.content}>
+      <Active program={this.state.currentProgram} />
+      <CategoriesFocusable
+        focusKey={'CATEGORIES'}
+        onProgramPress={this.onProgramPress}
+      />
+    </View>);
   }
 }
 
@@ -235,14 +227,12 @@ class Active extends React.PureComponent {
       backgroundColor: program ? program.color : 'grey'
     };
 
-    return (
-      <View style={styles.activeWrapper}>
-        <View style={[style, styles.activeProgram]} />
-        <Text style={styles.activeProgramTitle}>
-          {program ? program.title : 'No Program'}
-        </Text>
-      </View>
-    );
+    return (<View style={styles.activeWrapper}>
+      <View style={[style, styles.activeProgram]} />
+      <Text style={styles.activeProgramTitle}>
+        {program ? program.title : 'No Program'}
+      </Text>
+    </View>);
   }
 }
 
@@ -266,17 +256,15 @@ class Program extends React.PureComponent {
       backgroundColor: color
     };
 
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        style={styles.programWrapper}
-      >
-        <View style={[style, styles.program, focused ? styles.focusedBorder : null]} />
-        <Text style={styles.programTitle}>
-          {title}
-        </Text>
-      </TouchableOpacity>
-    );
+    return (<TouchableOpacity
+      onPress={onPress}
+      style={styles.programWrapper}
+    >
+      <View style={[style, styles.program, focused ? styles.focusedBorder : null]} />
+      <Text style={styles.programTitle}>
+        {title}
+      </Text>
+    </TouchableOpacity>);
   }
 }
 
@@ -302,7 +290,9 @@ class Category extends React.PureComponent {
   }
 
   onProgramFocused({x}) {
-    this.scrollRef.scrollTo({x});
+    this.scrollRef.scrollTo({
+      x
+    });
   }
 
   onProgramArrowPress(direction, {categoryIndex, programIndex}) {
@@ -318,35 +308,31 @@ class Category extends React.PureComponent {
   render() {
     // console.log('Category rendered: ', this.props.realFocusKey);
 
-    return (
-      <View style={styles.categoryWrapper}>
-        <Text style={styles.categoryTitle}>
-          {this.props.title}
-        </Text>
-        <ScrollView
-          horizontal
-          ref={(reference) => {
-            if (reference) {
-              this.scrollRef = reference;
-            }
-          }}
-        >
-          {programs.map((program, index) => (
-            <ProgramFocusable
-              {...program}
-              focusKey={`PROGRAM-${this.props.realFocusKey}-${index}`}
-              onPress={this.props.onProgramPress}
-              onEnterPress={this.props.onProgramPress}
-              key={program.title}
-              onBecameFocused={this.onProgramFocused}
-              onArrowPress={this.onProgramArrowPress}
-              programIndex={index}
-              categoryIndex={this.props.categoryIndex}
-            />
-          ))}
-        </ScrollView>
-      </View>
-    );
+    return (<View style={styles.categoryWrapper}>
+      <Text style={styles.categoryTitle}>
+        {this.props.title}
+      </Text>
+      <ScrollView
+        horizontal
+        ref={(reference) => {
+          if (reference) {
+            this.scrollRef = reference;
+          }
+        }}
+      >
+        {programs.map((program, index) => ((<ProgramFocusable
+          {...program}
+          focusKey={`PROGRAM-${this.props.realFocusKey}-${index}`}
+          onPress={this.props.onProgramPress}
+          onEnterPress={this.props.onProgramPress}
+          key={program.title}
+          onBecameFocused={this.onProgramFocused}
+          onArrowPress={this.onProgramArrowPress}
+          programIndex={index}
+          categoryIndex={this.props.categoryIndex}
+        />)))}
+      </ScrollView>
+    </View>);
   }
 }
 
@@ -378,29 +364,25 @@ class Categories extends React.PureComponent {
   render() {
     // console.log('Categories rendered: ', this.props.realFocusKey);
 
-    return (
-      <ScrollView
-        ref={(reference) => {
-          if (reference) {
-            this.scrollRef = reference;
-          }
-        }}
-        style={styles.categoriesWrapper}
-      >
-        {categories.map((category, index) => (
-          <CategoryFocusable
-            focusKey={`CATEGORY-${index}`}
-            {...category}
-            onProgramPress={this.props.onProgramPress}
-            key={category.title}
-            onBecameFocused={this.onCategoryFocused}
-            categoryIndex={index}
+    return (<ScrollView
+      ref={(reference) => {
+        if (reference) {
+          this.scrollRef = reference;
+        }
+      }}
+      style={styles.categoriesWrapper}
+    >
+      {categories.map((category, index) => (<CategoryFocusable
+        focusKey={`CATEGORY-${index}`}
+        {...category}
+        onProgramPress={this.props.onProgramPress}
+        key={category.title}
+        onBecameFocused={this.onCategoryFocused}
+        categoryIndex={index}
 
-            // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
-          />
-        ))}
-      </ScrollView>
-    );
+        // preferredChildFocusKey={`PROGRAM-CATEGORY-${index}-${programs.length - 1}`}
+      />))}
+    </ScrollView>);
   }
 }
 
@@ -449,16 +431,14 @@ class Spatial extends React.PureComponent {
   }
 
   render() {
-    return (
-      <View style={styles.wrapper}>
-        <MenuFocusable
-          focusKey={'MENU'}
-        />
-        <ContentFocusable
-          focusKey={'CONTENT'}
-        />
-      </View>
-    );
+    return (<View style={styles.wrapper}>
+      <MenuFocusable
+        focusKey={'MENU'}
+      />
+      <ContentFocusable
+        focusKey={'CONTENT'}
+      />
+    </View>);
   }
 }
 
@@ -468,10 +448,8 @@ Spatial.propTypes = {
 
 const SpatialFocusable = withFocusable()(Spatial);
 
-const App = () => (
-  <View>
-    <SpatialFocusable focusable={false} />
-  </View>
-);
+const App = () => (<View>
+  <SpatialFocusable focusable={false} />
+</View>);
 
 export default App;
