@@ -346,6 +346,16 @@ In Native mode this method is ignored (`noop`).
 setFocus(); // set focus to self
 setFocus('SOME_COMPONENT'); // set focus to another component if you know its focus key
 ```
+### `navigateByDirection`: function
+Move the focus by direction, if you can't use buttons or focusing by key.
+
+```jsx
+navigateByDirection('left'); // The focus is moved to left
+navigateByDirection('right'); // The focus is moved to right
+navigateByDirection('up'); // The focus is moved to up
+navigateByDirection('down'); // The focus is moved to down
+```
+
 
 ### `stealFocus`: function
 This method works exactly like `setFocus`, but it always sets focus to current component no matter which params you pass in.

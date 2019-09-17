@@ -300,6 +300,7 @@ class SpatialNavigation {
     this.pause = this.pause.bind(this);
     this.resume = this.resume.bind(this);
     this.setFocus = this.setFocus.bind(this);
+    this.navigateByDirection = this.navigateByDirection.bind(this);
     this.init = this.init.bind(this);
     this.setKeyMap = this.setKeyMap.bind(this);
 
@@ -384,23 +385,22 @@ class SpatialNavigation {
           return;
         }
 
+        event.preventDefault();
+        event.stopPropagation();
+
         if (eventType === KEY_ENTER && this.focusKey) {
-          event.preventDefault();
-          event.stopPropagation();
-
           this.onEnterPress();
+
+          return;
+        }
+
+        const preventDefaultNavigation = this.onArrowPress(eventType) === false;
+
+        if (preventDefaultNavigation) {
+          this.log('keyDownEventListener', 'default navigation prevented');
+          this.visualDebugger && this.visualDebugger.clear();
         } else {
-          event.preventDefault();
-          event.stopPropagation();
-
-          const preventDefaultNavigation = this.onArrowPress(eventType) === false;
-
-          if (preventDefaultNavigation) {
-            this.log('keyDownEventListener', 'default navigation prevented');
-            this.visualDebugger && this.visualDebugger.clear();
-          } else {
-            this.onKeyEvent(event.keyCode);
-          }
+          this.onKeyEvent(event.keyCode);
         }
       };
 
@@ -465,6 +465,29 @@ class SpatialNavigation {
      * component.focusable. */
 
     return component && component.onArrowPressHandler && component.onArrowPressHandler(...args);
+  }
+
+  /**
+   * Move focus by direction, if you can't use buttons or focusing by key.
+   *
+   * @param {string} direction
+   *
+   * @example
+   * navigateByDirection('right') // The focus is moved to right
+   */
+  navigateByDirection(direction) {
+    if (this.paused === true) {
+      return;
+    }
+
+    const validDirections = [DIRECTION_DOWN, DIRECTION_UP, DIRECTION_LEFT, DIRECTION_RIGHT];
+
+    if (validDirections.includes(direction)) {
+      this.log('navigateByDirection', 'direction', direction);
+      this.smartNavigate(direction);
+    } else {
+      this.log('navigateByDirection', `Invalid direction. You passed: \`${direction}\`, but you can use only these: `, validDirections);
+    }
   }
 
   onKeyEvent(keyCode) {

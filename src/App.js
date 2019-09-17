@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shuffle from 'lodash/shuffle';
+import throttle from 'lodash/throttle';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import withFocusable from './withFocusable';
 import SpatialNavigation from './spatialNavigation';
@@ -393,6 +394,42 @@ Categories.propTypes = {
 const CategoriesFocusable = withFocusable()(Categories);
 
 class Spatial extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.onWheel = this.onWheel.bind(this);
+    this.throttledWheelHandler = throttle(this.throttledWheelHandler.bind(this), 500, {trailing: false});
+  }
+
+  componentDidMount() {
+    window.addEventListener('wheel', this.onWheel, {passive: false});
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('wheel', this.onWheel);
+  }
+
+  onWheel(event) {
+    event.preventDefault();
+    this.throttledWheelHandler(event);
+  }
+
+  throttledWheelHandler(event) {
+    event.preventDefault();
+    const {deltaY, deltaX} = event;
+    const {navigateByDirection} = this.props;
+
+    if (deltaY > 1) {
+      navigateByDirection('down');
+    } else if (deltaY < 0) {
+      navigateByDirection('up');
+    } else if (deltaX > 1) {
+      navigateByDirection('right');
+    } else if (deltaX < 1) {
+      navigateByDirection('left');
+    }
+  }
+
   render() {
     return (<View style={styles.wrapper}>
       <MenuFocusable
@@ -405,8 +442,14 @@ class Spatial extends React.PureComponent {
   }
 }
 
+Spatial.propTypes = {
+  navigateByDirection: PropTypes.func.isRequired
+};
+
+const SpatialFocusable = withFocusable()(Spatial);
+
 const App = () => (<View>
-  <Spatial />
+  <SpatialFocusable focusable={false} />
 </View>);
 
 export default App;
