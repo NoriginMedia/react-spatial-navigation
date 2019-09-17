@@ -86,72 +86,72 @@ class SpatialNavigation {
     };
 
     switch (direction) {
-    case DIRECTION_UP: {
-      const y = isSibling ? itemY + itemHeight : itemY;
+      case DIRECTION_UP: {
+        const y = isSibling ? itemY + itemHeight : itemY;
 
-      result.a = {
-        x: itemX,
-        y
-      };
+        result.a = {
+          x: itemX,
+          y
+        };
 
-      result.b = {
-        x: itemX + itemWidth,
-        y
-      };
+        result.b = {
+          x: itemX + itemWidth,
+          y
+        };
 
-      break;
-    }
+        break;
+      }
 
-    case DIRECTION_DOWN: {
-      const y = isSibling ? itemY : itemY + itemHeight;
+      case DIRECTION_DOWN: {
+        const y = isSibling ? itemY : itemY + itemHeight;
 
-      result.a = {
-        x: itemX,
-        y
-      };
+        result.a = {
+          x: itemX,
+          y
+        };
 
-      result.b = {
-        x: itemX + itemWidth,
-        y
-      };
+        result.b = {
+          x: itemX + itemWidth,
+          y
+        };
 
-      break;
-    }
+        break;
+      }
 
-    case DIRECTION_LEFT: {
-      const x = isSibling ? itemX + itemWidth : itemX;
+      case DIRECTION_LEFT: {
+        const x = isSibling ? itemX + itemWidth : itemX;
 
-      result.a = {
-        x,
-        y: itemY
-      };
+        result.a = {
+          x,
+          y: itemY
+        };
 
-      result.b = {
-        x,
-        y: itemY + itemHeight
-      };
+        result.b = {
+          x,
+          y: itemY + itemHeight
+        };
 
-      break;
-    }
+        break;
+      }
 
-    case DIRECTION_RIGHT: {
-      const x = isSibling ? itemX : itemX + itemWidth;
+      case DIRECTION_RIGHT: {
+        const x = isSibling ? itemX : itemX + itemWidth;
 
-      result.a = {
-        x,
-        y: itemY
-      };
+        result.a = {
+          x,
+          y: itemY
+        };
 
-      result.b = {
-        x,
-        y: itemY + itemHeight
-      };
+        result.b = {
+          x,
+          y: itemY + itemHeight
+        };
 
-      break;
-    }
+        break;
+      }
 
-    default:
-      break;
+      default:
+        break;
     }
 
     return result;

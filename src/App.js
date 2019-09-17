@@ -238,7 +238,8 @@ class Active extends React.PureComponent {
 
 Active.propTypes = {
   program: PropTypes.shape({
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired
   })
 };
 
