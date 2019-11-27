@@ -45,6 +45,12 @@ const THROTTLE_OPTIONS = {
   trailing: false
 };
 
+export const getNearestChild = (children) => {
+  const nearestChildren = sortBy(children, ({layout}) => Math.abs(layout.left) + Math.abs(layout.top));
+
+  return first(nearestChildren);
+};
+
 /* eslint-disable no-nested-ternary */
 class SpatialNavigation {
   /**
@@ -661,9 +667,7 @@ class SpatialNavigation {
       /**
        * Otherwise, trying to focus something by coordinates
        */
-      const sortedXChildren = sortBy(children, (child) => child.layout.left);
-      const sortedYChildren = sortBy(sortedXChildren, (child) => child.layout.top);
-      const {focusKey: childKey} = first(sortedYChildren);
+      const {focusKey: childKey} = getNearestChild(children);
 
       this.log('getNextFocusKey', 'childKey will be focused', childKey);
 
