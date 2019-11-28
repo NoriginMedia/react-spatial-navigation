@@ -1,6 +1,6 @@
 {
   "name": "@noriginmedia/react-spatial-navigation",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "HOC-based Spatial Navigation (key navigation) solution for React",
   "main": "dist/index.js",
   "files": [
@@ -10,6 +10,7 @@
     "eslint": "eslint src",
     "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
     "start": "parcel index.html -d parcel",
+    "test": "jest",
     "prepublishOnly": "npm run eslint",
     "prepare": "npm run dist",
     "publish": "npm publish --access public"
@@ -49,11 +50,13 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "8.2.3",
+    "babel-jest": "^23.6.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "eslint": "4.19.1",
     "eslint-config-norigin": "git+https://github.com/NoriginMedia/eslint-config-norigin.git#v3.7.5",
+    "jest": "^23.6.0",
     "parcel-bundler": "^1.11.0",
     "pre-commit": "^1.2.2",
     "react": "^16.5.2",
