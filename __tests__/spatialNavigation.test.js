@@ -1,4 +1,4 @@
-import {getNearestChild} from '../src/spatialNavigation';
+import {getChildClosestToOrigin} from '../src/spatialNavigation';
 
 class Child {
   constructor(top, left) {
@@ -8,7 +8,7 @@ class Child {
   }
 }
 
-test('The getNearestChild is working well', () => {
+test('The getChildClosestToOrigin is working well', () => {
   const children = [
     new Child(-11.43242342, 222),
     new Child(0, 1),
@@ -16,9 +16,9 @@ test('The getNearestChild is working well', () => {
     new Child(10, 12)
   ];
 
-  const nearestChild = new Child(-0.00001, 0.2);
+  const childClosestToOrigin = new Child(-0.00001, 0.2);
 
-  const result = getNearestChild(children);
+  const result = getChildClosestToOrigin(children);
 
-  expect(result).toEqual(nearestChild);
+  expect(result).toEqual(childClosestToOrigin);
 });
