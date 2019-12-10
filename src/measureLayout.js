@@ -25,14 +25,12 @@ const measureLayout = (node, callback) => {
   const relativeNode = node && node.parentNode;
 
   if (node && relativeNode) {
-    setTimeout(() => {
-      const relativeRect = getRect(relativeNode);
-      const {height, left, top, width} = getRect(node);
-      const x = left - relativeRect.left;
-      const y = top - relativeRect.top;
+    const relativeRect = getRect(relativeNode);
+    const {height, left, top, width} = getRect(node);
+    const x = left - relativeRect.left;
+    const y = top - relativeRect.top;
 
-      callback(x, y, width, height, left, top);
-    }, 0);
+    callback(x, y, width, height, left, top);
   }
 };
 
