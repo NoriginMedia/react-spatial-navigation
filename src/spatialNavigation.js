@@ -375,7 +375,8 @@ class SpatialNavigation {
   }
 
   bindEventHandlers() {
-    if (window) {
+    // We check both because the React Native remote debugger implements window, but not window.addEventListener.
+    if (window && window.addEventListener) {
       this.keyDownEventListener = (event) => {
         if (this.paused === true) {
           return;
@@ -426,7 +427,8 @@ class SpatialNavigation {
   }
 
   unbindEventHandlers() {
-    if (window) {
+    // We check both because the React Native remote debugger implements window, but not window.removeEventListener.
+    if (window && window.removeEventListener) {
       window.removeEventListener('keydown', this.keyDownEventListener);
       this.keyDownEventListener = null;
 
