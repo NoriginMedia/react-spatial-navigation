@@ -240,6 +240,61 @@ Equivalent to `pauseSpatialNavigation`, detailed below, in "Props passed to Wrap
 
 Equivalent to `resumeSpatialNavigation`, detailed below, in "Props passed to Wrapped Component".
 
+### `getFocusableComponent`: function
+Returns the focusable component for the given key (optional; defaults to the current focus key).
+ 
+If there is no focusable component for that key, returns `null`.
+
+Example:
+
+```jsx
+const currentComponent = spatialNavigation.getFocusableComponent();
+const specificComponent = spatialNavigation.getFocusableComponent("my-focusable-1");
+```
+
+A focusable component has the following interface (event handler types are approximate for now):
+
+```ts
+interface FocusableComponent {
+    focusKey: string;
+    node: any;
+    parentFocusKey: string;
+    /* Unsure of typings for these callbacks (undocumented) */
+    onEnterPressHandler: (...args: any[]) => any;
+    onArrowPressHandler: (...args: any[]) => any;
+    onBecameFocusedHandler: (...args: any[]) => any;
+    onUpdateFocus: (focused: boolean) => any;
+    onUpdateHasFocusedChild: (hasFocusedChild: boolean) => any;
+    forgetLastFocusedChild: boolean;
+    trackChildren: boolean;
+    lastFocusedChildKey: string | null;
+    preferredChildFocusKey: string | null;
+    focusable: boolean;
+}
+```
+
+### `getCurrentFocusedComponent`: function
+
+A convenience method for calling `spatialNavigation.getFocusableComponent(spatialNavigation.getCurrentFocusedKey())`.
+
+See the API documentation of `getFocusableComponent` for more details.
+
+Example:
+
+```js
+const currentComponent = spatialNavigation.getCurrentFocusedComponent();
+```
+
+### `getCurrentFocusedKey`: function
+
+Returns the current focused key, which may be a `string` or `null` (e.g. at first initialisation, before any focusable components have been registered).
+
+Example:
+
+```js
+const focusKey = spatialNavigation.getCurrentFocusedKey();
+```
+
 #### Config
 ##### `trackChildren`: boolean
 Determine whether to track when any child component is focused. Wrapped component can rely on `hasFocusedChild` prop when this mode is enabled. Otherwise `hasFocusedChild` will be always `false`.
