@@ -222,6 +222,24 @@ Main HOC wrapper function. Accepts [config](#config) as a param.
 const FocusableComponent = withFocusable({...})(Component);
 ```
 
+#### Instance APIs
+
+### `init`: function
+
+Equivalent to `initNavigation`, detailed above, in "Initialization Config".
+
+### `setFocus`: function
+
+Equivalent to `setFocus`, detailed below, in "Props passed to Wrapped Component".
+
+### `pause`: function
+
+Equivalent to `pauseSpatialNavigation`, detailed below, in "Props passed to Wrapped Component".
+
+### `resume`: function
+
+Equivalent to `resumeSpatialNavigation`, detailed below, in "Props passed to Wrapped Component".
+
 #### Config
 ##### `trackChildren`: boolean
 Determine whether to track when any child component is focused. Wrapped component can rely on `hasFocusedChild` prop when this mode is enabled. Otherwise `hasFocusedChild` will be always `false`.
