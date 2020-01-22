@@ -197,7 +197,7 @@ class Content extends React.PureComponent {
   }
 
   onProgramPress(programProps, {pressedKeys} = {}) {
-    if (pressedKeys[KEY_ENTER] > 1) {
+    if (pressedKeys && pressedKeys[KEY_ENTER] > 1) {
       return;
     }
     this.setState({
