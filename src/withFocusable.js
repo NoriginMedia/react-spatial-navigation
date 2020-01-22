@@ -72,13 +72,13 @@ const withFocusable = ({
     onEnterPressHandler: ({
       onEnterPress = noop,
       ...rest
-    }) => () => {
-      onEnterPress(rest);
+    }) => (details) => {
+      onEnterPress(rest, details);
     },
     onArrowPressHandler: ({
       onArrowPress = noop,
       ...rest
-    }) => (...args) => onArrowPress(...args, rest),
+    }) => (direction, details) => onArrowPress(direction, rest, details),
     onBecameFocusedHandler: ({
       onBecameFocused = noop,
       ...rest
