@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.3]
+### Added
+- Added `KeyDetails` param on callback functions `onEnterPress` and `onArrowPress`
+
 ## [2.9.2]
 ### Fixed
 - Fixed issue #46 Focus jumps on wrong component: Removed `setTimeout` in `measureLayout` to avoid coordinates mismatches with DOM nodes.
