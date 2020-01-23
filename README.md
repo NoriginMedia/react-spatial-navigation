@@ -260,10 +260,11 @@ String that is used as a component focus key. Should be **unique**, otherwise it
 Callback function that is called when the item is currently focused and Enter (OK) key is pressed.
 
 Payload:
-All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
+1. All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
+2. [Details](#keydetails-object) - info about pressed keys
 
 ```jsx
-const onPress = ({prop1, prop2}) => {...};
+const onPress = ({prop1, prop2}, details) => {...};
 
 ...
 <FocusableItem 
@@ -280,6 +281,7 @@ Callback function that is called when the item is currently focused and an arrow
 Payload:
 1. The directional arrow (left, right, up, down): string
 2. All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
+3. [Details](#keydetails-object) - info about pressed keys
 
 Prevent default navigation:
 By returning `false` the default navigation behavior is prevented.
@@ -372,6 +374,19 @@ This function pauses key listeners. Useful when you need to temporary disable na
 
 ### `resumeSpatialNavigation`: function
 This function resumes key listeners if it was paused with [pauseSpatialNavigation](#pauseSpatialNavigation-function)
+
+### Data Types
+
+### `KeyDetails`: object
+This object contains informations about keys.
+```
+{
+  pressedKeys: {
+    [KEY]: number
+  }
+}
+```
+`pressedKeys` contains a property for each pressed key in a given moment, the value is the number of keydown events fired before the keyup event.
 
 # Development
 ## Dev environment
