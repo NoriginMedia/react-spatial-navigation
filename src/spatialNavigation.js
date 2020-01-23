@@ -292,6 +292,8 @@ class SpatialNavigation {
     this.nativeMode = false;
     this.throttle = 0;
 
+    this.pressedKeys = {};
+
     /**
      * Flag used to block key events from this service
      * @type {boolean}
@@ -374,6 +376,10 @@ class SpatialNavigation {
     }
   }
 
+  getEventType(keyCode) {
+    return findKey(this.getKeyMap(), (code) => keyCode === code);
+  }
+
   bindEventHandlers() {
     if (window) {
       this.keyDownEventListener = (event) => {
@@ -385,22 +391,28 @@ class SpatialNavigation {
           this.logIndex += 1;
         }
 
-        const eventType = findKey(this.getKeyMap(), (code) => event.keyCode === code);
+        const eventType = this.getEventType(event.keyCode);
 
         if (!eventType) {
           return;
         }
 
+        this.pressedKeys[eventType] = this.pressedKeys[eventType] ? this.pressedKeys[eventType] + 1 : 1;
+
         event.preventDefault();
         event.stopPropagation();
 
+        const details = {
+          pressedKeys: this.pressedKeys
+        };
+
         if (eventType === KEY_ENTER && this.focusKey) {
-          this.onEnterPress();
+          this.onEnterPress(details);
 
           return;
         }
 
-        const preventDefaultNavigation = this.onArrowPress(eventType) === false;
+        const preventDefaultNavigation = this.onArrowPress(eventType, details) === false;
 
         if (preventDefaultNavigation) {
           this.log('keyDownEventListener', 'default navigation prevented');
@@ -414,13 +426,20 @@ class SpatialNavigation {
       if (this.throttle) {
         this.keyDownEventListener =
           lodashThrottle(this.keyDownEventListener.bind(this), this.throttle, THROTTLE_OPTIONS);
-
-        // When throttling then make sure to only throttle key down and cancel any queued functions in case of key up
-        this.keyUpEventListener = () => this.keyDownEventListener.cancel();
-
-        window.addEventListener('keyup', this.keyUpEventListener);
       }
 
+      // When throttling then make sure to only throttle key down and cancel any queued functions in case of key up
+      this.keyUpEventListener = (event) => {
+        const eventType = this.getEventType(event.keyCode);
+
+        Reflect.deleteProperty(this.pressedKeys, eventType);
+
+        if (this.throttle) {
+          this.keyDownEventListener.cancel();
+        }
+      };
+
+      window.addEventListener('keyup', this.keyUpEventListener);
       window.addEventListener('keydown', this.keyDownEventListener);
     }
   }
@@ -437,7 +456,7 @@ class SpatialNavigation {
     }
   }
 
-  onEnterPress() {
+  onEnterPress(details) {
     const component = this.focusableComponents[this.focusKey];
 
     /* Guard against last-focused component being unmounted at time of onEnterPress (e.g due to UI fading out) */
@@ -454,7 +473,7 @@ class SpatialNavigation {
       return;
     }
 
-    component.onEnterPressHandler && component.onEnterPressHandler();
+    component.onEnterPressHandler && component.onEnterPressHandler(details);
   }
 
   onArrowPress(...args) {

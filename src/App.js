@@ -14,6 +14,8 @@ SpatialNavigation.init({
 
 // SpatialNavigation.setKeyMap(keyMap); -> Custom key map
 
+const KEY_ENTER = 'enter';
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
@@ -194,9 +196,12 @@ class Content extends React.PureComponent {
     this.onProgramPress = this.onProgramPress.bind(this);
   }
 
-  onProgramPress(program) {
+  onProgramPress(programProps, {pressedKeys} = {}) {
+    if (pressedKeys && pressedKeys[KEY_ENTER] > 1) {
+      return;
+    }
     this.setState({
-      currentProgram: program
+      currentProgram: programProps
     });
   }
 
@@ -324,7 +329,7 @@ class Category extends React.PureComponent {
         {programs.map((program, index) => ((<ProgramFocusable
           {...program}
           focusKey={`PROGRAM-${this.props.realFocusKey}-${index}`}
-          onPress={this.props.onProgramPress}
+          onPress={() => this.props.onProgramPress(program)}
           onEnterPress={this.props.onProgramPress}
           key={program.title}
           onBecameFocused={this.onProgramFocused}
