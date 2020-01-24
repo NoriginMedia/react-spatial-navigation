@@ -222,6 +222,36 @@ Main HOC wrapper function. Accepts [config](#config) as a param.
 const FocusableComponent = withFocusable({...})(Component);
 ```
 
+#### Events
+
+React Spatial Navigation uses [EventEmitter3](https://github.com/primus/eventemitter3), which implements the [Node.js `EventEmitter` API](https://nodejs.org/api/events.html), with some minor differences noted in the repository's readme.
+
+Add and remove event listeners as follows:
+
+```js
+const callback = (event) => {
+  console.log(`Got "focusKeyUpdate" event`, event);
+};
+spatialNavigation.eventEmitter.addListener('focusKeyUpdate', callback);
+spatialNavigation.eventEmitter.removeListener('focusKeyUpdate', callback);
+```
+
+##### `focusKeyUpdate`
+
+```js
+spatialNavigation.eventEmitter.addListener(
+  'focusKeyUpdate',
+  (event) => {
+    const { lastFocusedKey, newFocusKey } = event;
+    if(lastFocusedKey === newFocusKey){
+      console.log(`setFocus() was called on the same focus key as before; no focus change.`);
+      return;
+    }
+    console.log(`Focus changed from ${lastFocusedKey} -> ${newFocusKey}`);
+  }
+);
+```
+
 #### Config
 ##### `trackChildren`: boolean
 Determine whether to track when any child component is focused. Wrapped component can rely on `hasFocusedChild` prop when this mode is enabled. Otherwise `hasFocusedChild` will be always `false`.

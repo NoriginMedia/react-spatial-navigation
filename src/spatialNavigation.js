@@ -1,3 +1,4 @@
+import EventEmitter from 'eventemitter3';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import sortBy from 'lodash/sortBy';
@@ -316,6 +317,8 @@ class SpatialNavigation {
     this.visualDebugger = null;
 
     this.logIndex = 0;
+
+    this.eventEmitter = new EventEmitter();
   }
 
   init({
@@ -936,6 +939,14 @@ class SpatialNavigation {
     if (!this.nativeMode) {
       this.updateAllLayouts();
     }
+
+    this.eventEmitter.emit(
+      'focusKeyUpdate',
+      {
+        lastFocusedKey,
+        newFocusKey
+      }
+    );
   }
 
   updateAllLayouts() {
