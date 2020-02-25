@@ -303,7 +303,7 @@ const onPress = (direction, {prop1, prop2}) => {
 ```
 
 ### `onBecameFocused`: function
-Callback function that is called when the item becomes focused directly or when any of the the children components become focused. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
+Callback function that is called when the item becomes focused directly or when any of the children components become focused. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
 
 Payload:
 Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
@@ -321,13 +321,13 @@ const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {.
 ```
 
 ### `onBecameBlurred`: function
-Callback function that is called when the item loses focus or when any of the the children components lose focused. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
+Callback function that is called when the item loses focus or when all the children components lose focus. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
 
 Payload:
 Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
 
 ```jsx
-const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
+const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
 
 ...
 <FocusableItem 
