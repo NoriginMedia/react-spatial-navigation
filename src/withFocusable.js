@@ -85,6 +85,12 @@ const withFocusable = ({
     }) => (layout) => {
       onBecameFocused(layout, rest);
     },
+    onBecameBlurredHandler: ({
+      onBecameBlurred = noop,
+      ...rest
+    }) => (layout) => {
+      onBecameBlurred(layout, rest);
+    },
     pauseSpatialNavigation: () => SpatialNavigation.pause,
     resumeSpatialNavigation: () => SpatialNavigation.resume
   }),
@@ -99,6 +105,7 @@ const withFocusable = ({
         onEnterPressHandler,
         onArrowPressHandler,
         onBecameFocusedHandler,
+        onBecameBlurredHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
         trackChildren,
@@ -115,6 +122,7 @@ const withFocusable = ({
         onEnterPressHandler,
         onArrowPressHandler,
         onBecameFocusedHandler,
+        onBecameBlurredHandler,
         onUpdateFocus,
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
@@ -124,7 +132,12 @@ const withFocusable = ({
     },
     componentDidUpdate(prevProps) {
       const {
-        focused, realFocusKey: focusKey, onBecameFocusedHandler, preferredChildFocusKey, focusable = true
+        focused,
+        realFocusKey: focusKey,
+        onBecameFocusedHandler,
+        onBecameBlurredHandler,
+        preferredChildFocusKey,
+        focusable = true
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -137,6 +150,8 @@ const withFocusable = ({
 
       if (!prevProps.focused && focused) {
         onBecameFocusedHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));
+      } else if (prevProps.focused && !focused) {
+        onBecameBlurredHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));
       }
     },
     componentWillUnmount() {
@@ -152,6 +167,7 @@ const withFocusable = ({
 
   omitProps([
     'onBecameFocusedHandler',
+    'onBecameBlurredHandler',
     'onEnterPressHandler',
     'onArrowPressHandler',
     'onUpdateFocus',

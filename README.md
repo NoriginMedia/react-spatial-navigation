@@ -86,6 +86,7 @@ const ParentComponent = (props) => (<View>
     onEnterPress={props.onItemPress}
     onArrowPress={props.onArrowPress}
     onBecameFocused={props.onItemFocused}
+    onBecameBlurred={props.onItemBlurred}
   />
   ...
 </View>);
@@ -187,7 +188,7 @@ Enable visual debugging (all layouts, reference points and siblings refernce poi
 Enable Native mode. It will block certain web-only functionality such as:
 - adding window key listeners
 - measuring DOM layout
-- `onBecameFocused` callback doesn't return coordinates, but still has node ref to lazy measure layout
+- `onBecameFocused` and `onBecameBlurred` callbacks doesn't return coordinates, but still has node ref to lazy measure layout
 - coordinates calculations when navigating
 - down-tree propagation
 - last focused child
@@ -302,7 +303,7 @@ const onPress = (direction, {prop1, prop2}) => {
 ```
 
 ### `onBecameFocused`: function
-Callback function that is called when the item becomes focused directly or during propagation of the focus to the children components. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus propagation.
+Callback function that is called when the item becomes focused directly or when any of the children components become focused. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
 
 Payload:
 Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
@@ -315,6 +316,24 @@ const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {.
   prop1={111}
   prop2={222}
   onBecameFocused={onFocused}
+/>
+...
+```
+
+### `onBecameBlurred`: function
+Callback function that is called when the item loses focus or when all the children components lose focus. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
+
+Payload:
+Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
+
+```jsx
+const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
+
+...
+<FocusableItem 
+  prop1={111}
+  prop2={222}
+  onBecameBlurred={onBlur}
 />
 ...
 ```

@@ -659,8 +659,6 @@ class SpatialNavigation {
     );
 
     if (children.length > 0) {
-      this.onIntermediateNodeBecameFocused(targetFocusKey);
-
       const {lastFocusedChildKey, preferredChildFocusKey} = targetComponent;
 
       this.log('getNextFocusKey', 'lastFocusedChildKey is', lastFocusedChildKey);
@@ -712,6 +710,7 @@ class SpatialNavigation {
     onEnterPressHandler,
     onArrowPressHandler,
     onBecameFocusedHandler,
+    onBecameBlurredHandler,
     forgetLastFocusedChild,
     trackChildren,
     onUpdateFocus,
@@ -726,6 +725,7 @@ class SpatialNavigation {
       onEnterPressHandler,
       onArrowPressHandler,
       onBecameFocusedHandler,
+      onBecameBlurredHandler,
       onUpdateFocus,
       onUpdateHasFocusedChild,
       forgetLastFocusedChild,
@@ -849,12 +849,14 @@ class SpatialNavigation {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
       parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(false);
+      this.onIntermediateNodeBecameBlurred(parentFocusKey);
     });
 
     forEach(parentsToAddFlag, (parentFocusKey) => {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
       parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(true);
+      this.onIntermediateNodeBecameFocused(parentFocusKey);
     });
 
     this.parentsHavingFocusedChild = parents;
@@ -905,6 +907,11 @@ class SpatialNavigation {
   onIntermediateNodeBecameFocused(focusKey) {
     this.isParticipatingFocusableComponent(focusKey) &&
       this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey));
+  }
+
+  onIntermediateNodeBecameBlurred(focusKey) {
+    this.isParticipatingFocusableComponent(focusKey) &&
+      this.focusableComponents[focusKey].onBecameBlurredHandler(this.getNodeLayoutByFocusKey(focusKey));
   }
 
   pause() {
