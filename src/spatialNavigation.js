@@ -805,25 +805,23 @@ class SpatialNavigation {
   }
 
   setCurrentFocusedKey(newFocusKey, event) {
-    if (newFocusKey !== this.focusKey) {
-      if (this.isFocusableComponent(this.focusKey)) {
-        const oldComponent = this.focusableComponents[this.focusKey];
-        const parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
+    if (this.isFocusableComponent(this.focusKey) && newFocusKey !== this.focusKey) {
+      const oldComponent = this.focusableComponents[this.focusKey];
+      const parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
 
-        this.saveLastFocusedChildKey(parentComponent, this.focusKey);
+      this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
-        oldComponent.onUpdateFocus(false);
-        oldComponent.onBecameBlurredHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
-      }
+      oldComponent.onUpdateFocus(false);
+      oldComponent.onBecameBlurredHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
+    }
 
-      this.focusKey = newFocusKey;
+    this.focusKey = newFocusKey;
 
-      if (this.isFocusableComponent(this.focusKey)) {
-        const newComponent = this.focusableComponents[this.focusKey];
+    if (this.isFocusableComponent(this.focusKey)) {
+      const newComponent = this.focusableComponents[this.focusKey];
 
-        newComponent.onUpdateFocus(true);
-        newComponent.onBecameFocusedHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
-      }
+      newComponent.onUpdateFocus(true);
+      newComponent.onBecameFocusedHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
     }
   }
 
