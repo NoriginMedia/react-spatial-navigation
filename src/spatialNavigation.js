@@ -496,12 +496,12 @@ class SpatialNavigation {
    * Move focus by direction, if you can't use buttons or focusing by key.
    *
    * @param {string} direction
-   * @param {object} event
+   * @param {object} details
    *
    * @example
    * navigateByDirection('right') // The focus is moved to right
    */
-  navigateByDirection(direction, event) {
+  navigateByDirection(direction, details = {}) {
     if (this.paused === true) {
       return;
     }
@@ -510,7 +510,7 @@ class SpatialNavigation {
 
     if (validDirections.includes(direction)) {
       this.log('navigateByDirection', 'direction', direction);
-      this.smartNavigate(direction, null, event);
+      this.smartNavigate(direction, null, details);
     } else {
       this.log(
         'navigateByDirection',
@@ -525,14 +525,14 @@ class SpatialNavigation {
 
     const direction = findKey(this.getKeyMap(), (code) => event.keyCode === code);
 
-    this.smartNavigate(direction, null, event);
+    this.smartNavigate(direction, null, {event});
   }
 
   /**
    * This function navigates between siblings OR goes up by the Tree
    * Based on the Direction
    */
-  smartNavigate(direction, fromParentFocusKey, event) {
+  smartNavigate(direction, fromParentFocusKey, details) {
     this.log('smartNavigate', 'direction', direction);
     this.log('smartNavigate', 'fromParentFocusKey', fromParentFocusKey);
     this.log('smartNavigate', 'this.focusKey', this.focusKey);
@@ -610,13 +610,13 @@ class SpatialNavigation {
       );
 
       if (nextComponent) {
-        this.setFocus(nextComponent.focusKey, null, event);
+        this.setFocus(nextComponent.focusKey, null, details);
       } else {
         const parentComponent = this.focusableComponents[parentFocusKey];
 
         this.saveLastFocusedChildKey(parentComponent, focusKey);
 
-        this.smartNavigate(direction, parentFocusKey, event);
+        this.smartNavigate(direction, parentFocusKey, details);
       }
     }
   }
@@ -804,7 +804,7 @@ class SpatialNavigation {
     return null;
   }
 
-  setCurrentFocusedKey(newFocusKey, event) {
+  setCurrentFocusedKey(newFocusKey, details) {
     if (this.isFocusableComponent(this.focusKey) && newFocusKey !== this.focusKey) {
       const oldComponent = this.focusableComponents[this.focusKey];
       const parentComponent = this.focusableComponents[oldComponent.parentFocusKey];
@@ -812,7 +812,7 @@ class SpatialNavigation {
       this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
       oldComponent.onUpdateFocus(false);
-      oldComponent.onBecameBlurredHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
+      oldComponent.onBecameBlurredHandler(this.getNodeLayoutByFocusKey(this.focusKey), details);
     }
 
     this.focusKey = newFocusKey;
@@ -821,11 +821,11 @@ class SpatialNavigation {
       const newComponent = this.focusableComponents[this.focusKey];
 
       newComponent.onUpdateFocus(true);
-      newComponent.onBecameFocusedHandler(this.getNodeLayoutByFocusKey(this.focusKey), event);
+      newComponent.onBecameFocusedHandler(this.getNodeLayoutByFocusKey(this.focusKey), details);
     }
   }
 
-  updateParentsHasFocusedChild(focusKey, event) {
+  updateParentsHasFocusedChild(focusKey, details) {
     const parents = [];
 
     let currentComponent = this.focusableComponents[focusKey];
@@ -854,14 +854,14 @@ class SpatialNavigation {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
       parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(false);
-      this.onIntermediateNodeBecameBlurred(parentFocusKey, event);
+      this.onIntermediateNodeBecameBlurred(parentFocusKey, details);
     });
 
     forEach(parentsToAddFlag, (parentFocusKey) => {
       const parentComponent = this.focusableComponents[parentFocusKey];
 
       parentComponent && parentComponent.trackChildren && parentComponent.onUpdateHasFocusedChild(true);
-      this.onIntermediateNodeBecameFocused(parentFocusKey, event);
+      this.onIntermediateNodeBecameFocused(parentFocusKey, details);
     });
 
     this.parentsHavingFocusedChild = parents;
@@ -909,14 +909,14 @@ class SpatialNavigation {
     return this.isFocusableComponent(focusKey) && this.focusableComponents[focusKey].focusable;
   }
 
-  onIntermediateNodeBecameFocused(focusKey, event) {
+  onIntermediateNodeBecameFocused(focusKey, details) {
     this.isParticipatingFocusableComponent(focusKey) &&
-      this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey), event);
+      this.focusableComponents[focusKey].onBecameFocusedHandler(this.getNodeLayoutByFocusKey(focusKey), details);
   }
 
-  onIntermediateNodeBecameBlurred(focusKey, event) {
+  onIntermediateNodeBecameBlurred(focusKey, details) {
     this.isParticipatingFocusableComponent(focusKey) &&
-      this.focusableComponents[focusKey].onBecameBlurredHandler(this.getNodeLayoutByFocusKey(focusKey), event);
+      this.focusableComponents[focusKey].onBecameBlurredHandler(this.getNodeLayoutByFocusKey(focusKey), details);
   }
 
   pause() {
@@ -927,7 +927,7 @@ class SpatialNavigation {
     this.paused = false;
   }
 
-  setFocus(focusKey, overwriteFocusKey, event) {
+  setFocus(focusKey, overwriteFocusKey, details = {}) {
     if (!this.enabled) {
       return;
     }
@@ -941,8 +941,8 @@ class SpatialNavigation {
 
     this.log('setFocus', 'newFocusKey', newFocusKey);
 
-    this.setCurrentFocusedKey(newFocusKey, event);
-    this.updateParentsHasFocusedChild(newFocusKey, event);
+    this.setCurrentFocusedKey(newFocusKey, details);
+    this.updateParentsHasFocusedChild(newFocusKey, details);
     this.updateParentsLastFocusedChild(lastFocusedKey);
 
     if (!this.nativeMode) {

@@ -82,14 +82,14 @@ const withFocusable = ({
     onBecameFocusedHandler: ({
       onBecameFocused = noop,
       ...rest
-    }) => (layout, event) => {
-      onBecameFocused(layout, rest, event);
+    }) => (layout, details) => {
+      onBecameFocused(layout, rest, details);
     },
     onBecameBlurredHandler: ({
       onBecameBlurred = noop,
       ...rest
-    }) => (layout, event) => {
-      onBecameBlurred(layout, rest, event);
+    }) => (layout, details) => {
+      onBecameBlurred(layout, rest, details);
     },
     pauseSpatialNavigation: () => SpatialNavigation.pause,
     resumeSpatialNavigation: () => SpatialNavigation.resume

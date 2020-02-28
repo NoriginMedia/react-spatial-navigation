@@ -306,10 +306,10 @@ const onPress = (direction, {prop1, prop2}) => {
 Callback function that is called when the item becomes focused directly or when any of the children components become focused. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
 
 Payload:
-Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
+The first parameter is the component layout object. The second paramter is an object containing all the component props. The third parameter is a details object that was used when triggering the focus change, for example it contains the key event in case of arrow navigation. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
 
 ```jsx
-const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
+const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}, {event, other}) => {...};
 
 ...
 <FocusableItem 
@@ -324,10 +324,10 @@ const onFocused = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {.
 Callback function that is called when the item loses focus or when all the children components lose focus. For example when you have nested tree of 5 focusable components, this callback will be called on every level of down-tree focus change.
 
 Payload:
-Component layout object is passed as a first param. All the component props passed back to this callback. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
+The first parameter is the component layout object. The second paramter is an object containing all the component props. The third parameter is a details object that was used when triggering the focus change, for example it contains the key event in case of arrow navigation. Useful to avoid creating callback functions during render. `x` and `y` are relative coordinates to parent DOM (**not the Focusable parent**) element. `left` and `top` are absolute coordinates on the screen.
 
 ```jsx
-const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}) => {...};
+const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}, {event, other}) => {...};
 
 ...
 <FocusableItem 
@@ -362,19 +362,21 @@ This method sets the focus to another component (when focus key is passed as par
 This preemptive setting of the focus might be useful when rendering lists of data. 
 You can assign focus key with the item index and set it to e.g. first item, then as soon as it will be rendered, that item will get focused.
 In Native mode this method is ignored (`noop`).
+This method accepts a second parameter as a details object that will be passed back to the `onBecameFocused` and `onBecameBlurred` callbacks.
 
 ```jsx
 setFocus(); // set focus to self
-setFocus('SOME_COMPONENT'); // set focus to another component if you know its focus key
+setFocus('SOME_COMPONENT', {event: keyEvent}); // set focus to another component if you know its focus key
 ```
 ### `navigateByDirection`: function
 Move the focus by direction, if you can't use buttons or focusing by key.
+This method accepts a second parameter as a details object that will be passed back to the `onBecameFocused` and `onBecameBlurred` callbacks.
 
 ```jsx
 navigateByDirection('left'); // The focus is moved to left
 navigateByDirection('right'); // The focus is moved to right
 navigateByDirection('up'); // The focus is moved to up
-navigateByDirection('down'); // The focus is moved to down
+navigateByDirection('down', {event: keyEvent}); // The focus is moved to down
 ```
 
 
