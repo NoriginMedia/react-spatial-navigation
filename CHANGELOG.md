@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0]
+### Changed
+- `onBecameBlurred` and `onBecameFocused` are always invoked synchonously with focus change and not on componentDidUpdate
+### Added
+- `setFocus` and `navigateByDirection` accept an details object, this object is passed back on `onBecameBlurred` and `onBecameFocused` callbacks
+
 ## [2.10.0]
 ### Changed
 - Changed behaviour of `onBecameFocused`, now it's invoked also in case of stealFocus

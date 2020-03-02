@@ -82,14 +82,14 @@ const withFocusable = ({
     onBecameFocusedHandler: ({
       onBecameFocused = noop,
       ...rest
-    }) => (layout) => {
-      onBecameFocused(layout, rest);
+    }) => (layout, details) => {
+      onBecameFocused(layout, rest, details);
     },
     onBecameBlurredHandler: ({
       onBecameBlurred = noop,
       ...rest
-    }) => (layout) => {
-      onBecameBlurred(layout, rest);
+    }) => (layout, details) => {
+      onBecameBlurred(layout, rest, details);
     },
     pauseSpatialNavigation: () => SpatialNavigation.pause,
     resumeSpatialNavigation: () => SpatialNavigation.resume
@@ -130,12 +130,9 @@ const withFocusable = ({
         focusable
       });
     },
-    componentDidUpdate(prevProps) {
+    componentDidUpdate() {
       const {
-        focused,
         realFocusKey: focusKey,
-        onBecameFocusedHandler,
-        onBecameBlurredHandler,
         preferredChildFocusKey,
         focusable = true
       } = this.props;
@@ -147,12 +144,6 @@ const withFocusable = ({
         preferredChildFocusKey,
         focusable
       });
-
-      if (!prevProps.focused && focused) {
-        onBecameFocusedHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));
-      } else if (prevProps.focused && !focused) {
-        onBecameBlurredHandler(SpatialNavigation.getNodeLayoutByFocusKey(focusKey));
-      }
     },
     componentWillUnmount() {
       const {realFocusKey: focusKey} = this.props;
