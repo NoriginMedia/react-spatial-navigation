@@ -717,6 +717,7 @@ class SpatialNavigation {
     onUpdateFocus,
     onUpdateHasFocusedChild,
     preferredChildFocusKey,
+    autoRestoreFocus,
     focusable
   }) {
     this.focusableComponents[focusKey] = {
@@ -734,6 +735,7 @@ class SpatialNavigation {
       lastFocusedChildKey: null,
       preferredChildFocusKey,
       focusable,
+      autoRestoreFocus,
       layout: {
         x: 0,
         y: 0,
@@ -768,7 +770,7 @@ class SpatialNavigation {
     const componentToRemove = this.focusableComponents[focusKey];
 
     if (componentToRemove) {
-      const {parentFocusKey} = componentToRemove;
+      const {parentFocusKey, autoRestoreFocus} = componentToRemove;
 
       Reflect.deleteProperty(this.focusableComponents, focusKey);
 
@@ -788,7 +790,9 @@ class SpatialNavigation {
       /**
        * If the component was also focused at this time, focus another one
        */
-      if (isFocused) {
+      if (isFocused && autoRestoreFocus) {
+
+        console.log('!!!!!!autoRestoreFocus', autoRestoreFocus);
         this.setFocus(parentFocusKey);
       }
     }
