@@ -717,6 +717,7 @@ class SpatialNavigation {
     onUpdateFocus,
     onUpdateHasFocusedChild,
     preferredChildFocusKey,
+    autoRestoreFocus,
     focusable
   }) {
     this.focusableComponents[focusKey] = {
@@ -734,6 +735,7 @@ class SpatialNavigation {
       lastFocusedChildKey: null,
       preferredChildFocusKey,
       focusable,
+      autoRestoreFocus,
       layout: {
         x: 0,
         y: 0,
@@ -788,7 +790,7 @@ class SpatialNavigation {
       /**
        * If the component was also focused at this time, focus another one
        */
-      if (isFocused) {
+      if (isFocused && parentComponent.autoRestoreFocus) {
         this.setFocus(parentFocusKey);
       }
     }

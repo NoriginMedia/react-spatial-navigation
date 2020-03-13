@@ -87,6 +87,7 @@ const ParentComponent = (props) => (<View>
     onArrowPress={props.onArrowPress}
     onBecameFocused={props.onItemFocused}
     onBecameBlurred={props.onItemBlurred}
+    autoRestoreFocus={false}
   />
   ...
 </View>);
@@ -337,6 +338,13 @@ const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}, {event, 
 />
 ...
 ```
+
+
+##### `autoRestoreFocus`: boolean
+To determine whether parent component should focus the first available child component when currently focused child is unmounted and mounted again. By default when a child component is mounted again, parent component focuses the first child, which could be different from previuosly focused child. 
+When this flag is set to 'false', parent will focus the same component as before, instead of focusing the first child.
+* **true (default)**
+* **false**
 
 ## Props passed to Wrapped Component
 ### `focusKey`: string
