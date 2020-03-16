@@ -237,6 +237,11 @@ Determine whether this component should not remember the last focused child comp
 * **false (default)**
 * **true**
 
+##### `autoRestoreFocus`: boolean
+To determine whether parent component should focus the first available child component when currently focused child is unmounted.
+* **true (default)**
+* **false**
+
 ## Props that can be applied to HOC
 All these props are optional.
 
@@ -244,6 +249,9 @@ All these props are optional.
 Same as in [config](#config).
 
 ### `forgetLastFocusedChild`: boolean
+Same as in [config](#config).
+
+### `autoRestoreFocus`: boolean
 Same as in [config](#config).
 
 ### `focusable`: boolean
@@ -338,13 +346,6 @@ const onBlur = ({width, height, x, y, top, left, node}, {prop1, prop2}, {event, 
 />
 ...
 ```
-
-
-##### `autoRestoreFocus`: boolean
-To determine whether parent component should focus the first available child component when currently focused child is unmounted and mounted again. By default when a child component is mounted again, parent component focuses the first child, which could be different from previuosly focused child. 
-When this flag is set to 'false', parent will focus the same component as before, instead of focusing the first child.
-* **true (default)**
-* **false**
 
 ## Props passed to Wrapped Component
 ### `focusKey`: string
