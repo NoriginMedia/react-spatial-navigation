@@ -790,7 +790,7 @@ class SpatialNavigation {
       /**
        * If the component was also focused at this time, focus another one
        */
-      if (isFocused && parentComponent.autoRestoreFocus) {
+      if (isFocused && parentComponent && parentComponent.autoRestoreFocus) {
         this.setFocus(parentFocusKey);
       }
     }
