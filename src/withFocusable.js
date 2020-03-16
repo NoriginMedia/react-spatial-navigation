@@ -18,7 +18,8 @@ const omitProps = (keys) => mapProps((props) => omit(props, keys));
 
 const withFocusable = ({
   forgetLastFocusedChild: configForgetLastFocusedChild = false,
-  trackChildren: configTrackChildren = false
+  trackChildren: configTrackChildren = false,
+  autoRestoreFocus: configAutoRestoreFocus
 } = {}) => compose(
   getContext({
     /**
@@ -109,7 +110,8 @@ const withFocusable = ({
         onUpdateFocus,
         onUpdateHasFocusedChild,
         trackChildren,
-        focusable = true
+        focusable = true,
+        autoRestoreFocus = true
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -127,6 +129,7 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
         trackChildren: (configTrackChildren || trackChildren),
+        autoRestoreFocus: configAutoRestoreFocus !== undefined ? configAutoRestoreFocus : autoRestoreFocus,
         focusable
       });
     },
@@ -164,7 +167,8 @@ const withFocusable = ({
     'onUpdateFocus',
     'onUpdateHasFocusedChild',
     'forgetLastFocusedChild',
-    'trackChildren'
+    'trackChildren',
+    'autoRestoreFocus'
   ])
 );
 

@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [2.12.0]
+### Changed
+- added `autoRestoreFocus` prop to control whether parent component should restore focus on any available child when a currently focused child component is unmounted.
 
 ## [2.11.0]
 ### Changed

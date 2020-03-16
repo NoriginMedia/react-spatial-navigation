@@ -87,6 +87,7 @@ const ParentComponent = (props) => (<View>
     onArrowPress={props.onArrowPress}
     onBecameFocused={props.onItemFocused}
     onBecameBlurred={props.onItemBlurred}
+    autoRestoreFocus={false}
   />
   ...
 </View>);
@@ -236,6 +237,11 @@ Determine whether this component should not remember the last focused child comp
 * **false (default)**
 * **true**
 
+##### `autoRestoreFocus`: boolean
+To determine whether parent component should focus the first available child component when currently focused child is unmounted.
+* **true (default)**
+* **false**
+
 ## Props that can be applied to HOC
 All these props are optional.
 
@@ -243,6 +249,9 @@ All these props are optional.
 Same as in [config](#config).
 
 ### `forgetLastFocusedChild`: boolean
+Same as in [config](#config).
+
+### `autoRestoreFocus`: boolean
 Same as in [config](#config).
 
 ### `focusable`: boolean
