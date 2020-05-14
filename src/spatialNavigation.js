@@ -537,6 +537,10 @@ class SpatialNavigation {
     this.log('smartNavigate', 'fromParentFocusKey', fromParentFocusKey);
     this.log('smartNavigate', 'this.focusKey', this.focusKey);
 
+    if (!this.nativeMode && !fromParentFocusKey) {
+      this.updateAllLayouts();
+    }
+
     const currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
 
     this.log(
@@ -946,10 +950,6 @@ class SpatialNavigation {
     this.setCurrentFocusedKey(newFocusKey, details);
     this.updateParentsHasFocusedChild(newFocusKey, details);
     this.updateParentsLastFocusedChild(lastFocusedKey);
-
-    if (!this.nativeMode) {
-      this.updateAllLayouts();
-    }
   }
 
   updateAllLayouts() {
