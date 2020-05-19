@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.12.3]
 ### Changed
-- update throttle for fast clicking and not only for press+hold
+- update throttle for fast clicking via `isThrottledFastClicking` param and not only for press+hold
 
 ## [2.12.2]
 ### Changed

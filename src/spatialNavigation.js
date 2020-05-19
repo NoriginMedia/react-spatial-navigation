@@ -291,6 +291,7 @@ class SpatialNavigation {
     this.enabled = false;
     this.nativeMode = false;
     this.throttle = 0;
+    this.isThrottledFastClicking = false;
 
     this.pressedKeys = {};
 
@@ -322,11 +323,13 @@ class SpatialNavigation {
     debug: debug = false,
     visualDebug: visualDebug = false,
     nativeMode: nativeMode = false,
-    throttle: throttle = 0
+    throttle: throttle = 0,
+    isThrottledFastClicking: isThrottledFastClicking = false
   } = {}) {
     if (!this.enabled) {
       this.enabled = true;
       this.nativeMode = nativeMode;
+      this.isThrottledFastClicking = isThrottledFastClicking;
 
       this.debug = debug;
 
@@ -366,6 +369,7 @@ class SpatialNavigation {
       this.enabled = false;
       this.nativeMode = false;
       this.throttle = 0;
+      this.isThrottledFastClicking = false;
       this.focusKey = null;
       this.parentsHavingFocusedChild = [];
       this.focusableComponents = {};
@@ -433,6 +437,10 @@ class SpatialNavigation {
         const eventType = this.getEventType(event.keyCode);
 
         Reflect.deleteProperty(this.pressedKeys, eventType);
+
+        if (this.throttle && !this.isThrottledFastClicking) {
+          this.keyDownEventListener.cancel();
+        }
       };
 
       window.addEventListener('keyup', this.keyUpEventListener);
