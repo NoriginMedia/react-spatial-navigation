@@ -202,9 +202,15 @@ In Native mode you can only `stealFocus` to some component to flag it as `focuse
 * **true**
 
 ##### `throttle`: integer
-Enable to throttle the function fired by the event listener.
+Enable to throttle the function fired by the event listener `keydown` and stop it by `keyup`.
 
 * **0 (default)**
+
+##### `throttleKeypresses`: boolean
+In combination with `throttle` it prevents to stop throttling by `keyup`.
+The flag is useful in case of a fast pressing keys like arrows at a page with a lot of complex elements.
+
+* **false (default)**
 
 ### `setKeyMap`: function
 Function to set custom key codes.

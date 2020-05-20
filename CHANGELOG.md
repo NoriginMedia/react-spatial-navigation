@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.12.3]
 ### Changed
-- update throttle for fast clicking via `isThrottledFastClicking` param and not only for press+hold
+- added `throttleKeypresses`, which in combination with `throttle` prevents to stop throttling by `keyup`
+- usefull in case of a fast pressing keys like arrows at a page with a lot of complex elements
 
 ## [2.12.2]
 ### Changed
