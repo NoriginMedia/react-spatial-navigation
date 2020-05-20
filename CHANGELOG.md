@@ -6,8 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.12.3]
 ### Changed
-- added `throttleKeypresses`, which in combination with `throttle` prevents to stop throttling by `keyup`
-- usefull in case of a fast pressing keys like arrows at a page with a lot of complex elements
+- added `throttleKeypresses` to prevent canceling of throttled events for individual key presses
 
 ## [2.12.2]
 ### Changed
