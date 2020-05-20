@@ -206,6 +206,11 @@ Enable to throttle the function fired by the event listener.
 
 * **0 (default)**
 
+##### `throttleKeypresses`: boolean
+Prevent canceling of throttled events for individual key presses. Works only in combination with `throttle`. Useful when there are issues with the performance of handling rapidly firing navigational events.
+
+* **false (default)**
+
 ### `setKeyMap`: function
 Function to set custom key codes.
 ```jsx

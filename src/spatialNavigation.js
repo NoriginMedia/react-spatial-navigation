@@ -291,6 +291,7 @@ class SpatialNavigation {
     this.enabled = false;
     this.nativeMode = false;
     this.throttle = 0;
+    this.throttleKeypresses = false;
 
     this.pressedKeys = {};
 
@@ -322,11 +323,13 @@ class SpatialNavigation {
     debug: debug = false,
     visualDebug: visualDebug = false,
     nativeMode: nativeMode = false,
-    throttle: throttle = 0
+    throttle: throttle = 0,
+    throttleKeypresses: throttleKeypresses = false
   } = {}) {
     if (!this.enabled) {
       this.enabled = true;
       this.nativeMode = nativeMode;
+      this.throttleKeypresses = throttleKeypresses;
 
       this.debug = debug;
 
@@ -366,6 +369,7 @@ class SpatialNavigation {
       this.enabled = false;
       this.nativeMode = false;
       this.throttle = 0;
+      this.throttleKeypresses = false;
       this.focusKey = null;
       this.parentsHavingFocusedChild = [];
       this.focusableComponents = {};
@@ -434,7 +438,7 @@ class SpatialNavigation {
 
         Reflect.deleteProperty(this.pressedKeys, eventType);
 
-        if (this.throttle) {
+        if (this.throttle && !this.throttleKeypresses) {
           this.keyDownEventListener.cancel();
         }
       };
