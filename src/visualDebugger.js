@@ -1,10 +1,15 @@
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight;
+// We'll make VisualDebugger no-op for any environments lacking a DOM (e.g. SSR and React Native non-web platforms).
+const hasDOM = window && window.document;
+
+const WIDTH = hasDOM ? window.innerWidth : 0;
+const HEIGHT = hasDOM ? window.innerHeight : 0;
 
 class VisualDebugger {
   constructor() {
-    this.debugCtx = VisualDebugger.createCanvas('sn-debug', 1010);
-    this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts', 1000);
+    if (hasDOM) {
+      this.debugCtx = VisualDebugger.createCanvas('sn-debug', 1010);
+      this.layoutsCtx = VisualDebugger.createCanvas('sn-layouts', 1000);
+    }
   }
 
   static createCanvas(id, zIndex) {
@@ -25,14 +30,23 @@ class VisualDebugger {
   }
 
   clear() {
+    if (!hasDOM) {
+      return;
+    }
     this.debugCtx.clearRect(0, 0, WIDTH, HEIGHT);
   }
 
   clearLayouts() {
+    if (!hasDOM) {
+      return;
+    }
     this.layoutsCtx.clearRect(0, 0, WIDTH, HEIGHT);
   }
 
   drawLayout(layout, focusKey, parentFocusKey) {
+    if (!hasDOM) {
+      return;
+    }
     this.layoutsCtx.strokeStyle = 'green';
     this.layoutsCtx.strokeRect(layout.left, layout.top, layout.width, layout.height);
     this.layoutsCtx.font = '8px monospace';
@@ -44,6 +58,9 @@ class VisualDebugger {
   }
 
   drawPoint(x, y, color = 'blue', size = 10) {
+    if (!hasDOM) {
+      return;
+    }
     this.debugCtx.strokeStyle = color;
     this.debugCtx.lineWidth = 3;
     this.debugCtx.strokeRect(x - (size / 2), y - (size / 2), size, size);
