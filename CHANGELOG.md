@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.5]
+### Added
+- Added `blockNavigationOut` to avoid focus out from the selected component.
+
 ## [2.12.4]
 ### Fixed
 - Fixed issue where this library didn't work in SSR environments due to references to DOM-only variables
