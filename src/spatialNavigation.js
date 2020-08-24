@@ -626,7 +626,9 @@ class SpatialNavigation {
 
         this.saveLastFocusedChildKey(parentComponent, focusKey);
 
-        this.smartNavigate(direction, parentFocusKey, details);
+        if (!parentComponent || !parentComponent.blockNavigationOut) {
+          this.smartNavigate(direction, parentFocusKey, details);
+        }
       }
     }
   }
@@ -728,7 +730,8 @@ class SpatialNavigation {
     onUpdateHasFocusedChild,
     preferredChildFocusKey,
     autoRestoreFocus,
-    focusable
+    focusable,
+    blockNavigationOut
   }) {
     this.focusableComponents[focusKey] = {
       focusKey,
@@ -745,6 +748,7 @@ class SpatialNavigation {
       lastFocusedChildKey: null,
       preferredChildFocusKey,
       focusable,
+      blockNavigationOut,
       autoRestoreFocus,
       layout: {
         x: 0,
@@ -990,7 +994,7 @@ class SpatialNavigation {
     });
   }
 
-  updateFocusable(focusKey, {node, preferredChildFocusKey, focusable}) {
+  updateFocusable(focusKey, {node, preferredChildFocusKey, focusable, blockNavigationOut}) {
     if (this.nativeMode) {
       return;
     }
@@ -1000,6 +1004,7 @@ class SpatialNavigation {
     if (component) {
       component.preferredChildFocusKey = preferredChildFocusKey;
       component.focusable = focusable;
+      component.blockNavigationOut = blockNavigationOut;
 
       if (node) {
         component.node = node;

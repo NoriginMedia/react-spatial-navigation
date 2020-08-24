@@ -111,7 +111,8 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         trackChildren,
         focusable = true,
-        autoRestoreFocus = true
+        autoRestoreFocus = true,
+        blockNavigationOut = false
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -129,6 +130,7 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
         trackChildren: (configTrackChildren || trackChildren),
+        blockNavigationOut,
         autoRestoreFocus: configAutoRestoreFocus !== undefined ? configAutoRestoreFocus : autoRestoreFocus,
         focusable
       });
@@ -137,7 +139,8 @@ const withFocusable = ({
       const {
         realFocusKey: focusKey,
         preferredChildFocusKey,
-        focusable = true
+        focusable = true,
+        blockNavigationOut = false
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -145,7 +148,8 @@ const withFocusable = ({
       SpatialNavigation.updateFocusable(focusKey, {
         node,
         preferredChildFocusKey,
-        focusable
+        focusable,
+        blockNavigationOut
       });
     },
     componentWillUnmount() {
