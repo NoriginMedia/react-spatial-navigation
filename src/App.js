@@ -119,6 +119,7 @@ const programs = shuffle([{
 }]);
 
 const RETURN_KEY = 8;
+const B_KEY = 66;
 
 /* eslint-disable react/prefer-stateless-function */
 class MenuItem extends React.PureComponent {
@@ -190,10 +191,29 @@ class Content extends React.PureComponent {
     super(props);
 
     this.state = {
-      currentProgram: null
+      currentProgram: null,
+      blockNavigationOut: false
     };
 
+    this.onPressKey = this.onPressKey.bind(this);
     this.onProgramPress = this.onProgramPress.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.onPressKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onPressKey);
+  }
+
+  onPressKey(event) {
+    if (event.keyCode === B_KEY) {
+      const {blockNavigationOut: blocked} = this.state;
+
+      console.warn(`blockNavigationOut: ${!blocked}. Press B to ${blocked ? 'block' : 'unblock '}`);
+      this.setState((prevState) => ({blockNavigationOut: !prevState.blockNavigationOut}));
+    }
   }
 
   onProgramPress(programProps, {pressedKeys} = {}) {
@@ -206,6 +226,8 @@ class Content extends React.PureComponent {
   }
 
   render() {
+    const {blockNavigationOut} = this.state;
+
     // console.log('content rendered: ', this.props.realFocusKey);
 
     return (<View style={styles.content}>
@@ -213,6 +235,7 @@ class Content extends React.PureComponent {
       <CategoriesFocusable
         focusKey={'CATEGORIES'}
         onProgramPress={this.onProgramPress}
+        blockNavigationOut={blockNavigationOut}
       />
     </View>);
   }

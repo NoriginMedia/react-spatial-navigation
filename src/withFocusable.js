@@ -19,7 +19,8 @@ const omitProps = (keys) => mapProps((props) => omit(props, keys));
 const withFocusable = ({
   forgetLastFocusedChild: configForgetLastFocusedChild = false,
   trackChildren: configTrackChildren = false,
-  autoRestoreFocus: configAutoRestoreFocus
+  autoRestoreFocus: configAutoRestoreFocus,
+  blockNavigationOut: configBlockNavigationOut = false
 } = {}) => compose(
   getContext({
     /**
@@ -111,7 +112,8 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         trackChildren,
         focusable = true,
-        autoRestoreFocus = true
+        autoRestoreFocus = true,
+        blockNavigationOut = false
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -129,6 +131,7 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
         trackChildren: (configTrackChildren || trackChildren),
+        blockNavigationOut: (configBlockNavigationOut || blockNavigationOut),
         autoRestoreFocus: configAutoRestoreFocus !== undefined ? configAutoRestoreFocus : autoRestoreFocus,
         focusable
       });
@@ -137,7 +140,8 @@ const withFocusable = ({
       const {
         realFocusKey: focusKey,
         preferredChildFocusKey,
-        focusable = true
+        focusable = true,
+        blockNavigationOut = false
       } = this.props;
 
       const node = SpatialNavigation.isNativeMode() ? this : findDOMNode(this);
@@ -145,7 +149,8 @@ const withFocusable = ({
       SpatialNavigation.updateFocusable(focusKey, {
         node,
         preferredChildFocusKey,
-        focusable
+        focusable,
+        blockNavigationOut: (configBlockNavigationOut || blockNavigationOut)
       });
     },
     componentWillUnmount() {
