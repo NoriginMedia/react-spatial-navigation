@@ -247,6 +247,13 @@ To determine whether parent component should focus the first available child com
 * **true (default)**
 * **false**
 
+##### `blockNavigationOut`: boolean
+Disable the navigation out from the selected component. It can be useful when a user opens a popup (or screen) and you don't want to allow the user to focus other components outside this area.
+
+It doesn't block focus set programmatically by `setFocus`.
+* **false (default)**
+* **true**
+
 ## Props that can be applied to HOC
 All these props are optional.
 
@@ -257,6 +264,9 @@ Same as in [config](#config).
 Same as in [config](#config).
 
 ### `autoRestoreFocus`: boolean
+Same as in [config](#config).
+
+### `blockNavigationOut`: boolean
 Same as in [config](#config).
 
 ### `focusable`: boolean
