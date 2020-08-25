@@ -19,7 +19,8 @@ const omitProps = (keys) => mapProps((props) => omit(props, keys));
 const withFocusable = ({
   forgetLastFocusedChild: configForgetLastFocusedChild = false,
   trackChildren: configTrackChildren = false,
-  autoRestoreFocus: configAutoRestoreFocus
+  autoRestoreFocus: configAutoRestoreFocus,
+  blockNavigationOut: configBlockNavigationOut = false
 } = {}) => compose(
   getContext({
     /**
@@ -130,7 +131,7 @@ const withFocusable = ({
         onUpdateHasFocusedChild,
         forgetLastFocusedChild: (configForgetLastFocusedChild || forgetLastFocusedChild),
         trackChildren: (configTrackChildren || trackChildren),
-        blockNavigationOut,
+        blockNavigationOut: (configBlockNavigationOut || blockNavigationOut),
         autoRestoreFocus: configAutoRestoreFocus !== undefined ? configAutoRestoreFocus : autoRestoreFocus,
         focusable
       });
@@ -149,7 +150,7 @@ const withFocusable = ({
         node,
         preferredChildFocusKey,
         focusable,
-        blockNavigationOut
+        blockNavigationOut: (configBlockNavigationOut || blockNavigationOut)
       });
     },
     componentWillUnmount() {
