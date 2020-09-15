@@ -405,7 +405,6 @@ class SpatialNavigation {
         this.pressedKeys[eventType] = this.pressedKeys[eventType] ? this.pressedKeys[eventType] + 1 : 1;
 
         event.preventDefault();
-        event.stopPropagation();
 
         const details = {
           pressedKeys: this.pressedKeys
