@@ -6,11 +6,19 @@ import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
 export const FocusContext = createContext();
 const useFocusContext = () => useContext(FocusContext);
 
-export function RootProvider({ children }) {
+export function RootProvider({
+  children
+}) {
   const parent = React.useRef(0);
-  const nextParent = (focusKey) => (parent.current = focusKey);
+  const nextParent = (focusKey) => {
+    parent.current = focusKey;
+  };
 
-  return ( <FocusContext.Provider value={{ parent, nextParent }}>{children}</FocusContext.Provider> )
+  return (
+    <FocusContext.Provider value={{parent, nextParent}}>
+      {children}
+    </FocusContext.Provider>
+  );
 }
 
 const useFocusable = ({
@@ -30,12 +38,12 @@ const useFocusable = ({
   const nodeRef = useRef(null);
   const [focused, setFocused] = useState(false);
   const [hasFocusedChild, setHasFocusedChild] = useState(false);
-  const { parent, nextParent } = useFocusContext();
+  const {parent, nextParent} = useFocusContext();
   const parentFocusKey = useRef(parent.current).current;
 
   useMemo(() => {
     isParent && nextParent(focusKey);
-  }, []);
+  }, [isParent, focusKey, nextParent]);
 
   useEffect(() => {
     const node = nodeRef.current;
