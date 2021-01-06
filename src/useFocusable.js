@@ -11,7 +11,11 @@ const useFocusable = ({
   focusKey,
   parentFocusKey,
   trackChildren,
-  focusable = true
+  focusable = true,
+  onEnterPressHandler = noop,
+  onArrowPressHandler = noop,
+  onBecameFocusedHandler = noop,
+  onBecameBlurredHandler = noop
 }) => {
   const nodeRef = useRef(null);
   const [focused, setFocused] = useState(false);
@@ -25,10 +29,10 @@ const useFocusable = ({
       node,
       parentFocusKey: parentFocusKey || ROOT_FOCUS_KEY,
       preferredChildFocusKey,
-      onEnterPressHandler: noop,
-      onArrowPressHandler: noop,
-      onBecameFocusedHandler: noop,
-      onBecameBlurredHandler: noop,
+      onEnterPressHandler,
+      onArrowPressHandler,
+      onBecameFocusedHandler,
+      onBecameBlurredHandler,
       onUpdateFocus: (isFocused = false) => setFocused(isFocused),
       onUpdateHasFocusedChild: (isFocused = false) => setHasFocusedChild(isFocused),
       forgetLastFocusedChild,
