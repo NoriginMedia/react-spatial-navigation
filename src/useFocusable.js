@@ -1,7 +1,17 @@
-import {useState, useEffect, useRef} from 'react';
+import React, {useMemo, useState, useEffect, useRef, useContext, createContext} from 'react';
 import noop from 'lodash/noop';
 
 import SpatialNavigation, {ROOT_FOCUS_KEY} from './spatialNavigation';
+
+export const FocusContext = createContext();
+const useFocusContext = () => useContext(FocusContext);
+
+export function RootProvider({ children }) {
+  const parent = React.useRef(0);
+  const nextParent = (focusKey) => (parent.current = focusKey);
+
+  return ( <FocusContext.Provider value={{ parent, nextParent }}>{children}</FocusContext.Provider> )
+}
 
 const useFocusable = ({
   forgetLastFocusedChild,
@@ -9,8 +19,8 @@ const useFocusable = ({
   blockNavigationOut,
   preferredChildFocusKey,
   focusKey,
-  parentFocusKey,
   trackChildren,
+  isParent = false,
   focusable = true,
   onEnterPressHandler = noop,
   onArrowPressHandler = noop,
@@ -20,6 +30,12 @@ const useFocusable = ({
   const nodeRef = useRef(null);
   const [focused, setFocused] = useState(false);
   const [hasFocusedChild, setHasFocusedChild] = useState(false);
+  const { parent, nextParent } = useFocusContext();
+  const parentFocusKey = useRef(parent.current).current;
+
+  useMemo(() => {
+    isParent && nextParent(focusKey);
+  }, []);
 
   useEffect(() => {
     const node = nodeRef.current;
