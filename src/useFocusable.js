@@ -9,7 +9,7 @@ const useFocusContext = () => useContext(FocusContext);
 export function RootProvider({
   children
 }) {
-  const parent = React.useRef(0);
+  const parent = useRef(ROOT_FOCUS_KEY);
   const nextParent = (focusKey) => {
     parent.current = focusKey;
   };
@@ -51,7 +51,7 @@ const useFocusable = ({
     SpatialNavigation.addFocusable({
       focusKey,
       node,
-      parentFocusKey: parentFocusKey || ROOT_FOCUS_KEY,
+      parentFocusKey,
       preferredChildFocusKey,
       onEnterPressHandler,
       onArrowPressHandler,
