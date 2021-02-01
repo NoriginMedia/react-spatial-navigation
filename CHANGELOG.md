@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.12.6]
 ### Added
-- Added `updateAllSpatialLayouts` to allow updating components layout at anytime that is required.
+- Added `updateAllSpatialLayouts` to allow updating components layout at any time that is required.
 
 ## [2.12.5]
 ### Added
