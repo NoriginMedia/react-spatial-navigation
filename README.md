@@ -420,6 +420,9 @@ This function pauses key listeners. Useful when you need to temporary disable na
 ### `resumeSpatialNavigation`: function
 This function resumes key listeners if it was paused with [pauseSpatialNavigation](#pauseSpatialNavigation-function)
 
+### `updateAllSpatialLayouts`: function
+This function update all components layouts. It can be used before setFocus is invoked, when the layouts have changed without being noticed by spatialNavigation service.
+
 ### Data Types
 
 ### `KeyDetails`: object

@@ -94,7 +94,8 @@ const withFocusable = ({
       onBecameBlurred(layout, rest, details);
     },
     pauseSpatialNavigation: () => SpatialNavigation.pause,
-    resumeSpatialNavigation: () => SpatialNavigation.resume
+    resumeSpatialNavigation: () => SpatialNavigation.resume,
+    updateAllSpatialLayouts: () => SpatialNavigation.updateAllLayouts
   }),
 
   lifecycle({
