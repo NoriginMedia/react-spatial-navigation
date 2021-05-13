@@ -44,8 +44,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.13",
-    "prop-types": "^15.6.2",
-    "recompose": "^0.30.0"
+    "hoist-non-react-statics": "^3.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -60,6 +59,7 @@
     "jest": "^23.6.0",
     "parcel-bundler": "^1.11.0",
     "pre-commit": "^1.2.2",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-native-web": "^0.11.2"

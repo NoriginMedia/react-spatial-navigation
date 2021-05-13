@@ -122,16 +122,20 @@ const RETURN_KEY = 8;
 const B_KEY = 66;
 
 /* eslint-disable react/prefer-stateless-function */
-class MenuItem extends React.PureComponent {
-  render() {
-    // console.log('Menu item rendered: ', this.props.realFocusKey);
+function MenuItem({focused, register}) {
+  // console.log('Menu item rendered: ', this.props.realFocusKey);
 
-    return (<TouchableOpacity style={[styles.menuItem, this.props.focused ? styles.focusedBorder : null]} />);
-  }
+  return (
+    <TouchableOpacity
+      ref={register}
+      style={[styles.menuItem, focused ? styles.focusedBorder : null]}
+    />
+  );
 }
 
 MenuItem.propTypes = {
-  focused: PropTypes.bool.isRequired
+  focused: PropTypes.bool.isRequired,
+  register: PropTypes.func.isRequired
 
   // realFocusKey: PropTypes.string.isRequired
 };
@@ -143,12 +147,15 @@ class Menu extends React.PureComponent {
     super(props);
 
     this.onPressKey = this.onPressKey.bind(this);
+    this.menuItemRef = React.createRef();
   }
 
   componentDidMount() {
     this.props.setFocus();
 
     window.addEventListener('keydown', this.onPressKey);
+
+    console.log('Test ref forwarding:', this.menuItemRef.current);
   }
 
   componentWillUnmount() {
@@ -170,7 +177,10 @@ class Menu extends React.PureComponent {
       <MenuItemFocusable focusKey={'MENU-3'} />
       <MenuItemFocusable focusKey={'MENU-4'} />
       <MenuItemFocusable focusKey={'MENU-5'} />
-      <MenuItemFocusable focusKey={'MENU-6'} />
+      <MenuItemFocusable
+        focusKey={'MENU-6'}
+        ref={this.menuItemRef}
+      />
     </View>);
   }
 }
