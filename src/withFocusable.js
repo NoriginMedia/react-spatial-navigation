@@ -13,7 +13,9 @@ import getContext from "recompose/getContext";
 import pure from "recompose/pure";
 import mapProps from "recompose/mapProps";
 import SpatialNavigation, { ROOT_FOCUS_KEY } from "./spatialNavigation";
-import React from "react";
+import React, { useContext } from "react";
+
+export const FocusContext = React.createContext({ parentFocusKey: undefined });
 
 const omitProps = (keys) => mapProps((props) => omit(props, keys));
 
@@ -23,7 +25,6 @@ export function useFocusable({
   autoRestoreFocus: configAutoRestoreFocus,
   blockNavigationOut: configBlockNavigationOut = false,
   focusKey,
-  parentFocusKey,
   preferredChildFocusKey,
   forgetLastFocusedChild = false,
   onEnterPress = noop,
@@ -39,6 +40,10 @@ export function useFocusable({
 } = {}) {
   const [focused, setFocused] = React.useState(false);
   const [hasFocusedChild, setHasFocusedChild] = React.useState(false);
+
+  const { parentFocusKey } = useContext(FocusContext);
+
+  console.log(focusKey, parentFocusKey, "FocusKey", "ParentFocusKey");
 
   const onUpdateFocus = (focused = false) => {
     return setFocused(focused);
@@ -86,8 +91,6 @@ export function useFocusable({
   let firstMount = true;
 
   React.useEffect(() => {
-    console.log(ref, "REF");
-
     if (firstMount) {
       SpatialNavigation.addFocusable({
         focusKey,
@@ -127,12 +130,13 @@ export function useFocusable({
         focusKey,
       });
     };
-  }, [focusKey, focused, hasFocusedChild]);
+  }, [focusKey, focused, hasFocusedChild, parentFocusKey]);
 
   return {
     setFocus,
     focused,
     hasFocusedChild,
+    parentFocusKey: realFocusKey,
     navigateByDirection,
     stealFocus,
     pauseSpatialNavigation,

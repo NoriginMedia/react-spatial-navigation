@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import withFocusable, { useFocusable } from "./withFocusable";
+import withFocusable, { useFocusable, FocusContext } from "./withFocusable";
 import SpatialNavigation from "./spatialNavigation";
 
 SpatialNavigation.init({
@@ -141,7 +141,16 @@ const programs = shuffle([
 const RETURN_KEY = 8;
 const B_KEY = 66;
 
-function MenuItem({ focused, ref }) {
+MenuItem.propTypes = {
+  focused: PropTypes.bool.isRequired,
+
+  // realFocusKey: PropTypes.string.isRequired
+};
+
+function MenuItem({ focusKey }) {
+  const ref = useRef(null);
+  const { focused } = useFocusable({ ref, focusKey });
+
   return (
     <div ref={ref}>
       <TouchableOpacity
@@ -149,19 +158,6 @@ function MenuItem({ focused, ref }) {
       />
     </div>
   );
-}
-
-MenuItem.propTypes = {
-  focused: PropTypes.bool.isRequired,
-
-  // realFocusKey: PropTypes.string.isRequired
-};
-
-function FocusableMenuItem({ focusKey }) {
-  const ref = useRef(null);
-  const { focused } = useFocusable({ ref, focusKey });
-
-  return <MenuItem ref={ref} focused={focused} />;
 }
 
 function Menu({ focusKey }) {
@@ -191,12 +187,12 @@ function Menu({ focusKey }) {
       ref={ref}
       style={[styles.menu, hasFocusedChild ? styles.menuFocused : null]}
     >
-      <FocusableMenuItem focusKey={"MENU-1"} />
-      <FocusableMenuItem focusKey={"MENU-2"} />
-      <FocusableMenuItem focusKey={"MENU-3"} />
-      <FocusableMenuItem focusKey={"MENU-4"} />
-      <FocusableMenuItem focusKey={"MENU-5"} />
-      <FocusableMenuItem focusKey={"MENU-6"} />
+      <MenuItem focusKey={"MENU-1"} />
+      <MenuItem focusKey={"MENU-2"} />
+      <MenuItem focusKey={"MENU-3"} />
+      <MenuItem focusKey={"MENU-4"} />
+      <MenuItem focusKey={"MENU-5"} />
+      <MenuItem focusKey={"MENU-6"} />
     </View>
   );
 }
@@ -555,7 +551,9 @@ class Spatial extends React.PureComponent {
   render() {
     return (
       <View style={styles.wrapper}>
-        <Menu focusKey={"MENU"} />
+        <FocusContext.Provider value={{ parentFocusKey: "MENU" }}>
+          <Menu focusKey={"MENU"} />
+        </FocusContext.Provider>
         <ContentFocusable focusKey={"CONTENT"} />
       </View>
     );

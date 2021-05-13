@@ -889,7 +889,8 @@ class SpatialNavigation {
 
     this.updateLayout(focusKey);
 
-    console.log(focusKey, this.focusKey);
+    console.log("FOCUS KEY", focusKey, this.focusKey);
+
     /**
      * If for some reason this component was already focused before it was added, call the update
      */
@@ -945,8 +946,11 @@ class SpatialNavigation {
       newFocusKey !== this.focusKey
     ) {
       const oldComponent = this.focusableComponents[this.focusKey];
+      console.log(oldComponent, "OLD");
       const parentComponent =
         this.focusableComponents[oldComponent.parentFocusKey];
+
+      console.log(parentComponent, "PARENT");
 
       this.saveLastFocusedChildKey(parentComponent, this.focusKey);
 
@@ -956,6 +960,8 @@ class SpatialNavigation {
         details
       );
     }
+
+    console.log(`new focus key`, newFocusKey, this.focusKey);
 
     this.focusKey = newFocusKey;
 
