@@ -1,5 +1,5 @@
 // We'll make VisualDebugger no-op for any environments lacking a DOM (e.g. SSR and React Native non-web platforms).
-const hasDOM = window && window.document;
+const hasDOM = typeof window !== 'undefined';
 
 const WIDTH = hasDOM ? window.innerWidth : 0;
 const HEIGHT = hasDOM ? window.innerHeight : 0;
