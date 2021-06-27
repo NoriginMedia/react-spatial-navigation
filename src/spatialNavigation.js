@@ -51,6 +51,7 @@ export const getChildClosestToOrigin = (children) => {
   return first(childrenClosestToOrigin);
 };
 
+// Test for presence of DOM to avoid errors in SSR
 const hasDOM = typeof window !== 'undefined';
 
 /* eslint-disable no-nested-ternary */
