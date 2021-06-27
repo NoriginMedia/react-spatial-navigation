@@ -51,6 +51,8 @@ export const getChildClosestToOrigin = (children) => {
   return first(childrenClosestToOrigin);
 };
 
+const hasDOM = typeof window !== 'undefined';
+
 /* eslint-disable no-nested-ternary */
 class SpatialNavigation {
   /**
@@ -387,7 +389,7 @@ class SpatialNavigation {
 
   bindEventHandlers() {
     // We check both because the React Native remote debugger implements window, but not window.addEventListener.
-    if (window && window.addEventListener) {
+    if (hasDOM) {
       this.keyDownEventListener = (event) => {
         if (this.paused === true) {
           return;
@@ -452,7 +454,7 @@ class SpatialNavigation {
 
   unbindEventHandlers() {
     // We check both because the React Native remote debugger implements window, but not window.removeEventListener.
-    if (window && window.removeEventListener) {
+    if (hasDOM) {
       window.removeEventListener('keydown', this.keyDownEventListener);
       this.keyDownEventListener = null;
 
