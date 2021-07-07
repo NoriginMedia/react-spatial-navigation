@@ -284,18 +284,22 @@ String that is used as a component focus key. Should be **unique**, otherwise it
 ### `onEnterPress`: function
 Callback function that is called when the item is currently focused and Enter (OK) key is pressed.
 
+### `onEnterRelease`: function
+Callback function that is called when the item is currently focused and Enter (OK) key is released.
+
 Payload:
 1. All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
 2. [Details](#keydetails-object) - info about pressed keys
 
 ```jsx
 const onPress = ({prop1, prop2}, details) => {...};
-
+const onRelease = ({prop1, prop2}) => {...};
 ...
 <FocusableItem 
   prop1={111}
   prop2={222}
   onEnterPress={onPress}
+  onEnterRelease={onRelease}
 />
 ...
 ```
