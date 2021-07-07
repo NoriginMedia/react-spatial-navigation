@@ -1,6 +1,6 @@
 {
   "name": "@noriginmedia/react-spatial-navigation",
-  "version": "2.12.7",
+  "version": "2.12.8",
   "description": "HOC-based Spatial Navigation (key navigation) solution for React",
   "main": "dist/index.js",
   "files": [
