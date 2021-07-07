@@ -443,6 +443,10 @@ class SpatialNavigation {
         if (this.throttle && !this.throttleKeypresses) {
           this.keyDownEventListener.cancel();
         }
+
+        if (eventType === KEY_ENTER && this.focusKey) {
+          this.onEnterRelease();
+        }
       };
 
       window.addEventListener('keyup', this.keyUpEventListener);
@@ -481,6 +485,26 @@ class SpatialNavigation {
     }
 
     component.onEnterPressHandler && component.onEnterPressHandler(details);
+  }
+
+  onEnterRelease() {
+    const component = this.focusableComponents[this.focusKey];
+
+    /* Guard against last-focused component being unmounted at time of onEnterRelease (e.g due to UI fading out) */
+    if (!component) {
+      this.log('onEnterRelease', 'noComponent');
+
+      return;
+    }
+
+    /* Suppress onEnterRelease if the last-focused item happens to lose its 'focused' status. */
+    if (!component.focusable) {
+      this.log('onEnterRelease', 'componentNotFocusable');
+
+      return;
+    }
+
+    component.onEnterReleaseHandler && component.onEnterReleaseHandler();
   }
 
   onArrowPress(...args) {
@@ -722,6 +746,7 @@ class SpatialNavigation {
     node,
     parentFocusKey,
     onEnterPressHandler,
+    onEnterReleaseHandler,
     onArrowPressHandler,
     onBecameFocusedHandler,
     onBecameBlurredHandler,
@@ -739,6 +764,7 @@ class SpatialNavigation {
       node,
       parentFocusKey,
       onEnterPressHandler,
+      onEnterReleaseHandler,
       onArrowPressHandler,
       onBecameFocusedHandler,
       onBecameBlurredHandler,
