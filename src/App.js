@@ -8,13 +8,13 @@ import withFocusable from './withFocusable';
 import SpatialNavigation from './spatialNavigation';
 
 SpatialNavigation.init({
-  debug: false,
+  debug: true,
   visualDebug: false
 });
 
 // SpatialNavigation.setKeyMap(keyMap); -> Custom key map
 
-const KEY_ENTER = 'enter';
+const KEY_ENTER = 'ENTER';
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -118,7 +118,6 @@ const programs = shuffle([{
   color: '#c0ee33'
 }]);
 
-const RETURN_KEY = 8;
 const B_KEY = 66;
 
 /* eslint-disable react/prefer-stateless-function */
@@ -139,26 +138,8 @@ MenuItem.propTypes = {
 const MenuItemFocusable = withFocusable()(MenuItem);
 
 class Menu extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.onPressKey = this.onPressKey.bind(this);
-  }
-
   componentDidMount() {
     this.props.setFocus();
-
-    window.addEventListener('keydown', this.onPressKey);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onPressKey);
-  }
-
-  onPressKey(event) {
-    if (event.keyCode === RETURN_KEY) {
-      this.props.setFocus();
-    }
   }
 
   render() {
@@ -169,8 +150,14 @@ class Menu extends React.PureComponent {
       <MenuItemFocusable focusKey={'MENU-2'} />
       <MenuItemFocusable focusKey={'MENU-3'} />
       <MenuItemFocusable focusKey={'MENU-4'} />
-      <MenuItemFocusable focusKey={'MENU-5'} />
-      <MenuItemFocusable focusKey={'MENU-6'} />
+      <MenuItemFocusable
+        focusKey={'MENU-5'}
+        onBackPress={() => this.props.setFocus('MENU-1')}
+      />
+      <MenuItemFocusable
+        focusKey={'MENU-6'}
+        onBackPress={() => this.props.setFocus('MENU-1')}
+      />
     </View>);
   }
 }
@@ -325,7 +312,7 @@ class Category extends React.PureComponent {
   }
 
   onProgramArrowPress(direction, {categoryIndex, programIndex}) {
-    if (direction === 'right' && programIndex === programs.length - 1 && categoryIndex < categories.length - 1) {
+    if (direction === 'RIGHT' && programIndex === programs.length - 1 && categoryIndex < categories.length - 1) {
       this.props.setFocus(`CATEGORY-${categoryIndex + 1}`);
 
       return false;
@@ -354,6 +341,7 @@ class Category extends React.PureComponent {
           focusKey={`PROGRAM-${this.props.realFocusKey}-${index}`}
           onPress={() => this.props.onProgramPress(program)}
           onEnterPress={this.props.onProgramPress}
+          onBackPress={() => this.props.setFocus('MENU')}
           key={program.title}
           onBecameFocused={this.onProgramFocused}
           onArrowPress={this.onProgramArrowPress}
@@ -449,13 +437,13 @@ class Spatial extends React.PureComponent {
     const {navigateByDirection} = this.props;
 
     if (deltaY > 1) {
-      navigateByDirection('down');
+      navigateByDirection('DOWN');
     } else if (deltaY < 0) {
-      navigateByDirection('up');
+      navigateByDirection('UP');
     } else if (deltaX > 1) {
-      navigateByDirection('right');
+      navigateByDirection('RIGHT');
     } else if (deltaX < 1) {
-      navigateByDirection('left');
+      navigateByDirection('LEFT');
     }
   }
 

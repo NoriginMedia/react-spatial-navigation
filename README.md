@@ -40,11 +40,12 @@ initNavigation();
 
 // Optional
 setKeyMap({
-  'left': 9001,
-  'up': 9002,
-  'right': 9003,
-  'down': 9004,
-  'enter': 9005
+  'LEFT': [9001],
+  'UP': [9002],
+  'RIGHT': [9003],
+  'DOWN': [9004],
+  'ENTER': [9005]
+  'BACK': [9006, 9007]
 });
 ```
 
@@ -215,11 +216,12 @@ Prevent canceling of throttled events for individual key presses. Works only in 
 Function to set custom key codes.
 ```jsx
 setKeyMap({
-  'left': 9001,
-  'up': 9002,
-  'right': 9003,
-  'down': 9004,
-  'enter': 9005
+  'LEFT': [9001],
+  'UP': [9002],
+  'RIGHT': [9003],
+  'DOWN': [9004],
+  'ENTER': [9005]
+  'BACK': [9006, 9007]
 });
 ```
 
@@ -287,6 +289,12 @@ Callback function that is called when the item is currently focused and Enter (O
 ### `onEnterRelease`: function
 Callback function that is called when the item is currently focused and Enter (OK) key is released.
 
+### `onBackPress`: function
+Callback function that is called when the item is currently focused and Back key is pressed.
+
+### `onBackRelease`: function
+Callback function that is called when the item is currently focused and Back key is released.
+
 Payload:
 1. All the props passed to HOC is passed back to this callback. Useful to avoid creating callback functions during render.
 2. [Details](#keydetails-object) - info about pressed keys
@@ -300,6 +308,8 @@ const onRelease = ({prop1, prop2}) => {...};
   prop2={222}
   onEnterPress={onPress}
   onEnterRelease={onRelease}
+  onBackPress={onPress}
+  onBackRelease={onRelease}
 />
 ...
 ```

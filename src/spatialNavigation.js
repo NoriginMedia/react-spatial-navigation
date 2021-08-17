@@ -1,5 +1,6 @@
 import filter from 'lodash/filter';
 import first from 'lodash/first';
+import includes from 'lodash/includes';
 import sortBy from 'lodash/sortBy';
 import findKey from 'lodash/findKey';
 import forEach from 'lodash/forEach';
@@ -24,18 +25,20 @@ const DIAGONAL_SLICE_WEIGHT = 1;
  */
 const MAIN_COORDINATE_WEIGHT = 5;
 
-const DIRECTION_LEFT = 'left';
-const DIRECTION_RIGHT = 'right';
-const DIRECTION_UP = 'up';
-const DIRECTION_DOWN = 'down';
-const KEY_ENTER = 'enter';
+const DIRECTION_LEFT = 'LEFT';
+const DIRECTION_RIGHT = 'RIGHT';
+const DIRECTION_UP = 'UP';
+const DIRECTION_DOWN = 'DOWN';
+const KEY_ENTER = 'ENTER';
+const KEY_BACK = 'BACK';
 
 const DEFAULT_KEY_MAP = {
-  [DIRECTION_LEFT]: 37,
-  [DIRECTION_UP]: 38,
-  [DIRECTION_RIGHT]: 39,
-  [DIRECTION_DOWN]: 40,
-  [KEY_ENTER]: 13
+  [DIRECTION_LEFT]: [37],
+  [DIRECTION_UP]: [38],
+  [DIRECTION_RIGHT]: [39],
+  [DIRECTION_DOWN]: [40],
+  [KEY_ENTER]: [13],
+  [KEY_BACK]: [27]
 };
 
 const DEBUG_FN_COLORS = ['#0FF', '#FF0', '#F0F'];
@@ -382,7 +385,7 @@ class SpatialNavigation {
   }
 
   getEventType(keyCode) {
-    return findKey(this.getKeyMap(), (code) => keyCode === code);
+    return findKey(this.getKeyMap(), (codeArray) => includes(codeArray, keyCode));
   }
 
   bindEventHandlers() {
@@ -418,6 +421,12 @@ class SpatialNavigation {
           return;
         }
 
+        if (eventType === KEY_BACK && this.focusKey) {
+          this.onBackPress(details);
+
+          return;
+        }
+
         const preventDefaultNavigation = this.onArrowPress(eventType, details) === false;
 
         if (preventDefaultNavigation) {
@@ -446,6 +455,10 @@ class SpatialNavigation {
 
         if (eventType === KEY_ENTER && this.focusKey) {
           this.onEnterRelease();
+        }
+
+        if (eventType === KEY_BACK && this.focusKey) {
+          this.onBackRelease();
         }
       };
 
@@ -507,6 +520,46 @@ class SpatialNavigation {
     component.onEnterReleaseHandler && component.onEnterReleaseHandler();
   }
 
+  onBackPress(details) {
+    const component = this.focusableComponents[this.focusKey];
+
+    /* Guard against last-focused component being unmounted at time of onBackPress (e.g due to UI fading out) */
+    if (!component) {
+      this.log('onBackPress', 'noComponent');
+
+      return;
+    }
+
+    /* Suppress onBackPress if the last-focused item happens to lose its 'focused' status. */
+    if (!component.focusable) {
+      this.log('onBackPress', 'componentNotFocusable');
+
+      return;
+    }
+
+    component.onBackPressHandler && component.onBackPressHandler(details);
+  }
+
+  onBackRelease() {
+    const component = this.focusableComponents[this.focusKey];
+
+    /* Guard against last-focused component being unmounted at time of onBackRelease (e.g due to UI fading out) */
+    if (!component) {
+      this.log('onBackRelease', 'noComponent');
+
+      return;
+    }
+
+    /* Suppress onBackRelease if the last-focused item happens to lose its 'focused' status. */
+    if (!component.focusable) {
+      this.log('onBackRelease', 'componentNotFocusable');
+
+      return;
+    }
+
+    component.onBackReleaseHandler && component.onBackReleaseHandler();
+  }
+
   onArrowPress(...args) {
     const component = this.focusableComponents[this.focusKey];
 
@@ -554,7 +607,7 @@ class SpatialNavigation {
   onKeyEvent(event) {
     this.visualDebugger && this.visualDebugger.clear();
 
-    const direction = findKey(this.getKeyMap(), (code) => event.keyCode === code);
+    const direction = this.getEventType(event.keyCode);
 
     this.smartNavigate(direction, null, {event});
   }
@@ -747,6 +800,8 @@ class SpatialNavigation {
     parentFocusKey,
     onEnterPressHandler,
     onEnterReleaseHandler,
+    onBackPressHandler,
+    onBackReleaseHandler,
     onArrowPressHandler,
     onBecameFocusedHandler,
     onBecameBlurredHandler,
@@ -765,6 +820,8 @@ class SpatialNavigation {
       parentFocusKey,
       onEnterPressHandler,
       onEnterReleaseHandler,
+      onBackPressHandler,
+      onBackReleaseHandler,
       onArrowPressHandler,
       onBecameFocusedHandler,
       onBecameBlurredHandler,

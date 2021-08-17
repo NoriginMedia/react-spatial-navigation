@@ -83,6 +83,18 @@ const withFocusable = ({
     }) => () => {
       onEnterRelease(rest);
     },
+    onBackPressHandler: ({
+      onBackPress = noop,
+      ...rest
+    }) => (details) => {
+      onBackPress(rest, details);
+    },
+    onBackReleaseHandler: ({
+      onBackRelease = noop,
+      ...rest
+    }) => () => {
+      onBackRelease(rest);
+    },
     onArrowPressHandler: ({
       onArrowPress = noop,
       ...rest
@@ -113,6 +125,8 @@ const withFocusable = ({
         forgetLastFocusedChild = false,
         onEnterPressHandler,
         onEnterReleaseHandler,
+        onBackPressHandler,
+        onBackReleaseHandler,
         onArrowPressHandler,
         onBecameFocusedHandler,
         onBecameBlurredHandler,
@@ -133,6 +147,8 @@ const withFocusable = ({
         preferredChildFocusKey,
         onEnterPressHandler,
         onEnterReleaseHandler,
+        onBackPressHandler,
+        onBackReleaseHandler,
         onArrowPressHandler,
         onBecameFocusedHandler,
         onBecameBlurredHandler,
@@ -178,6 +194,8 @@ const withFocusable = ({
     'onBecameBlurredHandler',
     'onEnterPressHandler',
     'onEnterReleaseHandler',
+    'onBackPressHandler',
+    'onBackReleaseHandler',
     'onArrowPressHandler',
     'onUpdateFocus',
     'onUpdateHasFocusedChild',
