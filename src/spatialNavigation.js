@@ -569,7 +569,9 @@ class SpatialNavigation {
     this.log('smartNavigate', 'this.focusKey', this.focusKey);
 
     if (!this.nativeMode && !fromParentFocusKey) {
-      this.updateAllLayouts();
+      forOwn(this.focusableComponents, (component) => {
+        component.layoutUpdated = false;
+      });
     }
 
     const currentComponent = this.focusableComponents[fromParentFocusKey || this.focusKey];
@@ -581,6 +583,7 @@ class SpatialNavigation {
     );
 
     if (currentComponent) {
+      this.updateLayout(currentComponent.focusKey);
       const {parentFocusKey, focusKey, layout} = currentComponent;
 
       const isVerticalDirection = direction === DIRECTION_DOWN || direction === DIRECTION_UP;
@@ -598,6 +601,7 @@ class SpatialNavigation {
        */
       const siblings = filter(this.focusableComponents, (component) => {
         if (component.parentFocusKey === parentFocusKey && component.focusable) {
+          this.updateLayout(component.focusKey);
           const siblingCutoffCoordinate = SpatialNavigation.getCutoffCoordinate(
             isVerticalDirection,
             isIncrementalDirection,
@@ -726,6 +730,7 @@ class SpatialNavigation {
       /**
        * Otherwise, trying to focus something by coordinates
        */
+      children.forEach((component) => this.updateLayout(component.focusKey));
       const {focusKey: childKey} = getChildClosestToOrigin(children);
 
       this.log('getNextFocusKey', 'childKey will be focused', childKey);
@@ -790,7 +795,8 @@ class SpatialNavigation {
          * E.g. used in native environments to lazy-measure the layout on focus
          */
         node
-      }
+      },
+      layoutUpdated: false
     };
 
     if (this.nativeMode) {
@@ -841,6 +847,8 @@ class SpatialNavigation {
     const component = this.focusableComponents[focusKey];
 
     if (component) {
+      this.updateLayout(component.focusKey);
+
       return component.layout;
     }
 
@@ -1002,7 +1010,7 @@ class SpatialNavigation {
   updateLayout(focusKey) {
     const component = this.focusableComponents[focusKey];
 
-    if (!component || this.nativeMode) {
+    if (!component || this.nativeMode || component.layoutUpdated) {
       return;
     }
 

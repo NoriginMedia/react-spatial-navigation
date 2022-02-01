@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.9]
+### Changed
+- performance optimization: updateLayout is only called for components affected by navigation
+
 ## [2.12.8]
 ### Added
 - onEnterRelease event triggered when the Enter is released from the focused item
