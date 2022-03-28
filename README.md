@@ -1,6 +1,10 @@
 # react-spatial-navigation
 [![npm version](https://badge.fury.io/js/%40noriginmedia%2Freact-spatial-navigation.svg)](https://badge.fury.io/js/%40noriginmedia%2Freact-spatial-navigation)
 
+NOTE: This library is deprecated. 
+
+Updated & new version of the Norigin Spatial Navigation open-source library (with React Hooks) can be found [here](https://github.com/NoriginMedia/Norigin-Spatial-Navigation).
+
 ## Motivation
 The main motivation to create this package was to bring the best Developer Experience and Performance when working with Key Navigation and React. Ideally you wouldn't want to have any logic to define the navigation in your app. It should be as easy as just to tell which components should be navigable. With this package all you have to do is to initialize it, wrap your components with the HOC and set initial focus. The spatial navigation system will automatically figure out which components to focus next when you navigate with the directional keys.
 
