@@ -541,7 +541,13 @@ class SpatialNavigation {
 
     if (validDirections.includes(direction)) {
       this.log('navigateByDirection', 'direction', direction);
-      this.smartNavigate(direction, null, details);
+      const preventDefaultNavigation = this.onArrowPress(direction, details) === false;
+      if (preventDefaultNavigation) {
+        this.log('navigateByDirection', 'default navigation prevented');
+        this.visualDebugger && this.visualDebugger.clear();
+      } else {
+        this.smartNavigate(direction, null, details);
+      }
     } else {
       this.log(
         'navigateByDirection',
